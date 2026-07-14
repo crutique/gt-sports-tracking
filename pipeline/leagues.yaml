@@ -1,0 +1,13 @@
+northwoods:
+  name: Northwoods League
+  abbrev: NWL
+  official_url: https://northwoodsleague.com
+  platform: fixture            # Plan 3 flips this to the real platform scraper
+  tier: 1
+  fixture_dir: pipeline/fixtures/northwoods_sample
+mlb_draft:
+  name: MLB Draft League
+  abbrev: MLBDL
+  official_url: https://www.mlbdraftleague.com
+  platform: pending            # no scraper yet; build skips with a notice
+  tier: null
