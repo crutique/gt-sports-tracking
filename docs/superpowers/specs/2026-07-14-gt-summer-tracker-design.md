@@ -137,7 +137,17 @@ Excluded entirely (drafted/signed or transferred out per the original plan): Bro
 - One module per **stats platform**; a league is a config entry (platform + base URL + season id). Adding a league on a known platform costs a YAML block, not code.
 - Interface: `fetch_league_stats(league_cfg) -> LeagueStats` (full batting + pitching tables for every player in the league) and `fetch_game_log(league_cfg, player) -> list[GameLine]`.
 - Prefer JSON/API endpoints discovered via network inspection; fall back to HTML parsing (BeautifulSoup/lxml); Playwright only if a platform is JS-only.
-- Polite scraping: single session per league, retries with backoff, ~1 req/sec throttle, honest User-Agent. Nightly volume is small (see Feasibility).
+- Polite scraping: single session per league, retries with backoff, ~1 req/sec throttle, honest User-Agent. Nightly volume is small (~20 league-table requests + ~40 game-log requests across all leagues).
+
+### League coverage tiers
+
+Full league tables are NOT assumed to be accessible for every league. Each league is assigned a tier during bootstrap, and the site degrades gracefully:
+
+- **Tier 1 — full league tables retrievable** (expected for the major platforms: Pointstreak, PrestoSports, MLB-affiliated): complete experience — stats, game logs, percentile sliders with league-average ticks.
+- **Tier 2 — player stats retrievable, full league tables not practical** (login-gated GameChanger leagues, leaders-only views): profile shows season stats and game log; the sliders section is replaced by a quiet note — "{League} does not publish full league statistics, so percentiles aren't available." Dashboard percentile chip shows "—".
+- **Tier 3 — no machine-readable stats**: player appears with team/league and a link to the official site; stats marked unavailable.
+
+Percentiles are computed only for Tier 1 leagues; the UI never shows a percentile built from a partial pool.
 
 ### Percentile engine
 
@@ -200,7 +210,7 @@ Excluded entirely (drafted/signed or transferred out per the original plan): Bro
 ## Bootstrap (pre-launch research, not code)
 
 1. Research pass over all tracked players: find summer team via roster announcements/team sites; fill `players.yaml`; flag unverifiable players for user confirmation.
-2. Identify each league's stats platform; capture fixture pages; note JSON endpoints.
+2. Identify each league's stats platform; verify whether full batting/pitching tables are actually retrievable and assign the league a coverage tier (see League coverage tiers); capture fixture pages; note JSON endpoints.
 3. Fetch headshots: GT roster page for returning players; previous school/team sites for transfers and freshmen; store locally in `site/public/headshots/` (a generic silhouette placeholder for anyone missing).
 4. Seed `leagues.yaml` for every league that has ≥1 GT player.
 
