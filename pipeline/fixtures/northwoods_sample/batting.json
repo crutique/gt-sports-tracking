@@ -1,0 +1,8 @@
+[
+  {"stats_id": "fx-b1", "name": "Sample Slugger", "team": "Madison", "g": 30, "ab": 112, "r": 25, "h": 38, "d": 9, "t": 2, "hr": 7, "rbi": 30, "bb": 18, "k": 22, "hbp": 3, "sb": 8, "cs": 2, "sf": 2, "sh": 0},
+  {"stats_id": "fx-b2", "name": "Sample Contact", "team": "Duluth", "g": 28, "ab": 105, "r": 18, "h": 33, "d": 6, "t": 1, "hr": 1, "rbi": 14, "bb": 10, "k": 12, "hbp": 1, "sb": 12, "cs": 3, "sf": 1, "sh": 2},
+  {"stats_id": "fx-b3", "name": "Sample Average", "team": "Willmar", "g": 29, "ab": 98, "r": 12, "h": 26, "d": 5, "t": 0, "hr": 3, "rbi": 15, "bb": 8, "k": 25, "hbp": 2, "sb": 4, "cs": 1, "sf": 0, "sh": 1},
+  {"stats_id": "fx-b4", "name": "Sample Whiffer", "team": "Bismarck", "g": 25, "ab": 80, "r": 7, "h": 15, "d": 3, "t": 0, "hr": 2, "rbi": 9, "bb": 5, "k": 34, "hbp": 0, "sb": 1, "cs": 1, "sf": 1, "sh": 0},
+  {"stats_id": "fx-b5", "name": "Sample Patient", "team": "Mankato", "g": 27, "ab": 88, "r": 15, "h": 22, "d": 4, "t": 1, "hr": 0, "rbi": 8, "bb": 21, "k": 18, "hbp": 2, "sb": 6, "cs": 0, "sf": 0, "sh": 1},
+  {"stats_id": "fx-b6", "name": "Sample Bench", "team": "Willmar", "g": 8, "ab": 12, "r": 2, "h": 5, "d": 1, "t": 0, "hr": 1, "rbi": 4, "bb": 1, "k": 3, "hbp": 0, "sb": 0, "cs": 0, "sf": 0, "sh": 0}
+]

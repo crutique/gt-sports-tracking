@@ -1,0 +1,14 @@
+{
+  "jackson-blakely": [
+    {"date": "2026-07-12", "opponent": "vs Madison", "ip_outs": 18, "h": 4, "r": 2, "er": 2, "bb": 1, "k": 7, "hr": 1, "dec": "W"},
+    {"date": "2026-07-06", "opponent": "at Duluth", "ip_outs": 15, "h": 3, "r": 1, "er": 1, "bb": 2, "k": 5, "hr": 0, "dec": ""}
+  ],
+  "jamie-vicens": [
+    {"date": "2026-07-11", "opponent": "vs Madison", "ip_outs": 6, "h": 1, "r": 0, "er": 0, "bb": 1, "k": 3, "hr": 0, "dec": "H"},
+    {"date": "2026-07-08", "opponent": "at Bismarck", "ip_outs": 9, "h": 2, "r": 1, "er": 1, "bb": 0, "k": 4, "hr": 0, "dec": ""}
+  ],
+  "riley-hasenstab": [
+    {"date": "2026-07-13", "opponent": "vs Mankato", "ip_outs": 3, "h": 0, "r": 0, "er": 0, "bb": 0, "k": 2, "hr": 0, "dec": "SV"},
+    {"date": "2026-07-10", "opponent": "at Madison", "ip_outs": 6, "h": 1, "r": 0, "er": 0, "bb": 1, "k": 3, "hr": 0, "dec": "SV"}
+  ]
+}
