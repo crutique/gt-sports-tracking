@@ -54,7 +54,7 @@ def league_bundle(cfg, stats, logs, wanted):
     bat_rows = {r["stats_id"]: r for r in stats.get("batting", [])}
     pit_rows = {r["stats_id"]: r for r in stats.get("pitching", [])}
     bat_rates = [sm.batting_rates(r) for r in bat_rows.values() if sm.pa(r) > 0]
-    pit_rates = [sm.pitching_rates(r) for r in pit_rows.values() if (r.get("ip_outs") or 0) > 0]
+    pit_rates = [sm.pitching_rates(r) for r in pit_rows.values() if sm.bf(r) > 0]  # nonzero IP or BF per spec
     lg_bat = sm.batting_rates(_aggregate(list(bat_rows.values()), _BAT_AGG))
     lg_pit = sm.pitching_rates(_aggregate(list(pit_rows.values()), _PIT_AGG))
 
@@ -62,5 +62,7 @@ def league_bundle(cfg, stats, logs, wanted):
     for sid in wanted:
         hit = _hitting_block(bat_rows[sid], bat_rates, lg_bat, tier) if sid in bat_rows else None
         pit = _pitching_block(pit_rows[sid], pit_rates, lg_pit, tier) if sid in pit_rows else None
+        if hit is None and pit is None:
+            continue  # absent from both tables -> omit so output.assemble carries forward prior data
         bundle[sid] = {"hitting": hit, "pitching": pit, "gamelog": logs.get(sid, [])}
     return bundle

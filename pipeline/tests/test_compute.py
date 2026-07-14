@@ -59,3 +59,21 @@ def test_derived_flag_set_when_pa_not_native():
     sliders = {s["metric"]: s for s in bundle["a"]["hitting"]["sliders"]}
     assert sliders["kPct"]["derived"] is True   # PA derived from counting stats
     assert sliders["ops"]["derived"] is False
+
+
+def test_absent_wanted_player_omitted_for_carry_forward():
+    bundle = compute.league_bundle(CFG, {"batting": BATTING, "pitching": PITCHING},
+                                   {}, wanted={"ghost"})
+    assert "ghost" not in bundle
+
+
+def test_zero_out_pitcher_counts_toward_bf_pools():
+    pitching = PITCHING + [{"stats_id": "p3", "name": "P3", "team": "T3", "g": 1, "gs": 0,
+                            "ip_outs": 0, "w": 0, "l": 0, "sv": 0, "hld": 0,
+                            "h": 2, "r": 3, "er": 3, "bb": 1, "k": 0, "hb": 0, "hr": 1}]
+    bundle = compute.league_bundle(CFG, {"batting": BATTING, "pitching": pitching},
+                                   {}, wanted={"p3"})
+    sliders = {s["metric"]: s for s in bundle["p3"]["pitching"]["sliders"]}
+    # ip-denominated metrics skipped (rate is None); BF-denominated ones computed, no crash
+    assert "era" not in sliders and "kPct" in sliders and "oppAvg" in sliders
+    assert bundle["p3"]["pitching"]["rates"]["era"] is None
