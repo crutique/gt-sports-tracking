@@ -4,6 +4,7 @@ import yaml
 VALID_GT_STATUS = {"returning", "transfer", "freshman"}
 VALID_SUMMER_STATUS = {"assigned", "unassigned", "not_playing"}
 VALID_PLAYER_TYPE = {"hitter", "pitcher", "two_way"}
+REQUIRED_LEAGUE_KEYS = ("name", "abbrev", "official_url", "platform", "tier")
 
 
 class RegistryError(ValueError):
@@ -16,7 +17,16 @@ def load_all(players_path, leagues_path):
     with open(players_path) as f:
         players = yaml.safe_load(f) or []
 
+    for league_id, cfg in leagues.items():
+        cfg = cfg or {}
+        for key in REQUIRED_LEAGUE_KEYS:
+            if key not in cfg:
+                raise RegistryError(f"{league_id}: league {key} missing")
+        if cfg["platform"] == "fixture" and "fixture_dir" not in cfg:
+            raise RegistryError(f"{league_id}: league fixture_dir missing")
+
     seen = set()
+    seen_stats_ids = {}
     for p in players:
         slug = p.get("slug")
         if not slug or not p.get("name"):
@@ -36,4 +46,12 @@ def load_all(players_path, leagues_path):
                 raise RegistryError(f"{slug}: assigned player needs player_type")
             if not summer.get("stats_id") or not summer.get("team"):
                 raise RegistryError(f"{slug}: assigned player needs team and stats_id")
+            league = summer["league"]
+            stats_id = summer["stats_id"]
+            league_stats_ids = seen_stats_ids.setdefault(league, set())
+            if stats_id in league_stats_ids:
+                raise RegistryError(
+                    f"{slug}: duplicate stats_id {stats_id!r} in league {league}"
+                )
+            league_stats_ids.add(stats_id)
     return players, leagues
