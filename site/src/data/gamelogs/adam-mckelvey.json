@@ -1,0 +1,62 @@
+[
+ {
+  "date": "2026-07-09",
+  "opponent": "vs Harwich Mariners",
+  "ip_outs": 12,
+  "h": 6,
+  "r": 3,
+  "er": 3,
+  "bb": 3,
+  "k": 4,
+  "hr": 1,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-30",
+  "opponent": "at Hyannis Harbor Hawks",
+  "ip_outs": 9,
+  "h": 5,
+  "r": 3,
+  "er": 3,
+  "bb": 0,
+  "k": 2,
+  "hr": 2,
+  "dec": "L"
+ },
+ {
+  "date": "2026-06-24",
+  "opponent": "at Bourne Braves",
+  "ip_outs": 9,
+  "h": 2,
+  "r": 1,
+  "er": 1,
+  "bb": 1,
+  "k": 3,
+  "hr": 1,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-19",
+  "opponent": "at Yarmouth-Dennis Red Sox",
+  "ip_outs": 10,
+  "h": 1,
+  "r": 1,
+  "er": 1,
+  "bb": 0,
+  "k": 5,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-15",
+  "opponent": "vs Bourne Braves",
+  "ip_outs": 8,
+  "h": 0,
+  "r": 1,
+  "er": 0,
+  "bb": 1,
+  "k": 1,
+  "hr": 0,
+  "dec": ""
+ }
+]

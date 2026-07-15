@@ -258,9 +258,86 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/dimitri-angelakos.jpg",
-  "asOf": null,
+  "asOf": "2026-07-15",
   "hitting": null,
-  "pitching": null
+  "pitching": {
+   "counting": {
+    "g": 3,
+    "gs": 1,
+    "w": 2,
+    "l": 0,
+    "sv": 0,
+    "hld": 0,
+    "h": 8,
+    "r": 1,
+    "er": 1,
+    "bb": 1,
+    "k": 6,
+    "hb": 0,
+    "hr": 0,
+    "ip": "7.1"
+   },
+   "rates": {
+    "era": 1.2272727272727273,
+    "whip": 1.2272727272727273,
+    "kPct": 0.1935483870967742,
+    "bbPct": 0.03225806451612903,
+    "hr9": 0.0,
+    "k9": 7.363636363636364,
+    "bb9": 1.2272727272727273,
+    "oppAvg": 0.26666666666666666
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 1.2273,
+     "percentile": 80,
+     "leagueAvg": 4.0357,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 1.2273,
+     "percentile": 61,
+     "leagueAvg": 1.3887,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1935,
+     "percentile": 35,
+     "leagueAvg": 0.2356,
+     "leagueAvgPercentile": 49,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0323,
+     "percentile": 93,
+     "leagueAvg": 0.1171,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 0.0,
+     "percentile": 68,
+     "leagueAvg": 0.5176,
+     "leagueAvgPercentile": 33,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.2667,
+     "percentile": 31,
+     "leagueAvg": 0.2228,
+     "leagueAvgPercentile": 49,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "riley-hasenstab",
@@ -369,9 +446,86 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/adam-mckelvey.jpg",
-  "asOf": null,
+  "asOf": "2026-07-15",
   "hitting": null,
-  "pitching": null
+  "pitching": {
+   "counting": {
+    "g": 5,
+    "gs": 2,
+    "w": 0,
+    "l": 1,
+    "sv": 0,
+    "hld": 0,
+    "h": 14,
+    "r": 9,
+    "er": 8,
+    "bb": 5,
+    "k": 15,
+    "hb": 1,
+    "hr": 4,
+    "ip": "16.0"
+   },
+   "rates": {
+    "era": 4.5,
+    "whip": 1.1875,
+    "kPct": 0.21428571428571427,
+    "bbPct": 0.07142857142857142,
+    "hr9": 2.25,
+    "k9": 8.4375,
+    "bb9": 2.8125,
+    "oppAvg": 0.21875
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 4.5,
+     "percentile": 42,
+     "leagueAvg": 4.0357,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 1.1875,
+     "percentile": 66,
+     "leagueAvg": 1.3887,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.2143,
+     "percentile": 42,
+     "leagueAvg": 0.2356,
+     "leagueAvgPercentile": 49,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0714,
+     "percentile": 79,
+     "leagueAvg": 0.1171,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 2.25,
+     "percentile": 7,
+     "leagueAvg": 0.5176,
+     "leagueAvgPercentile": 33,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.2188,
+     "percentile": 53,
+     "leagueAvg": 0.2228,
+     "leagueAvgPercentile": 49,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "ryan-zuckerman",
@@ -431,8 +585,82 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/drew-rogers.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 14,
+    "ab": 42,
+    "r": 5,
+    "h": 9,
+    "d": 1,
+    "t": 0,
+    "hr": 1,
+    "rbi": 1,
+    "bb": 8,
+    "k": 22,
+    "hbp": 2,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.21428571428571427,
+    "obp": 0.36538461538461536,
+    "slg": 0.30952380952380953,
+    "ops": 0.674908424908425,
+    "kPct": 0.4230769230769231,
+    "bbPct": 0.15384615384615385
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.6749,
+     "percentile": 59,
+     "leagueAvg": 0.6656,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.2143,
+     "percentile": 48,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 57,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.3654,
+     "percentile": 63,
+     "leagueAvg": 0.3439,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.3095,
+     "percentile": 55,
+     "leagueAvg": 0.3217,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.4231,
+     "percentile": 7,
+     "leagueAvg": 0.2403,
+     "leagueAvgPercentile": 47,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1538,
+     "percentile": 75,
+     "leagueAvg": 0.1194,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -448,8 +676,82 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/caleb-daniel.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 18,
+    "ab": 57,
+    "r": 11,
+    "h": 11,
+    "d": 2,
+    "t": 0,
+    "hr": 2,
+    "rbi": 10,
+    "bb": 6,
+    "k": 15,
+    "hbp": 2,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.19298245614035087,
+    "obp": 0.2923076923076923,
+    "slg": 0.3333333333333333,
+    "ops": 0.6256410256410256,
+    "kPct": 0.23076923076923078,
+    "bbPct": 0.09230769230769231
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.6256,
+     "percentile": 47,
+     "leagueAvg": 0.6656,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.193,
+     "percentile": 38,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 57,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.2923,
+     "percentile": 25,
+     "leagueAvg": 0.3439,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.3333,
+     "percentile": 61,
+     "leagueAvg": 0.3217,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.2308,
+     "percentile": 53,
+     "leagueAvg": 0.2403,
+     "leagueAvgPercentile": 47,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0923,
+     "percentile": 33,
+     "leagueAvg": 0.1194,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -556,8 +858,82 @@
    "leagueKey": "appalachian"
   },
   "photo": "/headshots/judson-hartwell.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 18,
+    "ab": 60,
+    "r": 13,
+    "h": 10,
+    "d": 3,
+    "t": 0,
+    "hr": 1,
+    "rbi": 9,
+    "bb": 13,
+    "k": 19,
+    "hbp": 6,
+    "sb": 2,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.16666666666666666,
+    "obp": 0.3670886075949367,
+    "slg": 0.26666666666666666,
+    "ops": 0.6337552742616034,
+    "kPct": 0.24050632911392406,
+    "bbPct": 0.16455696202531644
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.6338,
+     "percentile": 22,
+     "leagueAvg": 0.8216,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.1667,
+     "percentile": 12,
+     "leagueAvg": 0.2698,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.3671,
+     "percentile": 35,
+     "leagueAvg": 0.4121,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.2667,
+     "percentile": 19,
+     "leagueAvg": 0.4096,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.2405,
+     "percentile": 42,
+     "leagueAvg": 0.2183,
+     "leagueAvgPercentile": 50,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1646,
+     "percentile": 53,
+     "leagueAvg": 0.1661,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -620,8 +996,82 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/holden-pantier.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 9,
+    "ab": 29,
+    "r": 6,
+    "h": 9,
+    "d": 3,
+    "t": 0,
+    "hr": 0,
+    "rbi": 5,
+    "bb": 6,
+    "k": 10,
+    "hbp": 1,
+    "sb": 2,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.3103448275862069,
+    "obp": 0.4444444444444444,
+    "slg": 0.41379310344827586,
+    "ops": 0.8582375478927202,
+    "kPct": 0.2777777777777778,
+    "bbPct": 0.16666666666666666
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.8582,
+     "percentile": 86,
+     "leagueAvg": 0.6656,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.3103,
+     "percentile": 87,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 57,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.4444,
+     "percentile": 88,
+     "leagueAvg": 0.3439,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.4138,
+     "percentile": 82,
+     "leagueAvg": 0.3217,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.2778,
+     "percentile": 33,
+     "leagueAvg": 0.2403,
+     "leagueAvgPercentile": 47,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1667,
+     "percentile": 80,
+     "leagueAvg": 0.1194,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -669,8 +1119,82 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/jordan-lodise.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 16,
+    "ab": 61,
+    "r": 7,
+    "h": 16,
+    "d": 4,
+    "t": 0,
+    "hr": 3,
+    "rbi": 6,
+    "bb": 1,
+    "k": 20,
+    "hbp": 1,
+    "sb": 3,
+    "cs": 1
+   },
+   "rates": {
+    "avg": 0.26229508196721313,
+    "obp": 0.2857142857142857,
+    "slg": 0.47540983606557374,
+    "ops": 0.7611241217798594,
+    "kPct": 0.31746031746031744,
+    "bbPct": 0.015873015873015872
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.7611,
+     "percentile": 78,
+     "leagueAvg": 0.6656,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.2623,
+     "percentile": 71,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 57,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.2857,
+     "percentile": 24,
+     "leagueAvg": 0.3439,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.4754,
+     "percentile": 89,
+     "leagueAvg": 0.3217,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.3175,
+     "percentile": 21,
+     "leagueAvg": 0.2403,
+     "leagueAvgPercentile": 47,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0159,
+     "percentile": 8,
+     "leagueAvg": 0.1194,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -716,9 +1240,86 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/brady-fox.jpg",
-  "asOf": null,
+  "asOf": "2026-07-15",
   "hitting": null,
-  "pitching": null
+  "pitching": {
+   "counting": {
+    "g": 6,
+    "gs": 0,
+    "w": 0,
+    "l": 1,
+    "sv": 0,
+    "hld": 1,
+    "h": 9,
+    "r": 6,
+    "er": 6,
+    "bb": 4,
+    "k": 11,
+    "hb": 3,
+    "hr": 1,
+    "ip": "6.0"
+   },
+   "rates": {
+    "era": 9.0,
+    "whip": 2.1666666666666665,
+    "kPct": 0.3235294117647059,
+    "bbPct": 0.11764705882352941,
+    "hr9": 1.5,
+    "k9": 16.5,
+    "bb9": 6.0,
+    "oppAvg": 0.3333333333333333
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 9.0,
+     "percentile": 15,
+     "leagueAvg": 4.0357,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 2.1667,
+     "percentile": 15,
+     "leagueAvg": 1.3887,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.3235,
+     "percentile": 86,
+     "leagueAvg": 0.2356,
+     "leagueAvgPercentile": 49,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1176,
+     "percentile": 53,
+     "leagueAvg": 0.1171,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 1.5,
+     "percentile": 13,
+     "leagueAvg": 0.5176,
+     "leagueAvgPercentile": 33,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.3333,
+     "percentile": 13,
+     "leagueAvg": 0.2228,
+     "leagueAvgPercentile": 49,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "tyler-guerin",
@@ -733,9 +1334,86 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/tyler-guerin.jpg",
-  "asOf": null,
+  "asOf": "2026-07-15",
   "hitting": null,
-  "pitching": null
+  "pitching": {
+   "counting": {
+    "g": 4,
+    "gs": 0,
+    "w": 0,
+    "l": 0,
+    "sv": 1,
+    "hld": 0,
+    "h": 6,
+    "r": 10,
+    "er": 10,
+    "bb": 4,
+    "k": 3,
+    "hb": 3,
+    "hr": 1,
+    "ip": "3.2"
+   },
+   "rates": {
+    "era": 24.545454545454547,
+    "whip": 2.7272727272727275,
+    "kPct": 0.13043478260869565,
+    "bbPct": 0.17391304347826086,
+    "hr9": 2.4545454545454546,
+    "k9": 7.363636363636364,
+    "bb9": 9.818181818181818,
+    "oppAvg": 0.375
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 24.5455,
+     "percentile": 1,
+     "leagueAvg": 4.0357,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 2.7273,
+     "percentile": 8,
+     "leagueAvg": 1.3887,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1304,
+     "percentile": 14,
+     "leagueAvg": 0.2356,
+     "leagueAvgPercentile": 49,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1739,
+     "percentile": 24,
+     "leagueAvg": 0.1171,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 2.4545,
+     "percentile": 6,
+     "leagueAvg": 0.5176,
+     "leagueAvgPercentile": 33,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.375,
+     "percentile": 6,
+     "leagueAvg": 0.2228,
+     "leagueAvgPercentile": 49,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "jayden-stroman",

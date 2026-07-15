@@ -15,8 +15,12 @@ cape_cod:
   name: Cape Cod Baseball League
   abbrev: CCBL
   official_url: https://www.capecodleague.com
-  platform: pending
-  tier: null
+  platform: mlbstats
+  api_base: https://statsapi.mlb.com/api/v1
+  sport_id: 22
+  league_id: 565
+  season: 2026
+  tier: 1
 necbl:
   name: New England Collegiate Baseball League
   abbrev: NECBL
@@ -27,8 +31,12 @@ appalachian:
   name: Appalachian League
   abbrev: APPY
   official_url: https://www.appyleague.com
-  platform: pending
-  tier: null
+  platform: mlbstats
+  api_base: https://statsapi.mlb.com/api/v1
+  sport_id: 22
+  league_id: 120
+  season: 2026
+  tier: 1
 sfcbl:
   name: South Florida Collegiate Baseball League
   abbrev: SFCBL
