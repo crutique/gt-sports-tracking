@@ -43,6 +43,13 @@ describe('data access', () => {
     expect(isSampleLeague('mlb_draft')).toBe(false);
   });
 
+  it('treats an absent note field as null, string when present', () => {
+    for (const p of getPlayers()) {
+      expect(p.note == null || typeof p.note === 'string').toBe(true);
+    }
+    expect(getPlayer('jackson-blakely')!.note ?? null).toBeNull();
+  });
+
   it('loads gamelogs by slug, empty for missing', () => {
     expect(getGamelog('riley-hasenstab').length).toBeGreaterThanOrEqual(2);
     expect(getGamelog('jackson-blakely')).toEqual([]);

@@ -31,6 +31,13 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
   <article class="card profile">
     <PlayerHero player={player} league={league} />
 
+    {player.note && (
+      <div class="strip note">
+        <span class="dot">i</span>
+        <em>{player.note}</em>
+      </div>
+    )}
+
     {hasStats && league && (
       <div class="strip">
         <span class="dot">i</span>

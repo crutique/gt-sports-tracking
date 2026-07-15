@@ -39,6 +39,27 @@ def test_assemble_assigned_with_stats():
     assert jb["recruit"] is None
 
 
+def test_assemble_note_passthrough():
+    noted = {**PLAYER_ASSIGNED,
+             "summer": {**PLAYER_ASSIGNED["summer"],
+                        "note": "Signed with Willmar in February but has not appeared."}}
+    noted_unassigned = {**PLAYER_UNASSIGNED,
+                        "summer": {"status": "unassigned",
+                                   "note": "Held out of summer ball for the MLB Draft."}}
+    recs = output.assemble([noted, noted_unassigned], LEAGUES, {"northwoods": BUNDLE},
+                           previous={}, today="2026-07-14")
+    by_slug = {r["slug"]: r for r in recs}
+    assert by_slug["jackson-blakely"]["note"] == \
+        "Signed with Willmar in February but has not appeared."
+    assert by_slug["will-baker"]["note"] == "Held out of summer ball for the MLB Draft."
+
+
+def test_assemble_note_absent_is_none():
+    recs = output.assemble([PLAYER_ASSIGNED, PLAYER_UNASSIGNED], LEAGUES,
+                           {"northwoods": BUNDLE}, previous={}, today="2026-07-14")
+    assert all(r["note"] is None for r in recs)
+
+
 def test_assemble_carries_forward_on_missing_bundle():
     prev_rec = {"slug": "jackson-blakely", "asOf": "2026-07-13", "summer":
                 {"status": "assigned", "team": "Willmar Stingers", "leagueKey": "northwoods"},
