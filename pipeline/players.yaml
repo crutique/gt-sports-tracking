@@ -23,24 +23,24 @@
 - {name: Judson Hartwell, slug: judson-hartwell, gt_status: returning, player_type: hitter, position: INF/OF, class2027: SO, photo: /headshots/judson-hartwell.jpg, summer: {status: assigned, team: Danville Otterbots, league: appalachian, stats_id: judson-hartwell}}
 - {name: Nathanael Coupet, slug: nathanael-coupet, gt_status: returning, player_type: hitter, position: C/INF, class2027: R-JR, photo: /headshots/nathanael-coupet.jpg, summer: {status: assigned, team: Boca Raton Blazers, league: sfcbl, stats_id: nathanael-coupet}} # single-source (On3); re-verify
 # Incoming transfers (player_type filled during bootstrap research)
-- {name: Logan Keilen, slug: logan-keilen, gt_status: transfer, class2027: R-SO, summer: {status: unassigned}}
-- {name: Cooper Blauser, slug: cooper-blauser, gt_status: transfer, summer: {status: unassigned}}
-- {name: Holden Pantier, slug: holden-pantier, gt_status: transfer, player_type: hitter, position: INF, summer: {status: assigned, team: Brewster Whitecaps, league: cape_cod, stats_id: holden-pantier}} # started w/ Johnson City (Appy), moved to Brewster mid-summer
-- {name: Eli Stephens, slug: eli-stephens, gt_status: transfer, player_type: hitter, position: C, class2027: JR, summer: {status: assigned, team: Keene Swamp Bats, league: necbl, stats_id: eli-stephens}}
+- {name: Logan Keilen, slug: logan-keilen, gt_status: transfer, class2027: R-SO, photo: /headshots/logan-keilen.jpg, summer: {status: unassigned}}
+- {name: Cooper Blauser, slug: cooper-blauser, gt_status: transfer, photo: /headshots/cooper-blauser.jpg, summer: {status: unassigned}}
+- {name: Holden Pantier, slug: holden-pantier, gt_status: transfer, player_type: hitter, position: INF, photo: /headshots/holden-pantier.jpg, summer: {status: assigned, team: Brewster Whitecaps, league: cape_cod, stats_id: holden-pantier}} # started w/ Johnson City (Appy), moved to Brewster mid-summer
+- {name: Eli Stephens, slug: eli-stephens, gt_status: transfer, player_type: hitter, position: C, class2027: JR, photo: /headshots/eli-stephens.jpg, summer: {status: assigned, team: Keene Swamp Bats, league: necbl, stats_id: eli-stephens}}
 - {name: Jackson Morgan, slug: jackson-morgan, gt_status: transfer, summer: {status: unassigned}}
-- {name: Jordan Lodise, slug: jordan-lodise, gt_status: transfer, player_type: hitter, position: SS, summer: {status: assigned, team: Hyannis Harbor Hawks, league: cape_cod, stats_id: "838363"}}
-- {name: Patrick Walsh, slug: patrick-walsh, gt_status: transfer, summer: {status: unassigned}}
-- {name: Josh Gunther, slug: josh-gunther, gt_status: transfer, summer: {status: unassigned}}
-- {name: Brady Fox, slug: brady-fox, gt_status: transfer, player_type: pitcher, position: LHP, summer: {status: assigned, team: Orleans Firebirds, league: cape_cod, stats_id: "836190"}}
-- {name: Tyler Guerin, slug: tyler-guerin, gt_status: transfer, player_type: pitcher, position: P, summer: {status: assigned, team: Falmouth Commodores, league: cape_cod, stats_id: tyler-guerin}} # per On3 tracker; thinner corroboration — re-verify
-- {name: Jayden Stroman, slug: jayden-stroman, gt_status: transfer, summer: {status: unassigned}}
+- {name: Jordan Lodise, slug: jordan-lodise, gt_status: transfer, player_type: hitter, position: SS, photo: /headshots/jordan-lodise.jpg, summer: {status: assigned, team: Hyannis Harbor Hawks, league: cape_cod, stats_id: "838363"}}
+- {name: Patrick Walsh, slug: patrick-walsh, gt_status: transfer, photo: /headshots/patrick-walsh.jpg, summer: {status: unassigned}}
+- {name: Josh Gunther, slug: josh-gunther, gt_status: transfer, photo: /headshots/josh-gunther.jpg, summer: {status: unassigned}}
+- {name: Brady Fox, slug: brady-fox, gt_status: transfer, player_type: pitcher, position: LHP, photo: /headshots/brady-fox.jpg, summer: {status: assigned, team: Orleans Firebirds, league: cape_cod, stats_id: "836190"}}
+- {name: Tyler Guerin, slug: tyler-guerin, gt_status: transfer, player_type: pitcher, position: P, photo: /headshots/tyler-guerin.jpg, summer: {status: assigned, team: Falmouth Commodores, league: cape_cod, stats_id: tyler-guerin}} # per On3 tracker; thinner corroboration — re-verify
+- {name: Jayden Stroman, slug: jayden-stroman, gt_status: transfer, photo: /headshots/jayden-stroman.jpg, summer: {status: unassigned}}
 # Incoming freshmen
-- {name: Deion Cole, slug: deion-cole, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Jack Richerson, slug: jack-richerson, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Ezekiel Lara, slug: ezekiel-lara, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Kolby Martin, slug: kolby-martin, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Ryan Engle, slug: ryan-engle, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Luke Nitkowski, slug: luke-nitkowski, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
+- {name: Deion Cole, slug: deion-cole, gt_status: freshman, class2027: FR, photo: /headshots/deion-cole.jpg, summer: {status: unassigned}}
+- {name: Jack Richerson, slug: jack-richerson, gt_status: freshman, class2027: FR, photo: /headshots/jack-richerson.jpg, summer: {status: unassigned}}
+- {name: Ezekiel Lara, slug: ezekiel-lara, gt_status: freshman, class2027: FR, photo: /headshots/ezekiel-lara.jpg, summer: {status: unassigned}}
+- {name: Kolby Martin, slug: kolby-martin, gt_status: freshman, class2027: FR, photo: /headshots/kolby-martin.jpg, summer: {status: unassigned}}
+- {name: Ryan Engle, slug: ryan-engle, gt_status: freshman, class2027: FR, photo: /headshots/ryan-engle.jpg, summer: {status: unassigned}}
+- {name: Luke Nitkowski, slug: luke-nitkowski, gt_status: freshman, class2027: FR, photo: /headshots/luke-nitkowski.jpg, summer: {status: unassigned}}
 - {name: Reid Gainous, slug: reid-gainous, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
-- {name: Michael Nottleman, slug: michael-nottleman, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
+- {name: Michael Nottleman, slug: michael-nottleman, gt_status: freshman, class2027: FR, photo: /headshots/michael-nottleman.jpg, summer: {status: unassigned}}
 - {name: Brett Slymen, slug: brett-slymen, gt_status: freshman, class2027: FR, summer: {status: unassigned}}
