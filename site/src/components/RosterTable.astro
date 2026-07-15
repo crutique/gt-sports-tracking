@@ -17,9 +17,9 @@ function sliderPct(p: Player, side: 'hitting' | 'pitching', metric: string): num
   const s: Slider | undefined = p[side]?.sliders?.find((x) => x.metric === metric);
   return s ? s.percentile : null;
 }
-function teamLeague(p: Player): string {
+function leagueLabel(p: Player): string {
   const lg = getLeagueByKey(p.summer.leagueKey);
-  return `${p.summer.team} · ${lg?.abbrev ?? ''}`;
+  return lg ? `${lg.abbrev} (${lg.name})` : '';
 }
 ---
 <div class="controls">
@@ -45,7 +45,8 @@ function teamLeague(p: Player): string {
           <th data-key="name" scope="col">Player</th>
           <th data-key="pos" scope="col">Pos</th>
           <th data-key="cls" scope="col">Class</th>
-          <th data-key="team" scope="col">Team · League</th>
+          <th data-key="team" scope="col">Team</th>
+          <th data-key="lg" scope="col">League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="ab" data-numeric scope="col">AB</th>
           <th data-key="avg" data-numeric scope="col">AVG</th>
@@ -68,7 +69,8 @@ function teamLeague(p: Player): string {
               <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
               <td data-v={p.position || '—'}>{p.position || '—'}</td>
               <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
-              <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
+              <td data-v={p.summer.team}>{p.summer.team}</td>
+              <td data-v={leagueLabel(p)}>{leagueLabel(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.ab}>{c.ab}</td>
               <td data-v={r.avg ?? '—'}>{fmtRate3(r.avg)}</td>
@@ -97,7 +99,8 @@ function teamLeague(p: Player): string {
           <th data-key="name" scope="col">Player</th>
           <th data-key="pos" scope="col">Pos</th>
           <th data-key="cls" scope="col">Class</th>
-          <th data-key="team" scope="col">Team · League</th>
+          <th data-key="team" scope="col">Team</th>
+          <th data-key="lg" scope="col">League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="gs" data-numeric scope="col">GS</th>
           <th data-key="ip" data-numeric scope="col">IP</th>
@@ -119,7 +122,8 @@ function teamLeague(p: Player): string {
               <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
               <td data-v={p.position || '—'}>{p.position || '—'}</td>
               <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
-              <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
+              <td data-v={p.summer.team}>{p.summer.team}</td>
+              <td data-v={leagueLabel(p)}>{leagueLabel(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.gs}>{c.gs}</td>
               <td data-v={c.ip}>{c.ip}</td>
