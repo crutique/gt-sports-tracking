@@ -4,6 +4,7 @@
   "name": "Caden Spivey",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "GR",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -20,6 +21,7 @@
   "name": "Brett Barfield",
   "gtStatus": "returning",
   "position": "LHP",
+  "classYear": "GR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -34,6 +36,7 @@
   "name": "Kayden Campbell",
   "gtStatus": "returning",
   "position": "LHP",
+  "classYear": "GR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -48,6 +51,7 @@
   "name": "Carson Ballard",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-SR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -62,6 +66,7 @@
   "name": "Jake Lankie",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-JR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -76,6 +81,7 @@
   "name": "Dylan Loy",
   "gtStatus": "returning",
   "position": "LHP",
+  "classYear": "SR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -90,6 +96,7 @@
   "name": "Caden Gaudette",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-SR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -104,6 +111,7 @@
   "name": "Justin Shadek",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-JR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -118,6 +126,7 @@
   "name": "Jackson Blakely",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "JR",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -132,6 +141,7 @@
   "name": "Jamie Vicens",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "SO",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -225,6 +235,7 @@
   "name": "Cooper Underwood",
   "gtStatus": "returning",
   "position": "LHP",
+  "classYear": "SO",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -239,6 +250,7 @@
   "name": "Dimitri Angelakos",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-SO",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -255,6 +267,7 @@
   "name": "Riley Hasenstab",
   "gtStatus": "returning",
   "position": "RHP",
+  "classYear": "R-SO",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -348,6 +361,7 @@
   "name": "Adam McKelvey",
   "gtStatus": "returning",
   "position": "LHP",
+  "classYear": "JR",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -364,6 +378,7 @@
   "name": "Ryan Zuckerman",
   "gtStatus": "returning",
   "position": "INF",
+  "classYear": "SR",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -378,6 +393,7 @@
   "name": "Will Baker",
   "gtStatus": "returning",
   "position": "INF/UTL",
+  "classYear": "JR",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -392,6 +408,7 @@
   "name": "Kent Schmidt",
   "gtStatus": "returning",
   "position": "INF",
+  "classYear": "SR",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -406,6 +423,7 @@
   "name": "Drew Rogers",
   "gtStatus": "returning",
   "position": "C/INF",
+  "classYear": "JR",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -422,6 +440,7 @@
   "name": "Caleb Daniel",
   "gtStatus": "returning",
   "position": "OF/UTL",
+  "classYear": "JR",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -438,6 +457,7 @@
   "name": "Coleman Lewis",
   "gtStatus": "returning",
   "position": "OF",
+  "classYear": "SO",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -528,6 +548,7 @@
   "name": "Judson Hartwell",
   "gtStatus": "returning",
   "position": "INF/OF",
+  "classYear": "SO",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -544,6 +565,7 @@
   "name": "Nathanael Coupet",
   "gtStatus": "returning",
   "position": "C/INF",
+  "classYear": "R-JR",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -560,11 +582,12 @@
   "name": "Logan Keilen",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "R-SO",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/logan-keilen.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -574,11 +597,12 @@
   "name": "Cooper Blauser",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/cooper-blauser.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -588,13 +612,14 @@
   "name": "Holden Pantier",
   "gtStatus": "transfer",
   "position": "INF",
+  "classYear": "",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
    "team": "Brewster Whitecaps",
    "leagueKey": "cape_cod"
   },
-  "photo": null,
+  "photo": "/headshots/holden-pantier.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -604,13 +629,14 @@
   "name": "Eli Stephens",
   "gtStatus": "transfer",
   "position": "C",
+  "classYear": "JR",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
    "team": "Keene Swamp Bats",
    "leagueKey": "necbl"
   },
-  "photo": null,
+  "photo": "/headshots/eli-stephens.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -620,6 +646,7 @@
   "name": "Jackson Morgan",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -634,13 +661,14 @@
   "name": "Jordan Lodise",
   "gtStatus": "transfer",
   "position": "SS",
+  "classYear": "",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
    "team": "Hyannis Harbor Hawks",
    "leagueKey": "cape_cod"
   },
-  "photo": null,
+  "photo": "/headshots/jordan-lodise.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -650,11 +678,12 @@
   "name": "Patrick Walsh",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/patrick-walsh.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -664,11 +693,12 @@
   "name": "Josh Gunther",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/josh-gunther.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -678,13 +708,14 @@
   "name": "Brady Fox",
   "gtStatus": "transfer",
   "position": "LHP",
+  "classYear": "",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
    "team": "Orleans Firebirds",
    "leagueKey": "cape_cod"
   },
-  "photo": null,
+  "photo": "/headshots/brady-fox.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -694,13 +725,14 @@
   "name": "Tyler Guerin",
   "gtStatus": "transfer",
   "position": "P",
+  "classYear": "",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
    "team": "Falmouth Commodores",
    "leagueKey": "cape_cod"
   },
-  "photo": null,
+  "photo": "/headshots/tyler-guerin.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -710,11 +742,12 @@
   "name": "Jayden Stroman",
   "gtStatus": "transfer",
   "position": "",
+  "classYear": "",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/jayden-stroman.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -724,11 +757,12 @@
   "name": "Deion Cole",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/deion-cole.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -738,11 +772,12 @@
   "name": "Jack Richerson",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/jack-richerson.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -752,11 +787,12 @@
   "name": "Ezekiel Lara",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/ezekiel-lara.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -766,11 +802,12 @@
   "name": "Kolby Martin",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/kolby-martin.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -780,11 +817,12 @@
   "name": "Ryan Engle",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/ryan-engle.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -794,11 +832,12 @@
   "name": "Luke Nitkowski",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/luke-nitkowski.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -808,6 +847,7 @@
   "name": "Reid Gainous",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -822,11 +862,12 @@
   "name": "Michael Nottleman",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/michael-nottleman.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -836,6 +877,7 @@
   "name": "Brett Slymen",
   "gtStatus": "freshman",
   "position": "",
+  "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"

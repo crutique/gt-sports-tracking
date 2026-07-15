@@ -11,7 +11,9 @@ def assemble(players, leagues, league_bundles, previous, today):
         summer_src = p["summer"]
         rec = {
             "slug": p["slug"], "name": p["name"], "gtStatus": p["gt_status"],
-            "position": p.get("position", ""), "playerType": p.get("player_type"),
+            "position": p.get("position", ""),
+            "classYear": p.get("class2027") or "",
+            "playerType": p.get("player_type"),
             "summer": {"status": summer_src["status"]},
             "photo": p.get("photo") or None,
             "asOf": None, "hitting": None, "pitching": None,

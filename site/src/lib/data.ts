@@ -27,6 +27,7 @@ export interface Player {
   name: string;
   gtStatus: 'returning' | 'transfer' | 'freshman';
   position: string;
+  classYear: string;
   playerType: 'hitter' | 'pitcher' | 'two_way' | null;
   summer: PlayerSummer;
   photo: string | null;
