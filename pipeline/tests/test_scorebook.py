@@ -44,6 +44,13 @@ def test_league_stats_normalized(monkeypatch):
     assert all(isinstance(r["stats_id"], str) for r in stats["pitching"])
 
 
+def test_iso_date_doubleheader_forms():
+    assert scorebook._iso_date("Jul 13", 2026) == "2026-07-13"
+    assert scorebook._iso_date("Jul 13 (2)", 2026) == "2026-07-13"
+    assert scorebook._iso_date("Jul 13(2)", 2026) == "2026-07-13"
+    assert scorebook._iso_date("Jul 4", 2026) == "2026-07-04"
+
+
 def test_game_logs(monkeypatch):
     _fake_get_json(monkeypatch)
     logs = scorebook.fetch_game_logs(CFG, ["10225", "jackson-blakely", "99999999"])

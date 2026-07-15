@@ -65,7 +65,7 @@ _MONTHS = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
 def _iso_date(short, year):
     parts = str(short).split()
     mon = _MONTHS[parts[0][:3]]
-    day = int("".join(ch for ch in parts[1] if ch.isdigit()))
+    day = int("".join(ch for ch in parts[1].split("(")[0] if ch.isdigit()))
     return f"{year}-{mon:02d}-{day:02d}"
 
 
