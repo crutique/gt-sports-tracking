@@ -5,8 +5,8 @@ import {
 } from '../src/lib/data';
 
 describe('data access', () => {
-  it('loads all 42 players', () => {
-    expect(getPlayers()).toHaveLength(42);
+  it('loads all 40 players', () => {
+    expect(getPlayers()).toHaveLength(40);
   });
 
   it('finds a player by slug, undefined for unknown', () => {
@@ -23,7 +23,8 @@ describe('data access', () => {
     expect(slugs).toContain('jackson-blakely');
     expect(slugs).toContain('nathanael-coupet');
     expect(slugs).toContain('kolby-martin');
-    expect(getUnassignedPlayers()).toHaveLength(21);
+    expect(slugs).toContain('isaiah-galason');
+    expect(getUnassignedPlayers()).toHaveLength(19);
   });
 
   it('exposes sliders with leagueAvgPercentile', () => {

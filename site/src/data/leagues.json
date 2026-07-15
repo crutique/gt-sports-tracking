@@ -69,14 +69,14 @@
   ]
  },
  {
-  "key": "alpb",
-  "name": "Atlantic League (independent pro)",
-  "abbrev": "ALPB",
-  "officialUrl": "https://atlanticleague.com",
-  "platform": "pending",
-  "tier": null,
+  "key": "cpl",
+  "name": "Coastal Plain League",
+  "abbrev": "CPL",
+  "officialUrl": "https://coastalplain.com",
+  "platform": "iscore",
+  "tier": 1,
   "gtPlayers": [
-   "caden-spivey"
+   "isaiah-galason"
   ]
  },
  {
