@@ -1,4 +1,4 @@
-"""Platform-name → scraper-module map. Real platforms register here in Plan 3."""
-from pipeline.scrapers import fixture
+"""Platform-name → scraper-module map."""
+from pipeline.scrapers import fixture, scorebook
 
-SCRAPERS = {"fixture": fixture}
+SCRAPERS = {"fixture": fixture, "scorebook": scorebook}
