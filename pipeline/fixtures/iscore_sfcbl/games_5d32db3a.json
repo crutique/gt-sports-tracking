@@ -1,0 +1,113 @@
+[
+ {
+  "gameGuid": "7c0cd4a8-45bd-4356-a6f3-2a6b194ff492",
+  "homeTeam": {
+   "id": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+   "name": "Boca Raton Blazers",
+   "teamColor": "blue"
+  },
+  "awayTeam": {
+   "id": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+   "name": "West Boca Snappers",
+   "teamColor": "blue"
+  },
+  "season": {
+   "id": "1a8ebd76-1702-4d2e-af70-88ad3a3a9040",
+   "name": "SFCBL Regular Season 2026"
+  },
+  "scheduledDate": "2026-07-13T22:00:00Z",
+  "sportId": 1,
+  "name": "Match",
+  "gameInfo": {
+   "homePlateUmpire": "",
+   "firstBaseUmpire": "",
+   "secondBaseUmpire": "",
+   "thirdBaseUmpire": "",
+   "crewChief": "",
+   "location": "Little Fenway",
+   "officialScorer": "",
+   "notes": "CFD9C7FF-6AEB-4715-88FB-C51829203648",
+   "temperature": "",
+   "wind": "",
+   "weatherId": null
+  },
+  "leagueId": "541ef447-c3d8-497d-811e-54bf6d5d9478",
+  "leagueName": "SFCBL 2026",
+  "gameStatusId": 3,
+  "innings": 9
+ },
+ {
+  "gameGuid": "f8d49810-df46-425e-b6fb-1e9d25590978",
+  "homeTeam": {
+   "id": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+   "name": "West Boca Snappers",
+   "teamColor": "blue"
+  },
+  "awayTeam": {
+   "id": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+   "name": "Boca Raton Blazers",
+   "teamColor": "blue"
+  },
+  "season": {
+   "id": "1a8ebd76-1702-4d2e-af70-88ad3a3a9040",
+   "name": "SFCBL Regular Season 2026"
+  },
+  "scheduledDate": "2026-07-11T14:00:00Z",
+  "sportId": 1,
+  "name": "Match",
+  "gameInfo": {
+   "homePlateUmpire": "",
+   "firstBaseUmpire": "",
+   "secondBaseUmpire": "",
+   "thirdBaseUmpire": "",
+   "crewChief": "",
+   "location": "Burt Aaronson P",
+   "officialScorer": "",
+   "notes": "026132A3-4436-4A78-AF56-71A0FF1724D2",
+   "temperature": "",
+   "wind": "",
+   "weatherId": null
+  },
+  "leagueId": "541ef447-c3d8-497d-811e-54bf6d5d9478",
+  "leagueName": "SFCBL 2026",
+  "gameStatusId": 3,
+  "innings": 9
+ },
+ {
+  "gameGuid": "0f675bdf-3a3e-418f-b41a-4834a6dedb03",
+  "homeTeam": {
+   "id": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+   "name": "Boca Raton Blazers",
+   "teamColor": "blue"
+  },
+  "awayTeam": {
+   "id": "401f7cb4-473c-4de6-bd2a-2a4d21e81026",
+   "name": "Boca Raton Beach Boys",
+   "teamColor": "blue"
+  },
+  "season": {
+   "id": "1a8ebd76-1702-4d2e-af70-88ad3a3a9040",
+   "name": "SFCBL Regular Season 2026"
+  },
+  "scheduledDate": "2026-06-16T21:00:00Z",
+  "sportId": 1,
+  "name": "Match",
+  "gameInfo": {
+   "homePlateUmpire": "",
+   "firstBaseUmpire": "",
+   "secondBaseUmpire": "",
+   "thirdBaseUmpire": "",
+   "crewChief": "",
+   "location": "Lynn University",
+   "officialScorer": "",
+   "notes": "12BBB0B0-DF5B-410E-98A0-875DC2D193A0",
+   "temperature": "",
+   "wind": "",
+   "weatherId": null
+  },
+  "leagueId": "541ef447-c3d8-497d-811e-54bf6d5d9478",
+  "leagueName": "SFCBL 2026",
+  "gameStatusId": 2,
+  "innings": 9
+ }
+]
