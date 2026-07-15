@@ -41,12 +41,37 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
 
     {!hasStats && (
       <div class="empty">
-        {player.summer.status === 'assigned'
-          ? `Stats for ${firstName} aren't flowing yet — the ${league?.name ?? 'league'} feed is coming online soon.`
-          : player.summer.status === 'not_playing'
-            ? `${firstName} is not playing summer ball this year.`
-            : `${firstName} doesn't have a confirmed summer team yet. Check back soon.`}
+        {player.recruit
+          ? `${firstName} hasn't played a game for Georgia Tech yet — here's what we know from his recruiting profile.`
+          : player.summer.status === 'assigned'
+            ? `Stats for ${firstName} aren't flowing yet — the ${league?.name ?? 'league'} feed is coming online soon.`
+            : player.summer.status === 'not_playing'
+              ? `${firstName} is not playing summer ball this year.`
+              : `${firstName} doesn't have a confirmed summer team yet. Check back soon.`}
       </div>
+    )}
+
+    {player.recruit && (
+      <section class="recruit">
+        <h2 class="section-title">Recruit Profile</h2>
+        <p class="facts">
+          {[player.recruit.hometown, player.recruit.high_school,
+            [player.recruit.height, player.recruit.weight ? `${player.recruit.weight} lbs` : null].filter(Boolean).join(' · '),
+            player.recruit.bats_throws ? `B/T ${player.recruit.bats_throws}` : null,
+          ].filter(Boolean).join('  ·  ')}
+        </p>
+        {(player.recruit.pg_grade || player.recruit.pg_rank) && (
+          <p class="pg">
+            {player.recruit.pg_grade && <span class="badge">PG {player.recruit.pg_grade}</span>}
+            {player.recruit.pg_rank && <span>#{player.recruit.pg_rank} national (Class of 2026)</span>}
+            {player.recruit.pg_url && <a href={String(player.recruit.pg_url)} rel="noopener">via Perfect Game ↗</a>}
+          </p>
+        )}
+        {player.recruit.hs_pitching && <p class="hs">2026 HS pitching: <strong>{player.recruit.hs_pitching}</strong></p>}
+        {player.recruit.hs_batting && <p class="hs">2026 HS batting: <strong>{player.recruit.hs_batting}</strong></p>}
+        {player.recruit.hs_source && <p class="src"><a href={String(player.recruit.hs_source)} rel="noopener">stats via MaxPreps ↗</a></p>}
+        {player.recruit.highlight && <p class="hl">{player.recruit.highlight}</p>}
+      </section>
     )}
 
     {hasStats && (
@@ -106,6 +131,29 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
     margin-right: 6px;
   }
   .empty { padding: 26px 22px; color: var(--text-mut); font-size: 14px; }
+  .recruit {
+    padding: 20px 22px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .recruit p { margin: 0 0 8px; }
+  .recruit p:last-child { margin-bottom: 0; }
+  .facts { font-size: 13px; color: var(--text); }
+  .pg { font-size: 12px; color: var(--text-mut); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold-light);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .hs { font-size: 13px; }
+  .hs strong { color: var(--navy); }
+  .src { font-size: 12px; color: var(--text-mut); }
+  .hl { font-style: italic; font-size: 13px; color: var(--text-mut); }
   .body {
     display: flex;
     gap: 24px;

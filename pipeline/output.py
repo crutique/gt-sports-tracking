@@ -13,6 +13,7 @@ def assemble(players, leagues, league_bundles, previous, today):
             "slug": p["slug"], "name": p["name"], "gtStatus": p["gt_status"],
             "position": p.get("position", ""),
             "classYear": p.get("class2027") or "",
+            "recruit": p.get("recruit") or None,
             "playerType": p.get("player_type"),
             "summer": {"status": summer_src["status"]},
             "photo": p.get("photo") or None,

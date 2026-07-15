@@ -34,6 +34,7 @@ export interface Player {
   asOf: string | null;
   hitting: StatBlock | null;
   pitching: StatBlock | null;
+  recruit: Record<string, string | number> | null;
 }
 
 export interface League {

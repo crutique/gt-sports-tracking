@@ -5,6 +5,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "GR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -22,6 +23,7 @@
   "gtStatus": "returning",
   "position": "LHP",
   "classYear": "GR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -37,6 +39,7 @@
   "gtStatus": "returning",
   "position": "LHP",
   "classYear": "GR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -52,6 +55,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-SR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -67,6 +71,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -82,6 +87,7 @@
   "gtStatus": "returning",
   "position": "LHP",
   "classYear": "SR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -97,6 +103,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-SR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -112,6 +119,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -127,6 +135,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -142,6 +151,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "SO",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -236,6 +246,7 @@
   "gtStatus": "returning",
   "position": "LHP",
   "classYear": "SO",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -251,6 +262,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-SO",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -345,6 +357,7 @@
   "gtStatus": "returning",
   "position": "RHP",
   "classYear": "R-SO",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -439,6 +452,7 @@
   "gtStatus": "returning",
   "position": "LHP",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -533,6 +547,7 @@
   "gtStatus": "returning",
   "position": "INF",
   "classYear": "SR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -548,6 +563,7 @@
   "gtStatus": "returning",
   "position": "INF/UTL",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -563,6 +579,7 @@
   "gtStatus": "returning",
   "position": "INF",
   "classYear": "SR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -578,6 +595,7 @@
   "gtStatus": "returning",
   "position": "C/INF",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -669,6 +687,7 @@
   "gtStatus": "returning",
   "position": "OF/UTL",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -760,6 +779,7 @@
   "gtStatus": "returning",
   "position": "OF",
   "classYear": "SO",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -851,6 +871,7 @@
   "gtStatus": "returning",
   "position": "INF/OF",
   "classYear": "SO",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -888,7 +909,7 @@
      "metric": "ops",
      "value": 0.6338,
      "percentile": 22,
-     "leagueAvg": 0.8222,
+     "leagueAvg": 0.823,
      "leagueAvgPercentile": 54,
      "derived": false
     },
@@ -896,15 +917,15 @@
      "metric": "avg",
      "value": 0.1667,
      "percentile": 12,
-     "leagueAvg": 0.2698,
-     "leagueAvgPercentile": 52,
+     "leagueAvg": 0.2703,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3671,
-     "percentile": 36,
-     "leagueAvg": 0.4121,
+     "percentile": 35,
+     "leagueAvg": 0.4127,
      "leagueAvgPercentile": 57,
      "derived": false
     },
@@ -912,7 +933,7 @@
      "metric": "slg",
      "value": 0.2667,
      "percentile": 19,
-     "leagueAvg": 0.4101,
+     "leagueAvg": 0.4103,
      "leagueAvgPercentile": 53,
      "derived": false
     },
@@ -920,15 +941,15 @@
      "metric": "kPct",
      "value": 0.2405,
      "percentile": 42,
-     "leagueAvg": 0.2183,
-     "leagueAvgPercentile": 51,
+     "leagueAvg": 0.2181,
+     "leagueAvgPercentile": 50,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1646,
-     "percentile": 53,
-     "leagueAvg": 0.1661,
+     "percentile": 52,
+     "leagueAvg": 0.1663,
      "leagueAvgPercentile": 53,
      "derived": false
     }
@@ -942,6 +963,7 @@
   "gtStatus": "returning",
   "position": "C/INF",
   "classYear": "R-JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -959,6 +981,7 @@
   "gtStatus": "transfer",
   "position": "",
   "classYear": "R-SO",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -974,6 +997,7 @@
   "gtStatus": "transfer",
   "position": "INF",
   "classYear": "R-SR",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -989,6 +1013,7 @@
   "gtStatus": "transfer",
   "position": "INF",
   "classYear": "R-JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1080,6 +1105,7 @@
   "gtStatus": "transfer",
   "position": "C",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1097,6 +1123,7 @@
   "gtStatus": "transfer",
   "position": "INF/OF",
   "classYear": "R-JR",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1112,6 +1139,7 @@
   "gtStatus": "transfer",
   "position": "SS",
   "classYear": "SO",
+  "recruit": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1203,6 +1231,7 @@
   "gtStatus": "transfer",
   "position": "INF",
   "classYear": "SO",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1218,6 +1247,7 @@
   "gtStatus": "transfer",
   "position": "RHP",
   "classYear": "SR",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1233,6 +1263,7 @@
   "gtStatus": "transfer",
   "position": "LHP",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1327,6 +1358,7 @@
   "gtStatus": "transfer",
   "position": "RHP/1B",
   "classYear": "JR",
+  "recruit": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1421,6 +1453,7 @@
   "gtStatus": "transfer",
   "position": "RHP/INF",
   "classYear": "SO",
+  "recruit": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1436,6 +1469,16 @@
   "gtStatus": "freshman",
   "position": "OF",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Acworth, GA",
+   "high_school": "Etowah",
+   "height": "6-1",
+   "weight": 200,
+   "bats_throws": "R/R",
+   "pg_grade": 10,
+   "pg_rank": 143,
+   "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692757"
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1451,6 +1494,17 @@
   "gtStatus": "freshman",
   "position": "3B",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Atlanta, GA",
+   "high_school": "Marist",
+   "height": "6-4",
+   "weight": 213,
+   "bats_throws": "R/R",
+   "pg_grade": 10,
+   "pg_rank": 208,
+   "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=817386",
+   "highlight": "First-team all-state 3B/RHP as a junior; dual-sport athlete who also signed with GT football."
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1466,6 +1520,17 @@
   "gtStatus": "freshman",
   "position": "OF",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Cerritos, CA",
+   "high_school": "Mater Dei",
+   "height": "6-1",
+   "weight": 175,
+   "bats_throws": "L/R",
+   "pg_grade": 10,
+   "pg_rank": 268,
+   "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=537878",
+   "highlight": "Prep Baseball California Hitter of the Week after a 7-for-11 road trip with Mater Dei."
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1481,6 +1546,15 @@
   "gtStatus": "freshman",
   "position": "SS",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Canton, GA",
+   "high_school": "Sequoyah",
+   "height": "6-0",
+   "weight": 183,
+   "bats_throws": "S/R",
+   "pg_rank": 500,
+   "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=631514"
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1496,6 +1570,16 @@
   "gtStatus": "freshman",
   "position": "LHP",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Kernersville, NC",
+   "high_school": "Westchester Country Day",
+   "height": "6-5",
+   "weight": 220,
+   "bats_throws": "L/L",
+   "pg_grade": 9.5,
+   "pg_rank": 386,
+   "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1032346"
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1511,6 +1595,16 @@
   "gtStatus": "freshman",
   "position": "RHP",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Alpharetta, GA",
+   "high_school": "Creekview",
+   "height": "6-1",
+   "weight": 180,
+   "bats_throws": "L/R",
+   "pg_rank": 429,
+   "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692022",
+   "highlight": "Threw a nine-strikeout no-hitter for Creekview this spring; GHSA All-State first team. Son of former MLB LHP C.J. Nitkowski."
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1526,6 +1620,17 @@
   "gtStatus": "freshman",
   "position": "RHP",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Cairo, GA",
+   "high_school": "Thomas County Central",
+   "height": "6-1",
+   "weight": 190,
+   "bats_throws": "R/R",
+   "pg_grade": 8.5,
+   "pg_rank": 437,
+   "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=851616",
+   "highlight": "Threw back-to-back no-hitters this spring (26 K over 12 IP) \u2014 a Prep Baseball National Pitcher of the Week."
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1541,6 +1646,19 @@
   "gtStatus": "freshman",
   "position": "LHP",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Columbus, GA",
+   "high_school": "Columbus",
+   "height": "6-5",
+   "weight": 200,
+   "bats_throws": "L/L",
+   "pg_grade": 8.5,
+   "pg_rank": 471,
+   "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=669805",
+   "hs_pitching": "13 G, 70.0 IP, 8-1, 0.90 ERA, 133 K",
+   "hs_batting": ".425/.579/.975, 9 HR, 31 RBI",
+   "hs_source": "https://www.maxpreps.com/ga/columbus/columbus-blue-devils/athletes/michael-nottleman/baseball/stats/?careerid=khbg2rhfu9o44"
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1556,6 +1674,18 @@
   "gtStatus": "freshman",
   "position": "RHP",
   "classYear": "FR",
+  "recruit": {
+   "hometown": "Aliso Viejo, CA",
+   "high_school": "Capistrano Valley Christian Schools",
+   "height": "6-4",
+   "weight": 190,
+   "bats_throws": "R/R",
+   "pg_grade": 9,
+   "pg_rank": 500,
+   "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1123263",
+   "hs_pitching": "7 G, 31.0 IP, 2.26 ERA, 32 K, 9 BB",
+   "hs_source": "https://www.maxpreps.com/ca/san-juan-capistrano/capistrano-valley-christian-eagles/athletes/brett-slymen/baseball/stats/?careerid=g6tuo7p5v0qaa"
+  },
   "playerType": null,
   "summer": {
    "status": "unassigned"

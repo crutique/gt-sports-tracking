@@ -7,7 +7,7 @@ PLAYER_ASSIGNED = {"name": "Jackson Blakely", "slug": "jackson-blakely",
                               "league": "northwoods", "stats_id": "jackson-blakely"}}
 PLAYER_UNASSIGNED = {"name": "Will Baker", "slug": "will-baker", "gt_status": "returning",
                      "player_type": "hitter", "position": "", "class2027": "JR",
-                     "summer": {"status": "unassigned"}}
+                     "summer": {"status": "unassigned"}, "recruit": {"hometown": "X"}}
 LEAGUES = {"northwoods": {"name": "Northwoods League", "abbrev": "NWL",
                           "official_url": "https://northwoodsleague.com",
                           "platform": "fixture", "tier": 1}}
@@ -35,6 +35,8 @@ def test_assemble_assigned_with_stats():
     assert wb["summer"]["status"] == "unassigned"
     assert wb["hitting"] is None and wb["asOf"] is None
     assert wb["classYear"] == "JR"
+    assert wb["recruit"] == {"hometown": "X"}
+    assert jb["recruit"] is None
 
 
 def test_assemble_carries_forward_on_missing_bundle():
