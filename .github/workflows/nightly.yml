@@ -1,0 +1,47 @@
+name: Nightly stats refresh
+
+on:
+  schedule:
+    - cron: "0 8 * * *"        # ~4am ET, all leagues' games finished
+  workflow_dispatch:
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Tests (offline, must pass before publishing)
+        run: python -m pytest -q
+      - name: Build data
+        id: build
+        run: python -m pipeline.build_data
+        continue-on-error: true    # failed-partial still wrote carried-forward outputs
+      - name: Commit refreshed data
+        if: always()
+        run: |
+          git config user.name "gt-summer-tracker-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/src/data data/history
+          if git diff --cached --quiet; then
+            echo "No data changes tonight."
+          else
+            git commit -m "data: nightly refresh $(date -u +%F)"
+            git push
+          fi
+      - name: Surface failed-partial
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "::warning::build_data exited failed-partial — some league kept previous data. See build step logs."
+          exit 1
