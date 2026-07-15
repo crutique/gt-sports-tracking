@@ -4,7 +4,8 @@ import RosterTable from '../components/RosterTable.astro';
 import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers } from '../lib/data';
 
 const unassigned = getUnassignedPlayers();
-const pending = unassigned.filter((p) => p.summer.status === 'unassigned');
+const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
+const freshmen = unassigned.filter((p) => p.gtStatus === 'freshman');
 const notPlaying = unassigned.filter((p) => p.summer.status === 'not_playing');
 // Assigned but no stats yet (scraper pending) — must not silently disappear from the page.
 const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
@@ -42,6 +43,20 @@ const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
     </section>
   )}
 
+  {freshmen.length > 0 && (
+    <section class="quiet">
+      <h2 class="section-title">Incoming Freshmen</h2>
+      <p class="note">High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.</p>
+      <p>
+        {freshmen.map((p, i) => (
+          <>
+            <a href={`/players/${p.slug}`}>{p.name}</a>{i < freshmen.length - 1 ? ' · ' : ''}
+          </>
+        ))}
+      </p>
+    </section>
+  )}
+
   {notPlaying.length > 0 && (
     <section class="quiet">
       <h2 class="section-title">Not playing this summer</h2>
@@ -62,4 +77,5 @@ const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
   .quiet { margin-top: 26px; }
   .quiet p { font-size: 13px; line-height: 2; margin: 0; }
   .where { color: var(--text-mut); }
+  .note { font-size: 12px; color: var(--text-mut); margin: 0 0 4px; }
 </style>
