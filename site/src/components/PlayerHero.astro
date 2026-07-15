@@ -8,8 +8,7 @@ interface Props {
 }
 const { player, league } = Astro.props;
 
-const statusLabel = { returning: 'Returning', transfer: 'Incoming Transfer', freshman: 'Incoming Freshman' }[player.gtStatus];
-const meta = [player.position, statusLabel].filter(Boolean).join(' · ');
+const meta = player.position;
 
 let context = '';
 if (player.hitting) {

@@ -63,7 +63,7 @@ function teamLeague(p: Player): string {
           const pct = sliderPct(p, 'hitting', 'ops');
           return (
             <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={22} /> {p.name}</a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
               <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.ab}>{c.ab}</td>
@@ -110,7 +110,7 @@ function teamLeague(p: Player): string {
           const pct = sliderPct(p, 'pitching', 'era');
           return (
             <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={22} /> {p.name}</a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
               <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.gs}>{c.gs}</td>
@@ -218,7 +218,7 @@ function teamLeague(p: Player): string {
   }
   th[data-dir='asc']::after { content: ' ↑'; }
   th[data-dir='desc']::after { content: ' ↓'; }
-  td { padding: 7px 8px; border-bottom: 1px solid #eef1f5; white-space: nowrap; }
+  td { padding: 10px 8px; border-bottom: 1px solid #eef1f5; white-space: nowrap; }
   td a { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; }
   .strong { font-weight: 800; }
   .none { padding: 16px; color: var(--text-mut); font-size: 13px; }

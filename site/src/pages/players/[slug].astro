@@ -26,6 +26,7 @@ const gamelog = getGamelog(player.slug);
 const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
 ---
 <Base title={`${player.name} — GT Summer Tracker`}>
+  <a class="back" href="/">← All players</a>
   {sample && <SampleDataBanner leagueName={league?.name ?? 'League'} />}
   <article class="card profile">
     <PlayerHero player={player} league={league} />
@@ -77,6 +78,12 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
 </Base>
 
 <style>
+  .back {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
   .profile { overflow: hidden; }
   .strip {
     background: #eef1f5;
