@@ -11,3 +11,27 @@ mlb_draft:
   official_url: https://www.mlbdraftleague.com
   platform: pending            # no scraper yet; build skips with a notice
   tier: null
+cape_cod:
+  name: Cape Cod Baseball League
+  abbrev: CCBL
+  official_url: https://www.capecodleague.com
+  platform: pending
+  tier: null
+necbl:
+  name: New England Collegiate Baseball League
+  abbrev: NECBL
+  official_url: https://necbl.com
+  platform: pending
+  tier: null
+appalachian:
+  name: Appalachian League
+  abbrev: APPY
+  official_url: https://www.appyleague.com
+  platform: pending
+  tier: null
+sfcbl:
+  name: South Florida Collegiate Baseball League
+  abbrev: SFCBL
+  official_url: https://southfloridacollegiateleague.com
+  platform: pending
+  tier: null

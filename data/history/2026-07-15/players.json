@@ -120,9 +120,7 @@
   "position": "RHP",
   "playerType": "pitcher",
   "summer": {
-   "status": "assigned",
-   "team": "Willmar Stingers",
-   "leagueKey": "northwoods"
+   "status": "unassigned"
   },
   "photo": "/headshots/jackson-blakely.jpg",
   "asOf": null,
@@ -243,7 +241,9 @@
   "position": "RHP",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Yarmouth-Dennis Red Sox",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/dimitri-angelakos.jpg",
   "asOf": null,
@@ -350,7 +350,9 @@
   "position": "LHP",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Cotuit Kettleers",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/adam-mckelvey.jpg",
   "asOf": null,
@@ -406,7 +408,9 @@
   "position": "C/INF",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Wareham Gatemen",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/drew-rogers.jpg",
   "asOf": null,
@@ -420,7 +424,9 @@
   "position": "OF/UTL",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Yarmouth-Dennis Red Sox",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/caleb-daniel.jpg",
   "asOf": null,
@@ -434,11 +440,87 @@
   "position": "OF",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Green Bay Rockers",
+   "leagueKey": "northwoods"
   },
   "photo": "/headshots/coleman-lewis.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 27,
+    "ab": 97,
+    "r": 24,
+    "h": 34,
+    "d": 4,
+    "t": 0,
+    "hr": 5,
+    "rbi": 18,
+    "bb": 26,
+    "k": 22,
+    "hbp": 4,
+    "sb": 17,
+    "cs": 4
+   },
+   "rates": {
+    "avg": 0.35051546391752575,
+    "obp": 0.5039370078740157,
+    "slg": 0.5463917525773195,
+    "ops": 1.0503287604513352,
+    "kPct": 0.171875,
+    "bbPct": 0.203125
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 1.0503,
+     "percentile": 93,
+     "leagueAvg": 0.7492,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.3505,
+     "percentile": 92,
+     "leagueAvg": 0.2537,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.5039,
+     "percentile": 93,
+     "leagueAvg": 0.3833,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.5464,
+     "percentile": 91,
+     "leagueAvg": 0.3659,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1719,
+     "percentile": 70,
+     "leagueAvg": 0.2096,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.2031,
+     "percentile": 83,
+     "leagueAvg": 0.1406,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -448,7 +530,9 @@
   "position": "INF/OF",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Danville Otterbots",
+   "leagueKey": "appalachian"
   },
   "photo": "/headshots/judson-hartwell.jpg",
   "asOf": null,
@@ -462,7 +546,9 @@
   "position": "C/INF",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Boca Raton Blazers",
+   "leagueKey": "sfcbl"
   },
   "photo": "/headshots/nathanael-coupet.jpg",
   "asOf": null,
@@ -501,10 +587,12 @@
   "slug": "holden-pantier",
   "name": "Holden Pantier",
   "gtStatus": "transfer",
-  "position": "",
-  "playerType": null,
+  "position": "INF",
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Brewster Whitecaps",
+   "leagueKey": "cape_cod"
   },
   "photo": null,
   "asOf": null,
@@ -515,10 +603,12 @@
   "slug": "eli-stephens",
   "name": "Eli Stephens",
   "gtStatus": "transfer",
-  "position": "",
-  "playerType": null,
+  "position": "C",
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Keene Swamp Bats",
+   "leagueKey": "necbl"
   },
   "photo": null,
   "asOf": null,
@@ -543,10 +633,12 @@
   "slug": "jordan-lodise",
   "name": "Jordan Lodise",
   "gtStatus": "transfer",
-  "position": "",
-  "playerType": null,
+  "position": "SS",
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Hyannis Harbor Hawks",
+   "leagueKey": "cape_cod"
   },
   "photo": null,
   "asOf": null,
@@ -585,10 +677,12 @@
   "slug": "brady-fox",
   "name": "Brady Fox",
   "gtStatus": "transfer",
-  "position": "",
-  "playerType": null,
+  "position": "LHP",
+  "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Orleans Firebirds",
+   "leagueKey": "cape_cod"
   },
   "photo": null,
   "asOf": null,
@@ -599,10 +693,12 @@
   "slug": "tyler-guerin",
   "name": "Tyler Guerin",
   "gtStatus": "transfer",
-  "position": "",
-  "playerType": null,
+  "position": "P",
+  "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Falmouth Commodores",
+   "leagueKey": "cape_cod"
   },
   "photo": null,
   "asOf": null,

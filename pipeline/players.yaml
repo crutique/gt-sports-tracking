@@ -7,32 +7,32 @@
 - {name: Dylan Loy, slug: dylan-loy, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/dylan-loy.jpg, summer: {status: unassigned}}
 - {name: Caden Gaudette, slug: caden-gaudette, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/caden-gaudette.jpg, summer: {status: unassigned}}
 - {name: Justin Shadek, slug: justin-shadek, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/justin-shadek.jpg, summer: {status: unassigned}}
-- {name: Jackson Blakely, slug: jackson-blakely, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jackson-blakely.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: jackson-blakely}} # not found in NWL stats as of 2026-07-15 — pending roster research
+- {name: Jackson Blakely, slug: jackson-blakely, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jackson-blakely.jpg, summer: {status: unassigned}} # signed w/ Willmar 2/11/26 but absent from roster as of 7/15 — likely summer shutdown (post-TJ workload); whereabouts unverified
 - {name: Jamie Vicens, slug: jamie-vicens, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jamie-vicens.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10352"}}
 - {name: Cooper Underwood, slug: cooper-underwood, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/cooper-underwood.jpg, summer: {status: unassigned}}
-- {name: Dimitri Angelakos, slug: dimitri-angelakos, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/dimitri-angelakos.jpg, summer: {status: unassigned}}
+- {name: Dimitri Angelakos, slug: dimitri-angelakos, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/dimitri-angelakos.jpg, summer: {status: assigned, team: Yarmouth-Dennis Red Sox, league: cape_cod, stats_id: dimitri-angelakos}}
 - {name: Riley Hasenstab, slug: riley-hasenstab, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/riley-hasenstab.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10225"}}
-- {name: Adam McKelvey, slug: adam-mckelvey, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/adam-mckelvey.jpg, summer: {status: unassigned}}
+- {name: Adam McKelvey, slug: adam-mckelvey, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/adam-mckelvey.jpg, summer: {status: assigned, team: Cotuit Kettleers, league: cape_cod, stats_id: adam-mckelvey}}
 # Returning position players
 - {name: Ryan Zuckerman, slug: ryan-zuckerman, gt_status: returning, player_type: hitter, position: INF, photo: /headshots/ryan-zuckerman.jpg, summer: {status: unassigned}}
 - {name: Will Baker, slug: will-baker, gt_status: returning, player_type: hitter, position: INF/UTL, photo: /headshots/will-baker.jpg, summer: {status: unassigned}}
 - {name: Kent Schmidt, slug: kent-schmidt, gt_status: returning, player_type: hitter, position: INF, photo: /headshots/kent-schmidt.jpg, summer: {status: unassigned}}
-- {name: Drew Rogers, slug: drew-rogers, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/drew-rogers.jpg, summer: {status: unassigned}}
-- {name: Caleb Daniel, slug: caleb-daniel, gt_status: returning, player_type: hitter, position: OF/UTL, photo: /headshots/caleb-daniel.jpg, summer: {status: unassigned}}
-- {name: Coleman Lewis, slug: coleman-lewis, gt_status: returning, player_type: hitter, position: OF, photo: /headshots/coleman-lewis.jpg, summer: {status: unassigned}}
-- {name: Judson Hartwell, slug: judson-hartwell, gt_status: returning, player_type: hitter, position: INF/OF, photo: /headshots/judson-hartwell.jpg, summer: {status: unassigned}}
-- {name: Nathanael Coupet, slug: nathanael-coupet, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/nathanael-coupet.jpg, summer: {status: unassigned}}
+- {name: Drew Rogers, slug: drew-rogers, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/drew-rogers.jpg, summer: {status: assigned, team: Wareham Gatemen, league: cape_cod, stats_id: drew-rogers}}
+- {name: Caleb Daniel, slug: caleb-daniel, gt_status: returning, player_type: hitter, position: OF/UTL, photo: /headshots/caleb-daniel.jpg, summer: {status: assigned, team: Yarmouth-Dennis Red Sox, league: cape_cod, stats_id: caleb-daniel}}
+- {name: Coleman Lewis, slug: coleman-lewis, gt_status: returning, player_type: hitter, position: OF, photo: /headshots/coleman-lewis.jpg, summer: {status: assigned, team: Green Bay Rockers, league: northwoods, stats_id: "10561"}}
+- {name: Judson Hartwell, slug: judson-hartwell, gt_status: returning, player_type: hitter, position: INF/OF, photo: /headshots/judson-hartwell.jpg, summer: {status: assigned, team: Danville Otterbots, league: appalachian, stats_id: judson-hartwell}}
+- {name: Nathanael Coupet, slug: nathanael-coupet, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/nathanael-coupet.jpg, summer: {status: assigned, team: Boca Raton Blazers, league: sfcbl, stats_id: nathanael-coupet}} # single-source (On3); re-verify
 # Incoming transfers (player_type filled during bootstrap research)
 - {name: Logan Keilen, slug: logan-keilen, gt_status: transfer, summer: {status: unassigned}}
 - {name: Cooper Blauser, slug: cooper-blauser, gt_status: transfer, summer: {status: unassigned}}
-- {name: Holden Pantier, slug: holden-pantier, gt_status: transfer, summer: {status: unassigned}}
-- {name: Eli Stephens, slug: eli-stephens, gt_status: transfer, summer: {status: unassigned}}
+- {name: Holden Pantier, slug: holden-pantier, gt_status: transfer, player_type: hitter, position: INF, summer: {status: assigned, team: Brewster Whitecaps, league: cape_cod, stats_id: holden-pantier}} # started w/ Johnson City (Appy), moved to Brewster mid-summer
+- {name: Eli Stephens, slug: eli-stephens, gt_status: transfer, player_type: hitter, position: C, summer: {status: assigned, team: Keene Swamp Bats, league: necbl, stats_id: eli-stephens}}
 - {name: Jackson Morgan, slug: jackson-morgan, gt_status: transfer, summer: {status: unassigned}}
-- {name: Jordan Lodise, slug: jordan-lodise, gt_status: transfer, summer: {status: unassigned}}
+- {name: Jordan Lodise, slug: jordan-lodise, gt_status: transfer, player_type: hitter, position: SS, summer: {status: assigned, team: Hyannis Harbor Hawks, league: cape_cod, stats_id: "838363"}}
 - {name: Patrick Walsh, slug: patrick-walsh, gt_status: transfer, summer: {status: unassigned}}
 - {name: Josh Gunther, slug: josh-gunther, gt_status: transfer, summer: {status: unassigned}}
-- {name: Brady Fox, slug: brady-fox, gt_status: transfer, summer: {status: unassigned}}
-- {name: Tyler Guerin, slug: tyler-guerin, gt_status: transfer, summer: {status: unassigned}}
+- {name: Brady Fox, slug: brady-fox, gt_status: transfer, player_type: pitcher, position: LHP, summer: {status: assigned, team: Orleans Firebirds, league: cape_cod, stats_id: "836190"}}
+- {name: Tyler Guerin, slug: tyler-guerin, gt_status: transfer, player_type: pitcher, position: P, summer: {status: assigned, team: Falmouth Commodores, league: cape_cod, stats_id: tyler-guerin}} # per On3 tracker; thinner corroboration — re-verify
 - {name: Jayden Stroman, slug: jayden-stroman, gt_status: transfer, summer: {status: unassigned}}
 # Incoming freshmen
 - {name: Deion Cole, slug: deion-cole, gt_status: freshman, summer: {status: unassigned}}

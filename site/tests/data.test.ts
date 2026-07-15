@@ -16,9 +16,12 @@ describe('data access', () => {
 
   it('splits assigned and unassigned', () => {
     const assigned = getAssignedPlayers();
-    expect(assigned.map((p) => p.slug).sort()).toEqual(
-      ['caden-spivey', 'jackson-blakely', 'jamie-vicens', 'riley-hasenstab']);
-    expect(getUnassignedPlayers()).toHaveLength(38);
+    expect(assigned).toHaveLength(15);
+    const slugs = assigned.map((p) => p.slug);
+    expect(slugs).toContain('coleman-lewis');
+    expect(slugs).toContain('jordan-lodise');
+    expect(slugs).not.toContain('jackson-blakely');
+    expect(getUnassignedPlayers()).toHaveLength(27);
   });
 
   it('exposes sliders with leagueAvgPercentile', () => {
@@ -30,7 +33,7 @@ describe('data access', () => {
 
   it('loads leagues sorted by player count', () => {
     const leagues = getLeagues();
-    expect(leagues[0].key).toBe('northwoods');
+    expect(leagues[0].key).toBe('cape_cod');
     expect(getLeagueByKey('northwoods')?.abbrev).toBe('NWL');
     expect(getLeagueByKey('nope')).toBeUndefined();
   });

@@ -8,9 +8,11 @@ def test_load_all_seed_files():
     slugs = [p["slug"] for p in players]
     assert len(slugs) == len(set(slugs))
     assigned = [p for p in players if p["summer"]["status"] == "assigned"]
-    assert {p["slug"] for p in assigned} == {
-        "jackson-blakely", "jamie-vicens", "riley-hasenstab", "caden-spivey",
-    }
+    assert len(assigned) == 15
+    slugs = {p["slug"] for p in assigned}
+    assert {"jamie-vicens", "riley-hasenstab", "coleman-lewis", "caden-spivey",
+            "jordan-lodise", "brady-fox"} <= slugs
+    assert "jackson-blakely" not in slugs
     assert "northwoods" in leagues and leagues["northwoods"]["tier"] == 1
 
 
