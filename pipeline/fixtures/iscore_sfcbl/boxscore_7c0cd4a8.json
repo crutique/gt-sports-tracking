@@ -1,0 +1,127 @@
+{
+ "gameInformation": {
+  "gameGuid": "7c0cd4a8-45bd-4356-a6f3-2a6b194ff492",
+  "homeTeam": {
+   "id": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+   "name": "Boca Raton Blazers",
+   "teamColor": "blue"
+  },
+  "awayTeam": {
+   "id": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+   "name": "West Boca Snappers",
+   "teamColor": "blue"
+  },
+  "season": {
+   "id": "1a8ebd76-1702-4d2e-af70-88ad3a3a9040",
+   "name": "SFCBL Regular Season 2026"
+  },
+  "scheduledDate": "2026-07-13T22:00:00Z",
+  "sportId": 1,
+  "name": "Match",
+  "gameInfo": {
+   "homePlateUmpire": "",
+   "firstBaseUmpire": "",
+   "secondBaseUmpire": "",
+   "thirdBaseUmpire": "",
+   "crewChief": "",
+   "location": "Little Fenway",
+   "officialScorer": "",
+   "notes": "CFD9C7FF-6AEB-4715-88FB-C51829203648",
+   "temperature": "",
+   "wind": "",
+   "weatherId": null
+  },
+  "leagueId": "541ef447-c3d8-497d-811e-54bf6d5d9478",
+  "leagueName": "SFCBL 2026",
+  "gameStatusId": 3,
+  "innings": 9
+ },
+ "gameStatState": {
+  "players": {
+   "5d32db3a-b7f8-4152-89cc-7a57ee42f972": {
+    "playerId": "5d32db3a-b7f8-4152-89cc-7a57ee42f972",
+    "teamId": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+    "teamSide": "HOME",
+    "stats": {
+     "batting": {
+      "overall": {
+       "PA": 5,
+       "AB": 5,
+       "H": 1,
+       "TB": 4,
+       "HR": 1,
+       "HR_2RUN": 1,
+       "RBI": 3,
+       "R": 1,
+       "SO": 1,
+       "LOB": 2,
+       "GP": 1
+      }
+     }
+    }
+   },
+   "a624bb9a-9ebd-4b54-a3bd-ac9aa7d39408": {
+    "playerId": "a624bb9a-9ebd-4b54-a3bd-ac9aa7d39408",
+    "teamId": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+    "teamSide": "HOME",
+    "stats": {
+     "pitching": {
+      "overall": {
+       "PITCHES": 92,
+       "BALLS": 43,
+       "STRIKES": 48,
+       "BF": 22,
+       "BB": 3,
+       "AB": 18,
+       "H": 5,
+       "H_1B": 3,
+       "OUTS_PITCHED": 13,
+       "SO": 7,
+       "H_2B": 2,
+       "HBP": 1,
+       "R": 3,
+       "ER": 3,
+       "GP": 1,
+       "GS": 1,
+       "W": 1
+      }
+     }
+    }
+   },
+   "7a164050-5bed-4021-8117-4edde829ecd1": {
+    "playerId": "7a164050-5bed-4021-8117-4edde829ecd1",
+    "teamId": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+    "teamSide": "AWAY",
+    "stats": {
+     "pitching": {
+      "overall": {
+       "PITCHES": 69,
+       "STRIKES": 37,
+       "BF": 20,
+       "AB": 12,
+       "OUTS_PITCHED": 7,
+       "BALLS": 30,
+       "BB": 6,
+       "SB_AGAINST": 1,
+       "R": 6,
+       "ER": 6,
+       "H": 4,
+       "H_1B": 1,
+       "CS_FOR": 2,
+       "SO": 1,
+       "HR": 1,
+       "HR_2RUN": 1,
+       "H_3B": 1,
+       "HBP": 2,
+       "H_2B": 1,
+       "PKA": 1,
+       "GP": 1,
+       "GS": 1,
+       "L": 1
+      }
+     }
+    }
+   }
+  }
+ }
+}

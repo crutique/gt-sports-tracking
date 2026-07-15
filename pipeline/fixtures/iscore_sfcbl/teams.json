@@ -1,0 +1,18 @@
+[
+ {
+  "guid": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+  "name": "West Boca Snappers",
+  "color": "blue",
+  "shortName": "WBS",
+  "managerName": "",
+  "playerCount": 40
+ },
+ {
+  "guid": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+  "name": "Boca Raton Blazers",
+  "color": "blue",
+  "shortName": "BRB",
+  "managerName": "",
+  "playerCount": 39
+ }
+]

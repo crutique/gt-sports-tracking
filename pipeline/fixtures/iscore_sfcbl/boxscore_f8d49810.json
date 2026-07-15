@@ -1,0 +1,117 @@
+{
+ "gameInformation": {
+  "gameGuid": "f8d49810-df46-425e-b6fb-1e9d25590978",
+  "homeTeam": {
+   "id": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+   "name": "West Boca Snappers",
+   "teamColor": "blue"
+  },
+  "awayTeam": {
+   "id": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+   "name": "Boca Raton Blazers",
+   "teamColor": "blue"
+  },
+  "season": {
+   "id": "1a8ebd76-1702-4d2e-af70-88ad3a3a9040",
+   "name": "SFCBL Regular Season 2026"
+  },
+  "scheduledDate": "2026-07-11T14:00:00Z",
+  "sportId": 1,
+  "name": "Match",
+  "gameInfo": {
+   "homePlateUmpire": "",
+   "firstBaseUmpire": "",
+   "secondBaseUmpire": "",
+   "thirdBaseUmpire": "",
+   "crewChief": "",
+   "location": "Burt Aaronson P",
+   "officialScorer": "",
+   "notes": "026132A3-4436-4A78-AF56-71A0FF1724D2",
+   "temperature": "",
+   "wind": "",
+   "weatherId": null
+  },
+  "leagueId": "541ef447-c3d8-497d-811e-54bf6d5d9478",
+  "leagueName": "SFCBL 2026",
+  "gameStatusId": 3,
+  "innings": 9
+ },
+ "gameStatState": {
+  "players": {
+   "5d32db3a-b7f8-4152-89cc-7a57ee42f972": {
+    "playerId": "5d32db3a-b7f8-4152-89cc-7a57ee42f972",
+    "teamId": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+    "teamSide": "AWAY",
+    "stats": {
+     "batting": {
+      "overall": {
+       "PA": 3,
+       "AB": 3,
+       "FC": 1,
+       "SO": 1,
+       "LOB": 1,
+       "GP": 1
+      }
+     }
+    }
+   },
+   "76c73b76-4a04-4c64-a309-b329fd2f7aa4": {
+    "playerId": "76c73b76-4a04-4c64-a309-b329fd2f7aa4",
+    "teamId": "bb3f63a5-332e-4081-b21c-0195b6cf430a",
+    "teamSide": "AWAY",
+    "stats": {
+     "pitching": {
+      "overall": {
+       "PITCHES": 61,
+       "STRIKES": 37,
+       "BALLS": 23,
+       "AB": 10,
+       "BF": 14,
+       "SO": 3,
+       "OUTS_PITCHED": 9,
+       "H": 3,
+       "H_2B": 2,
+       "WP": 1,
+       "SF": 2,
+       "R": 2,
+       "ER": 2,
+       "H_1B": 1,
+       "HBP": 1,
+       "BB": 1,
+       "GP": 1,
+       "GS": 1,
+       "L": 1
+      }
+     }
+    }
+   },
+   "e8112049-e60a-4dc8-bace-91bae84176e4": {
+    "playerId": "e8112049-e60a-4dc8-bace-91bae84176e4",
+    "teamId": "4374ad7b-ddf7-4f56-9f39-c57ff9b4800d",
+    "teamSide": "HOME",
+    "stats": {
+     "pitching": {
+      "overall": {
+       "PITCHES": 79,
+       "STRIKES": 52,
+       "BF": 20,
+       "AB": 18,
+       "OUTS_PITCHED": 15,
+       "BALLS": 26,
+       "SO": 8,
+       "H": 3,
+       "H_1B": 3,
+       "WP": 1,
+       "BB": 1,
+       "SB_AGAINST": 1,
+       "HBP": 1,
+       "GP": 1,
+       "GS": 1,
+       "W": 1
+      }
+     }
+    }
+   }
+  }
+ }
+}
