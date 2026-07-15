@@ -138,6 +138,36 @@ def test_player_missing_from_stats_and_gamelogs_keeps_gamelog(tmp_path):
     assert log_path.read_text() == log_before
 
 
+def test_name_watch_warning_surfaces_in_build(tmp_path, capsys):
+    # "Sample Slugger" sits in the fetched northwoods batting pool; a registry
+    # player with that name is unassigned -> name-watch warning in result +
+    # stdout, but the build itself stays healthy.
+    out, hist = tmp_path / "data", tmp_path / "history"
+    fixture_dir = _copy_fixture(tmp_path)
+    players = tmp_path / "players.yaml"
+    players.write_text(PLAYERS_YAML + (
+        "- {name: Sample Slugger, slug: sample-slugger, gt_status: transfer,"
+        " summer: {status: unassigned}}\n"))
+    leagues = tmp_path / "leagues.yaml"
+    leagues.write_text(LEAGUES_TEMPLATE.format(fixture_dir=fixture_dir))
+    result = build_data.build(str(players), str(leagues), out, hist, today="2026-07-14")
+    assert result.failures == []
+    nw = [w for w in result.warnings if w.startswith("name-watch:")]
+    assert len(nw) == 1
+    assert "'Sample Slugger'" in nw[0]
+    assert "northwoods batting row stats_id=fx-b1" in nw[0]
+    assert any("WARNING name-watch:" in line
+               for line in capsys.readouterr().out.splitlines())
+
+
+def test_no_name_watch_warnings_when_assignments_match(tmp_path):
+    # Every registry name in the pools is assigned with the matching stats_id.
+    out, hist = tmp_path / "data", tmp_path / "history"
+    players, leagues, _ = _setup(tmp_path)
+    result = build_data.build(players, leagues, out, hist, today="2026-07-14")
+    assert [w for w in result.warnings if w.startswith("name-watch:")] == []
+
+
 def test_present_player_empty_log_fetch_keeps_existing_file(tmp_path):
     out, hist = tmp_path / "data", tmp_path / "history"
     players, leagues_ok, _ = _setup(tmp_path)

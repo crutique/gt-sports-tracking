@@ -4,7 +4,7 @@ import datetime
 import sys
 from dataclasses import dataclass, field
 
-from pipeline import compute, output, registry, validate
+from pipeline import compute, name_watch, output, registry, validate
 from pipeline.scrapers import SCRAPERS
 
 
@@ -38,6 +38,10 @@ def build(players_path, leagues_path, out_dir, history_dir, today=None):
             continue
         try:
             stats = mod.fetch_league_stats(cfg)
+            nw_warnings = name_watch.check_names(key, stats, players)
+            result.warnings.extend(nw_warnings)
+            for w in nw_warnings:
+                print(f"[build] WARNING {w}")
             sids = [p["summer"]["stats_id"] for p in assigned]
             logs = mod.fetch_game_logs(cfg, sids)
             errors, warnings = validate.check_league(key, stats, assigned, previous)
