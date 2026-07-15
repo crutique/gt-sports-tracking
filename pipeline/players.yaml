@@ -8,10 +8,10 @@
 - {name: Caden Gaudette, slug: caden-gaudette, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
 - {name: Justin Shadek, slug: justin-shadek, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
 - {name: Jackson Blakely, slug: jackson-blakely, gt_status: returning, player_type: pitcher, position: P, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: jackson-blakely}} # not found in NWL stats as of 2026-07-15 — pending roster research
-- {name: Jamie Vicens, slug: jamie-vicens, gt_status: returning, player_type: pitcher, position: P, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10352"}}
+- {name: Jamie Vicens, slug: jamie-vicens, gt_status: returning, player_type: pitcher, position: P, photo: /headshots/jamie-vicens.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10352"}}
 - {name: Cooper Underwood, slug: cooper-underwood, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
 - {name: Dimitri Angelakos, slug: dimitri-angelakos, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Riley Hasenstab, slug: riley-hasenstab, gt_status: returning, player_type: pitcher, position: P, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10225"}}
+- {name: Riley Hasenstab, slug: riley-hasenstab, gt_status: returning, player_type: pitcher, position: P, photo: /headshots/riley-hasenstab.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10225"}}
 - {name: Adam McKelvey, slug: adam-mckelvey, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
 # Returning position players
 - {name: Ryan Zuckerman, slug: ryan-zuckerman, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
