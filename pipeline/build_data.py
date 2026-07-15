@@ -48,15 +48,18 @@ def build(players_path, leagues_path, out_dir, history_dir, today=None):
                 raise ValidationFailure("; ".join(errors))
             league_bundles[key] = compute.league_bundle(cfg, stats, logs, wanted=set(sids))
             for p in assigned:
-                gamelogs_by_slug[p["slug"]] = logs.get(p["summer"]["stats_id"], [])
+                sid = p["summer"]["stats_id"]
+                if sid in league_bundles[key]:
+                    gamelogs_by_slug[p["slug"]] = logs.get(sid, [])
         except Exception as e:  # noqa: BLE001 — per-league isolation is the point
             result.failures.append((key, str(e)))
-            print(f"[build] FAILED {key}: {e} — keeping previous data", file=sys.stderr)
+            print(f"[build] FAILED {key}: {e} — keeping previous data (if any)", file=sys.stderr)
 
     records = output.assemble(players, leagues, league_bundles, previous, today)
     output.write_outputs(records, leagues, gamelogs_by_slug, out_dir, history_dir, today)
     print(f"[build] wrote {len(records)} players; "
-          f"{len(result.failures)} league failure(s), {len(result.skipped)} skipped")
+          f"{len(result.failures)} league failure(s), {len(result.skipped)} skipped, "
+          f"{len(result.warnings)} warning(s)")
     return result
 
 

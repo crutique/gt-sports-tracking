@@ -1,6 +1,7 @@
 """Assemble site-facing player records and write the JSON contract + history."""
 import json
 import shutil
+import sys
 from pathlib import Path
 
 
@@ -63,4 +64,9 @@ def load_previous(out_dir):
     path = Path(out_dir) / "players.json"
     if not path.exists():
         return {}
-    return {r["slug"]: r for r in json.loads(path.read_text())}
+    try:
+        return {r["slug"]: r for r in json.loads(path.read_text())}
+    except (json.JSONDecodeError, OSError, KeyError, TypeError) as e:
+        print(f"[output] WARNING: previous players.json unreadable ({e}); starting fresh",
+              file=sys.stderr)
+        return {}

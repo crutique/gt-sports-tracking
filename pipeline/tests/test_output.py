@@ -70,3 +70,10 @@ def test_load_previous_roundtrip(tmp_path):
 
 def test_load_previous_missing_dir(tmp_path):
     assert output.load_previous(tmp_path / "nope") == {}
+
+
+def test_load_previous_corrupted_returns_empty(tmp_path):
+    out = tmp_path / "data"
+    out.mkdir()
+    (out / "players.json").write_text("{truncated")
+    assert output.load_previous(out) == {}
