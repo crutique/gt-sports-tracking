@@ -43,6 +43,8 @@ function teamLeague(p: Player): string {
       <thead>
         <tr>
           <th data-key="name" scope="col">Player</th>
+          <th data-key="pos" scope="col">Pos</th>
+          <th data-key="cls" scope="col">Class</th>
           <th data-key="team" scope="col">Team · League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="ab" data-numeric scope="col">AB</th>
@@ -64,6 +66,8 @@ function teamLeague(p: Player): string {
           return (
             <tr data-league={p.summer.leagueKey}>
               <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
+              <td data-v={p.position || '—'}>{p.position || '—'}</td>
+              <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
               <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.ab}>{c.ab}</td>
@@ -91,6 +95,8 @@ function teamLeague(p: Player): string {
       <thead>
         <tr>
           <th data-key="name" scope="col">Player</th>
+          <th data-key="pos" scope="col">Pos</th>
+          <th data-key="cls" scope="col">Class</th>
           <th data-key="team" scope="col">Team · League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="gs" data-numeric scope="col">GS</th>
@@ -111,6 +117,8 @@ function teamLeague(p: Player): string {
           return (
             <tr data-league={p.summer.leagueKey}>
               <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
+              <td data-v={p.position || '—'}>{p.position || '—'}</td>
+              <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
               <td data-v={teamLeague(p)}>{teamLeague(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.gs}>{c.gs}</td>

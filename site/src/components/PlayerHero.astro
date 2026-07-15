@@ -8,7 +8,7 @@ interface Props {
 }
 const { player, league } = Astro.props;
 
-const meta = player.position;
+const meta = [player.position, player.classYear].filter(Boolean).join(' · ');
 
 let context = '';
 if (player.hitting) {
