@@ -45,7 +45,6 @@ function leagueLabel(p: Player): string {
           <th data-key="name" scope="col">Player</th>
           <th data-key="pos" scope="col">Pos</th>
           <th data-key="cls" scope="col">Class</th>
-          <th data-key="team" scope="col">Team</th>
           <th data-key="lg" scope="col">League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="ab" data-numeric scope="col">AB</th>
@@ -66,10 +65,9 @@ function leagueLabel(p: Player): string {
           const pct = sliderPct(p, 'hitting', 'ops');
           return (
             <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /><span class="who"><span class="pname">{p.name}</span><span class="pteam">{p.summer.team}</span></span></a></td>
               <td data-v={p.position || '—'}>{p.position || '—'}</td>
               <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
-              <td data-v={p.summer.team}>{p.summer.team}</td>
               <td data-v={leagueLabel(p)}>{leagueLabel(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.ab}>{c.ab}</td>
@@ -99,7 +97,6 @@ function leagueLabel(p: Player): string {
           <th data-key="name" scope="col">Player</th>
           <th data-key="pos" scope="col">Pos</th>
           <th data-key="cls" scope="col">Class</th>
-          <th data-key="team" scope="col">Team</th>
           <th data-key="lg" scope="col">League</th>
           <th data-key="g" data-numeric scope="col">G</th>
           <th data-key="gs" data-numeric scope="col">GS</th>
@@ -119,10 +116,9 @@ function leagueLabel(p: Player): string {
           const pct = sliderPct(p, 'pitching', 'era');
           return (
             <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /> {p.name}</a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={32} /><span class="who"><span class="pname">{p.name}</span><span class="pteam">{p.summer.team}</span></span></a></td>
               <td data-v={p.position || '—'}>{p.position || '—'}</td>
               <td data-v={p.classYear || '—'}>{p.classYear || '—'}</td>
-              <td data-v={p.summer.team}>{p.summer.team}</td>
               <td data-v={leagueLabel(p)}>{leagueLabel(p)}</td>
               <td data-v={c.g}>{c.g}</td>
               <td data-v={c.gs}>{c.gs}</td>
@@ -232,6 +228,16 @@ function leagueLabel(p: Player): string {
   th[data-dir='desc']::after { content: ' ↓'; }
   td { padding: 10px 8px; border-bottom: 1px solid #eef1f5; white-space: nowrap; }
   td a { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; }
+  .who {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .pteam {
+    color: var(--text-mut);
+    font-weight: 400;
+    font-size: 11px;
+  }
   .strong { font-weight: 800; }
   .none { padding: 16px; color: var(--text-mut); font-size: 13px; }
 </style>
