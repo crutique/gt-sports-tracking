@@ -177,7 +177,7 @@ Percentiles are computed only for Tier 1 leagues; the UI never shows a percentil
     "rates":    { "avg": 0.298, "obp": 0.371, "slg": 0.541, "ops": 0.912,
                    "kPct": 0.24, "bbPct": 0.11 },
     "sliders": [ { "metric": "ops", "value": 0.912, "percentile": 87,
-                    "leagueAvg": 0.742, "derived": false }, ... ]
+                    "leagueAvg": 0.742, "leagueAvgPercentile": 48, "derived": false }, ... ]
   }
 }
 ```

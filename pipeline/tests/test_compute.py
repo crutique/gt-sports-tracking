@@ -77,3 +77,14 @@ def test_zero_out_pitcher_counts_toward_bf_pools():
     # ip-denominated metrics skipped (rate is None); BF-denominated ones computed, no crash
     assert "era" not in sliders and "kPct" in sliders and "oppAvg" in sliders
     assert bundle["p3"]["pitching"]["rates"]["era"] is None
+
+
+def test_slider_includes_league_avg_percentile():
+    bundle = compute.league_bundle(CFG, {"batting": BATTING, "pitching": PITCHING},
+                                   {}, wanted={"a"})
+    sliders = {s["metric"]: s for s in bundle["a"]["hitting"]["sliders"]}
+    ops = sliders["ops"]
+    assert isinstance(ops["leagueAvgPercentile"], int)
+    assert 0 <= ops["leagueAvgPercentile"] <= 99
+    # league avg is below the best hitter's percentile
+    assert ops["leagueAvgPercentile"] < ops["percentile"]

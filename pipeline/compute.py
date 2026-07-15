@@ -23,10 +23,14 @@ def _sliders(side, metrics, my_rates, all_rates, lg_avgs, tier):
         pool = [r[m] for r in all_rates if r.get(m) is not None]
         # NOTE: a tied league leader can legitimately show <99 (midrank splits ties);
         # correct math, not a display bug.
+        lg_avg = lg_avgs.get(m)
         out.append({
             "metric": m, "value": round(value, 4),
             "percentile": pc.midrank_percentile(pool, value, invert=pc.is_inverted(side, m)),
-            "leagueAvg": round(lg_avgs[m], 4) if lg_avgs.get(m) is not None else None,
+            "leagueAvg": round(lg_avg, 4) if lg_avg is not None else None,
+            "leagueAvgPercentile": (pc.midrank_percentile(pool, lg_avg,
+                                                          invert=pc.is_inverted(side, m))
+                                    if lg_avg is not None else None),
             "derived": m in _DERIVED[side],
         })
     return out

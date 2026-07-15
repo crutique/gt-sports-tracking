@@ -1,0 +1,26 @@
+[
+ {
+  "key": "northwoods",
+  "name": "Northwoods League",
+  "abbrev": "NWL",
+  "officialUrl": "https://northwoodsleague.com",
+  "platform": "fixture",
+  "tier": 1,
+  "gtPlayers": [
+   "jackson-blakely",
+   "jamie-vicens",
+   "riley-hasenstab"
+  ]
+ },
+ {
+  "key": "mlb_draft",
+  "name": "MLB Draft League",
+  "abbrev": "MLBDL",
+  "officialUrl": "https://www.mlbdraftleague.com",
+  "platform": "pending",
+  "tier": null,
+  "gtPlayers": [
+   "caden-spivey"
+  ]
+ }
+]
