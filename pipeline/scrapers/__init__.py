@@ -1,4 +1,4 @@
 """Platform-name → scraper-module map."""
-from pipeline.scrapers import fixture, scorebook
+from pipeline.scrapers import fixture, mlbstats, scorebook
 
-SCRAPERS = {"fixture": fixture, "scorebook": scorebook}
+SCRAPERS = {"fixture": fixture, "mlbstats": mlbstats, "scorebook": scorebook}
