@@ -4,8 +4,9 @@ import StatGrid from '../../components/StatGrid.astro';
 import SampleDataBanner from '../../components/SampleDataBanner.astro';
 import PlayerHero from '../../components/PlayerHero.astro';
 import SliderPanel from '../../components/SliderPanel.astro';
+import GameLogTable from '../../components/GameLogTable.astro';
 import Base from '../../layouts/Base.astro';
-import { getLeagueByKey, getPlayers, isSampleLeague } from '../../lib/data';
+import { getGamelog, getLeagueByKey, getPlayers, isSampleLeague } from '../../lib/data';
 import type { Player } from '../../lib/data';
 
 export function getStaticPaths() {
@@ -21,6 +22,8 @@ const sample = isSampleLeague(player.summer.leagueKey);
 const firstName = player.name.split(' ')[0];
 const hasStats = Boolean(player.hitting || player.pitching);
 const side = player.hitting ? 'hitters' : 'pitchers';
+const gamelog = getGamelog(player.slug);
+const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
 ---
 <Base title={`${player.name} — GT Summer Tracker`}>
   {sample && <SampleDataBanner leagueName={league?.name ?? 'League'} />}
@@ -68,6 +71,8 @@ const side = player.hitting ? 'hitters' : 'pitchers';
         </div>
       </div>
     )}
+
+    {hasStats && <GameLogTable entries={gamelog} side={logSide} />}
   </article>
 </Base>
 

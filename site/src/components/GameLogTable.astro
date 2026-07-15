@@ -1,0 +1,60 @@
+---
+import { fmtDate, outsToIp } from '../lib/format';
+import type { GameLogEntry, HitterGame, PitcherGame } from '../lib/data';
+
+interface Props {
+  entries: GameLogEntry[];
+  side: 'hitting' | 'pitching';
+}
+const { entries, side } = Astro.props;
+
+const headers = side === 'hitting'
+  ? ['Date', 'Opponent', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'SB']
+  : ['Date', 'Opponent', 'IP', 'H', 'R', 'ER', 'BB', 'K', 'HR', 'Dec'];
+
+function cells(e: GameLogEntry): (string | number)[] {
+  if (side === 'hitting') {
+    const g = e as HitterGame;
+    return [fmtDate(g.date), g.opponent, g.ab, g.r, g.h, g.d, g.t, g.hr, g.rbi, g.bb, g.k, g.sb];
+  }
+  const g = e as PitcherGame;
+  return [fmtDate(g.date), g.opponent, outsToIp(g.ip_outs), g.h, g.r, g.er, g.bb, g.k, g.hr, g.dec || '—'];
+}
+---
+<section>
+  <h2 class="section-title">Game Log</h2>
+  {entries.length === 0 ? (
+    <p class="none">No games recorded yet.</p>
+  ) : (
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>{headers.map((h) => <th>{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {entries.map((e) => <tr>{cells(e).map((c) => <td>{c}</td>)}</tr>)}
+        </tbody>
+      </table>
+    </div>
+  )}
+</section>
+
+<style>
+  section { padding: 0 22px 22px; background: var(--bg); }
+  .none { color: var(--text-mut); font-size: 13px; }
+  .scroller { overflow-x: auto; }
+  table { background: var(--card); border-radius: 6px; font-size: 12.5px; }
+  th {
+    text-align: left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-mut);
+    font-weight: 600;
+    padding: 6px 8px;
+    border-bottom: 2px solid var(--gold);
+  }
+  td { padding: 6px 8px; border-bottom: 1px solid #eef1f5; }
+  tr:last-child td { border-bottom: none; }
+  th:nth-child(n + 3), td:nth-child(n + 3) { text-align: center; }
+</style>
