@@ -888,8 +888,8 @@
      "metric": "ops",
      "value": 0.6338,
      "percentile": 22,
-     "leagueAvg": 0.8216,
-     "leagueAvgPercentile": 52,
+     "leagueAvg": 0.8222,
+     "leagueAvgPercentile": 54,
      "derived": false
     },
     {
@@ -903,17 +903,17 @@
     {
      "metric": "obp",
      "value": 0.3671,
-     "percentile": 35,
+     "percentile": 36,
      "leagueAvg": 0.4121,
-     "leagueAvgPercentile": 56,
+     "leagueAvgPercentile": 57,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.2667,
      "percentile": 19,
-     "leagueAvg": 0.4096,
-     "leagueAvgPercentile": 52,
+     "leagueAvg": 0.4101,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
@@ -921,7 +921,7 @@
      "value": 0.2405,
      "percentile": 42,
      "leagueAvg": 0.2183,
-     "leagueAvgPercentile": 50,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
@@ -972,8 +972,8 @@
   "slug": "cooper-blauser",
   "name": "Cooper Blauser",
   "gtStatus": "transfer",
-  "position": "",
-  "classYear": "",
+  "position": "INF",
+  "classYear": "R-SR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -988,7 +988,7 @@
   "name": "Holden Pantier",
   "gtStatus": "transfer",
   "position": "INF",
-  "classYear": "",
+  "classYear": "R-JR",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1095,13 +1095,13 @@
   "slug": "jackson-morgan",
   "name": "Jackson Morgan",
   "gtStatus": "transfer",
-  "position": "",
-  "classYear": "",
+  "position": "INF/OF",
+  "classYear": "R-JR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/jackson-morgan.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -1111,7 +1111,7 @@
   "name": "Jordan Lodise",
   "gtStatus": "transfer",
   "position": "SS",
-  "classYear": "",
+  "classYear": "SO",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1201,8 +1201,8 @@
   "slug": "patrick-walsh",
   "name": "Patrick Walsh",
   "gtStatus": "transfer",
-  "position": "",
-  "classYear": "",
+  "position": "INF",
+  "classYear": "SO",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1216,8 +1216,8 @@
   "slug": "josh-gunther",
   "name": "Josh Gunther",
   "gtStatus": "transfer",
-  "position": "",
-  "classYear": "",
+  "position": "RHP",
+  "classYear": "SR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1232,7 +1232,7 @@
   "name": "Brady Fox",
   "gtStatus": "transfer",
   "position": "LHP",
-  "classYear": "",
+  "classYear": "JR",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1325,8 +1325,8 @@
   "slug": "tyler-guerin",
   "name": "Tyler Guerin",
   "gtStatus": "transfer",
-  "position": "P",
-  "classYear": "",
+  "position": "RHP/1B",
+  "classYear": "JR",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1419,8 +1419,8 @@
   "slug": "jayden-stroman",
   "name": "Jayden Stroman",
   "gtStatus": "transfer",
-  "position": "",
-  "classYear": "",
+  "position": "RHP/INF",
+  "classYear": "SO",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1434,7 +1434,7 @@
   "slug": "deion-cole",
   "name": "Deion Cole",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "OF",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1449,7 +1449,7 @@
   "slug": "jack-richerson",
   "name": "Jack Richerson",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "3B",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1464,7 +1464,7 @@
   "slug": "ezekiel-lara",
   "name": "Ezekiel Lara",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "OF",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1479,7 +1479,7 @@
   "slug": "kolby-martin",
   "name": "Kolby Martin",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "SS",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1494,7 +1494,7 @@
   "slug": "ryan-engle",
   "name": "Ryan Engle",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "LHP",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1509,7 +1509,7 @@
   "slug": "luke-nitkowski",
   "name": "Luke Nitkowski",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "RHP",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1524,13 +1524,13 @@
   "slug": "reid-gainous",
   "name": "Reid Gainous",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "RHP",
   "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/reid-gainous.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -1539,7 +1539,7 @@
   "slug": "michael-nottleman",
   "name": "Michael Nottleman",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "LHP",
   "classYear": "FR",
   "playerType": null,
   "summer": {
@@ -1554,13 +1554,13 @@
   "slug": "brett-slymen",
   "name": "Brett Slymen",
   "gtStatus": "freshman",
-  "position": "",
+  "position": "RHP",
   "classYear": "FR",
   "playerType": null,
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/brett-slymen.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
