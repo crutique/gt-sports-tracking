@@ -1,27 +1,27 @@
 # Returning pitchers
-- {name: Caden Spivey, slug: caden-spivey, gt_status: returning, player_type: pitcher, position: P, summer: {status: assigned, team: Trenton Thunder, league: mlb_draft, stats_id: caden-spivey}}
-- {name: Brett Barfield, slug: brett-barfield, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Kayden Campbell, slug: kayden-campbell, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Carson Ballard, slug: carson-ballard, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Jake Lankie, slug: jake-lankie, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Dylan Loy, slug: dylan-loy, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Caden Gaudette, slug: caden-gaudette, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Justin Shadek, slug: justin-shadek, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Jackson Blakely, slug: jackson-blakely, gt_status: returning, player_type: pitcher, position: P, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: jackson-blakely}} # not found in NWL stats as of 2026-07-15 — pending roster research
-- {name: Jamie Vicens, slug: jamie-vicens, gt_status: returning, player_type: pitcher, position: P, photo: /headshots/jamie-vicens.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10352"}}
-- {name: Cooper Underwood, slug: cooper-underwood, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Dimitri Angelakos, slug: dimitri-angelakos, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
-- {name: Riley Hasenstab, slug: riley-hasenstab, gt_status: returning, player_type: pitcher, position: P, photo: /headshots/riley-hasenstab.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10225"}}
-- {name: Adam McKelvey, slug: adam-mckelvey, gt_status: returning, player_type: pitcher, position: P, summer: {status: unassigned}}
+- {name: Caden Spivey, slug: caden-spivey, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/caden-spivey.jpg, summer: {status: assigned, team: Trenton Thunder, league: mlb_draft, stats_id: caden-spivey}}
+- {name: Brett Barfield, slug: brett-barfield, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/brett-barfield.jpg, summer: {status: unassigned}}
+- {name: Kayden Campbell, slug: kayden-campbell, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/kayden-campbell.jpg, summer: {status: unassigned}}
+- {name: Carson Ballard, slug: carson-ballard, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/carson-ballard.jpg, summer: {status: unassigned}}
+- {name: Jake Lankie, slug: jake-lankie, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jake-lankie.jpg, summer: {status: unassigned}}
+- {name: Dylan Loy, slug: dylan-loy, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/dylan-loy.jpg, summer: {status: unassigned}}
+- {name: Caden Gaudette, slug: caden-gaudette, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/caden-gaudette.jpg, summer: {status: unassigned}}
+- {name: Justin Shadek, slug: justin-shadek, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/justin-shadek.jpg, summer: {status: unassigned}}
+- {name: Jackson Blakely, slug: jackson-blakely, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jackson-blakely.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: jackson-blakely}} # not found in NWL stats as of 2026-07-15 — pending roster research
+- {name: Jamie Vicens, slug: jamie-vicens, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/jamie-vicens.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10352"}}
+- {name: Cooper Underwood, slug: cooper-underwood, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/cooper-underwood.jpg, summer: {status: unassigned}}
+- {name: Dimitri Angelakos, slug: dimitri-angelakos, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/dimitri-angelakos.jpg, summer: {status: unassigned}}
+- {name: Riley Hasenstab, slug: riley-hasenstab, gt_status: returning, player_type: pitcher, position: RHP, photo: /headshots/riley-hasenstab.jpg, summer: {status: assigned, team: Willmar Stingers, league: northwoods, stats_id: "10225"}}
+- {name: Adam McKelvey, slug: adam-mckelvey, gt_status: returning, player_type: pitcher, position: LHP, photo: /headshots/adam-mckelvey.jpg, summer: {status: unassigned}}
 # Returning position players
-- {name: Ryan Zuckerman, slug: ryan-zuckerman, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Will Baker, slug: will-baker, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Kent Schmidt, slug: kent-schmidt, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Drew Rogers, slug: drew-rogers, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Caleb Daniel, slug: caleb-daniel, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Coleman Lewis, slug: coleman-lewis, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Judson Hartwell, slug: judson-hartwell, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
-- {name: Nathanael Coupet, slug: nathanael-coupet, gt_status: returning, player_type: hitter, position: "", summer: {status: unassigned}}
+- {name: Ryan Zuckerman, slug: ryan-zuckerman, gt_status: returning, player_type: hitter, position: INF, photo: /headshots/ryan-zuckerman.jpg, summer: {status: unassigned}}
+- {name: Will Baker, slug: will-baker, gt_status: returning, player_type: hitter, position: INF/UTL, photo: /headshots/will-baker.jpg, summer: {status: unassigned}}
+- {name: Kent Schmidt, slug: kent-schmidt, gt_status: returning, player_type: hitter, position: INF, photo: /headshots/kent-schmidt.jpg, summer: {status: unassigned}}
+- {name: Drew Rogers, slug: drew-rogers, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/drew-rogers.jpg, summer: {status: unassigned}}
+- {name: Caleb Daniel, slug: caleb-daniel, gt_status: returning, player_type: hitter, position: OF/UTL, photo: /headshots/caleb-daniel.jpg, summer: {status: unassigned}}
+- {name: Coleman Lewis, slug: coleman-lewis, gt_status: returning, player_type: hitter, position: OF, photo: /headshots/coleman-lewis.jpg, summer: {status: unassigned}}
+- {name: Judson Hartwell, slug: judson-hartwell, gt_status: returning, player_type: hitter, position: INF/OF, photo: /headshots/judson-hartwell.jpg, summer: {status: unassigned}}
+- {name: Nathanael Coupet, slug: nathanael-coupet, gt_status: returning, player_type: hitter, position: C/INF, photo: /headshots/nathanael-coupet.jpg, summer: {status: unassigned}}
 # Incoming transfers (player_type filled during bootstrap research)
 - {name: Logan Keilen, slug: logan-keilen, gt_status: transfer, summer: {status: unassigned}}
 - {name: Cooper Blauser, slug: cooper-blauser, gt_status: transfer, summer: {status: unassigned}}

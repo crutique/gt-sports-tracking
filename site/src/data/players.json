@@ -3,14 +3,14 @@
   "slug": "caden-spivey",
   "name": "Caden Spivey",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
    "team": "Trenton Thunder",
    "leagueKey": "mlb_draft"
   },
-  "photo": null,
+  "photo": "/headshots/caden-spivey.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -19,12 +19,12 @@
   "slug": "brett-barfield",
   "name": "Brett Barfield",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "LHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/brett-barfield.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -33,12 +33,12 @@
   "slug": "kayden-campbell",
   "name": "Kayden Campbell",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "LHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/kayden-campbell.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -47,12 +47,12 @@
   "slug": "carson-ballard",
   "name": "Carson Ballard",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/carson-ballard.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -61,12 +61,12 @@
   "slug": "jake-lankie",
   "name": "Jake Lankie",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/jake-lankie.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -75,12 +75,12 @@
   "slug": "dylan-loy",
   "name": "Dylan Loy",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "LHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/dylan-loy.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -89,12 +89,12 @@
   "slug": "caden-gaudette",
   "name": "Caden Gaudette",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/caden-gaudette.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -103,12 +103,12 @@
   "slug": "justin-shadek",
   "name": "Justin Shadek",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/justin-shadek.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -117,14 +117,14 @@
   "slug": "jackson-blakely",
   "name": "Jackson Blakely",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
    "team": "Willmar Stingers",
    "leagueKey": "northwoods"
   },
-  "photo": null,
+  "photo": "/headshots/jackson-blakely.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -133,7 +133,7 @@
   "slug": "jamie-vicens",
   "name": "Jamie Vicens",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -175,7 +175,7 @@
      "metric": "era",
      "value": 8.5263,
      "percentile": 25,
-     "leagueAvg": 5.6618,
+     "leagueAvg": 5.6609,
      "leagueAvgPercentile": 49,
      "derived": false
     },
@@ -226,12 +226,12 @@
   "slug": "cooper-underwood",
   "name": "Cooper Underwood",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "LHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/cooper-underwood.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -240,12 +240,12 @@
   "slug": "dimitri-angelakos",
   "name": "Dimitri Angelakos",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/dimitri-angelakos.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -254,7 +254,7 @@
   "slug": "riley-hasenstab",
   "name": "Riley Hasenstab",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "RHP",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -296,7 +296,7 @@
      "metric": "era",
      "value": 2.5052,
      "percentile": 83,
-     "leagueAvg": 5.6618,
+     "leagueAvg": 5.6609,
      "leagueAvgPercentile": 49,
      "derived": false
     },
@@ -347,12 +347,12 @@
   "slug": "adam-mckelvey",
   "name": "Adam McKelvey",
   "gtStatus": "returning",
-  "position": "P",
+  "position": "LHP",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/adam-mckelvey.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -361,12 +361,12 @@
   "slug": "ryan-zuckerman",
   "name": "Ryan Zuckerman",
   "gtStatus": "returning",
-  "position": "",
+  "position": "INF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/ryan-zuckerman.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -375,12 +375,12 @@
   "slug": "will-baker",
   "name": "Will Baker",
   "gtStatus": "returning",
-  "position": "",
+  "position": "INF/UTL",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/will-baker.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -389,12 +389,12 @@
   "slug": "kent-schmidt",
   "name": "Kent Schmidt",
   "gtStatus": "returning",
-  "position": "",
+  "position": "INF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/kent-schmidt.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -403,12 +403,12 @@
   "slug": "drew-rogers",
   "name": "Drew Rogers",
   "gtStatus": "returning",
-  "position": "",
+  "position": "C/INF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/drew-rogers.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -417,12 +417,12 @@
   "slug": "caleb-daniel",
   "name": "Caleb Daniel",
   "gtStatus": "returning",
-  "position": "",
+  "position": "OF/UTL",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/caleb-daniel.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -431,12 +431,12 @@
   "slug": "coleman-lewis",
   "name": "Coleman Lewis",
   "gtStatus": "returning",
-  "position": "",
+  "position": "OF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/coleman-lewis.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -445,12 +445,12 @@
   "slug": "judson-hartwell",
   "name": "Judson Hartwell",
   "gtStatus": "returning",
-  "position": "",
+  "position": "INF/OF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/judson-hartwell.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
@@ -459,12 +459,12 @@
   "slug": "nathanael-coupet",
   "name": "Nathanael Coupet",
   "gtStatus": "returning",
-  "position": "",
+  "position": "C/INF",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
   },
-  "photo": null,
+  "photo": "/headshots/nathanael-coupet.jpg",
   "asOf": null,
   "hitting": null,
   "pitching": null
