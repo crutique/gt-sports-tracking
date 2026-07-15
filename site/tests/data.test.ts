@@ -16,12 +16,14 @@ describe('data access', () => {
 
   it('splits assigned and unassigned', () => {
     const assigned = getAssignedPlayers();
-    expect(assigned).toHaveLength(15);
+    expect(assigned).toHaveLength(21);
     const slugs = assigned.map((p) => p.slug);
     expect(slugs).toContain('coleman-lewis');
     expect(slugs).toContain('jordan-lodise');
-    expect(slugs).not.toContain('jackson-blakely');
-    expect(getUnassignedPlayers()).toHaveLength(27);
+    expect(slugs).toContain('jackson-blakely');
+    expect(slugs).toContain('nathanael-coupet');
+    expect(slugs).toContain('kolby-martin');
+    expect(getUnassignedPlayers()).toHaveLength(21);
   });
 
   it('exposes sliders with leagueAvgPercentile', () => {
@@ -47,7 +49,8 @@ describe('data access', () => {
     for (const p of getPlayers()) {
       expect(p.note == null || typeof p.note === 'string').toBe(true);
     }
-    expect(getPlayer('jackson-blakely')!.note ?? null).toBeNull();
+    expect(typeof getPlayer('jackson-blakely')!.note).toBe('string');
+    expect(getPlayer('coleman-lewis')!.note ?? null).toBeNull();
   });
 
   it('loads gamelogs by slug, empty for missing', () => {

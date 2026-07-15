@@ -25,8 +25,11 @@ necbl:
   name: New England Collegiate Baseball League
   abbrev: NECBL
   official_url: https://necbl.com
-  platform: pending
-  tier: null
+  platform: prestosports
+  site_base: https://necbl.com
+  sport_path: sports/bsb
+  season: "2026"
+  tier: 1
 appalachian:
   name: Appalachian League
   abbrev: APPY
@@ -40,6 +43,26 @@ appalachian:
 sfcbl:
   name: South Florida Collegiate Baseball League
   abbrev: SFCBL
-  official_url: https://southfloridacollegiateleague.com
+  official_url: https://sfcbl.com
+  platform: iscore
+  api_base: https://api.microservices.iscoresports.com/api
+  league_id: 541ef447-c3d8-497d-811e-54bf6d5d9478
+  season_id: 1a8ebd76-1702-4d2e-af70-88ad3a3a9040
+  season: 2026
+  tier: 1
+alpb:
+  name: Atlantic League (independent pro)
+  abbrev: ALPB
+  official_url: https://atlanticleague.com
   platform: pending
   tier: null
+sunbelt:
+  name: Sunbelt Baseball League
+  abbrev: SBL
+  official_url: https://www.sunbeltbaseballleague.net
+  platform: prestosports
+  site_base: https://www.sunbeltbaseballleague.net
+  sport_path: sports/bsb
+  season: "2026"
+  request_delay_s: 10
+  tier: 1

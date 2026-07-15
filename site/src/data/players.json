@@ -6,11 +6,12 @@
   "position": "RHP",
   "classYear": "GR",
   "recruit": null,
+  "note": "Signed professionally in June 2026 \u2014 High Point (ALPB) on 6/9, traded to Lexington 6/18.",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
-   "team": "Trenton Thunder",
-   "leagueKey": "mlb_draft"
+   "team": "Lexington Legends",
+   "leagueKey": "alpb"
   },
   "photo": "/headshots/caden-spivey.jpg",
   "asOf": null,
@@ -24,9 +25,10 @@
   "position": "LHP",
   "classYear": "GR",
   "recruit": null,
+  "note": "Not playing summer ball \u2014 four seasons of eligibility used (FSU 2023, GT 2024-26).",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "not_playing"
   },
   "photo": "/headshots/brett-barfield.jpg",
   "asOf": null,
@@ -40,9 +42,10 @@
   "position": "LHP",
   "classYear": "GR",
   "recruit": null,
+  "note": "Not playing summer ball \u2014 four seasons of eligibility used (Louisville 2023-24, GT 2025-26).",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "not_playing"
   },
   "photo": "/headshots/kayden-campbell.jpg",
   "asOf": null,
@@ -56,6 +59,7 @@
   "position": "RHP",
   "classYear": "R-SR",
   "recruit": null,
+  "note": "Draft-eligible after a 46-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -72,6 +76,7 @@
   "position": "RHP",
   "classYear": "R-JR",
   "recruit": null,
+  "note": "No 2026 summer club found (pitched for Willmar in 2025); went undrafted July 14.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -88,6 +93,7 @@
   "position": "LHP",
   "classYear": "SR",
   "recruit": null,
+  "note": "Draft-eligible after a 45-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -104,9 +110,10 @@
   "position": "RHP",
   "classYear": "R-SR",
   "recruit": null,
+  "note": "Graduated in May after a team-leading 26 appearances; sitting out the summer.",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "not_playing"
   },
   "photo": "/headshots/caden-gaudette.jpg",
   "asOf": null,
@@ -120,6 +127,7 @@
   "position": "RHP",
   "classYear": "R-JR",
   "recruit": null,
+  "note": "Held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -136,9 +144,12 @@
   "position": "RHP",
   "classYear": "JR",
   "recruit": null,
+  "note": "Signed with Willmar in February but has not appeared \u2014 likely a post-Tommy John innings shutdown after his 64-inning spring.",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Willmar Stingers",
+   "leagueKey": "northwoods"
   },
   "photo": "/headshots/jackson-blakely.jpg",
   "asOf": null,
@@ -152,6 +163,7 @@
   "position": "RHP",
   "classYear": "SO",
   "recruit": null,
+  "note": "No longer on Willmar's roster as of mid-July, after five appearances.",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -247,9 +259,12 @@
   "position": "LHP",
   "classYear": "SO",
   "recruit": null,
+  "note": "Assigned to Y-D and featured in the league's June preview, but removed from the roster without appearing \u2014 likely shut down after 23.2 freshman innings.",
   "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Yarmouth-Dennis Red Sox",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/cooper-underwood.jpg",
   "asOf": null,
@@ -263,6 +278,7 @@
   "position": "RHP",
   "classYear": "R-SO",
   "recruit": null,
+  "note": "Made one Brookhaven (Sunbelt) appearance on June 26 before joining Y-D two days later.",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -304,15 +320,15 @@
      "metric": "era",
      "value": 1.2273,
      "percentile": 80,
-     "leagueAvg": 4.0357,
+     "leagueAvg": 4.0273,
      "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 1.2273,
-     "percentile": 61,
-     "leagueAvg": 1.3887,
+     "percentile": 62,
+     "leagueAvg": 1.3881,
      "leagueAvgPercentile": 52,
      "derived": false
     },
@@ -336,15 +352,15 @@
      "metric": "hr9",
      "value": 0.0,
      "percentile": 68,
-     "leagueAvg": 0.5176,
-     "leagueAvgPercentile": 33,
+     "leagueAvg": 0.516,
+     "leagueAvgPercentile": 32,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.2667,
      "percentile": 31,
-     "leagueAvg": 0.2228,
+     "leagueAvg": 0.2226,
      "leagueAvgPercentile": 49,
      "derived": true
     }
@@ -358,6 +374,7 @@
   "position": "RHP",
   "classYear": "R-SO",
   "recruit": null,
+  "note": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -453,6 +470,7 @@
   "position": "LHP",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -464,77 +482,77 @@
   "hitting": null,
   "pitching": {
    "counting": {
-    "g": 5,
-    "gs": 2,
+    "g": 6,
+    "gs": 3,
     "w": 0,
     "l": 1,
     "sv": 0,
     "hld": 0,
-    "h": 14,
-    "r": 9,
-    "er": 8,
-    "bb": 5,
-    "k": 15,
-    "hb": 1,
+    "h": 15,
+    "r": 11,
+    "er": 9,
+    "bb": 6,
+    "k": 17,
+    "hb": 2,
     "hr": 4,
-    "ip": "16.0"
+    "ip": "17.0"
    },
    "rates": {
-    "era": 4.5,
-    "whip": 1.1875,
-    "kPct": 0.21428571428571427,
-    "bbPct": 0.07142857142857142,
-    "hr9": 2.25,
-    "k9": 8.4375,
-    "bb9": 2.8125,
-    "oppAvg": 0.21875
+    "era": 4.764705882352941,
+    "whip": 1.2352941176470589,
+    "kPct": 0.2236842105263158,
+    "bbPct": 0.07894736842105263,
+    "hr9": 2.1176470588235294,
+    "k9": 9.0,
+    "bb9": 3.176470588235294,
+    "oppAvg": 0.22058823529411764
    },
    "sliders": [
     {
      "metric": "era",
-     "value": 4.5,
-     "percentile": 42,
-     "leagueAvg": 4.0357,
+     "value": 4.7647,
+     "percentile": 40,
+     "leagueAvg": 4.0273,
      "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "whip",
-     "value": 1.1875,
-     "percentile": 66,
-     "leagueAvg": 1.3887,
+     "value": 1.2353,
+     "percentile": 61,
+     "leagueAvg": 1.3881,
      "leagueAvgPercentile": 52,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2143,
-     "percentile": 42,
+     "value": 0.2237,
+     "percentile": 47,
      "leagueAvg": 0.2356,
      "leagueAvgPercentile": 49,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.0714,
-     "percentile": 79,
+     "value": 0.0789,
+     "percentile": 75,
      "leagueAvg": 0.1171,
      "leagueAvgPercentile": 54,
      "derived": false
     },
     {
      "metric": "hr9",
-     "value": 2.25,
-     "percentile": 7,
-     "leagueAvg": 0.5176,
-     "leagueAvgPercentile": 33,
+     "value": 2.1176,
+     "percentile": 8,
+     "leagueAvg": 0.516,
+     "leagueAvgPercentile": 32,
      "derived": false
     },
     {
      "metric": "oppAvg",
-     "value": 0.2188,
-     "percentile": 53,
-     "leagueAvg": 0.2228,
+     "value": 0.2206,
+     "percentile": 52,
+     "leagueAvg": 0.2226,
      "leagueAvgPercentile": 49,
      "derived": true
     }
@@ -548,6 +566,7 @@
   "position": "INF",
   "classYear": "SR",
   "recruit": null,
+  "note": "2026 ACC MVP held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -564,6 +583,7 @@
   "position": "INF/UTL",
   "classYear": "JR",
   "recruit": null,
+  "note": "Held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -580,6 +600,7 @@
   "position": "INF",
   "classYear": "SR",
   "recruit": null,
+  "note": "Forwent the 2026 MLB Draft to return for his senior year; not re-signed by Falmouth after his 2025 Cape All-Star summer.",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -596,6 +617,7 @@
   "position": "C/INF",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -632,16 +654,16 @@
     {
      "metric": "ops",
      "value": 0.6749,
-     "percentile": 59,
-     "leagueAvg": 0.6656,
+     "percentile": 60,
+     "leagueAvg": 0.6652,
      "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2143,
-     "percentile": 48,
-     "leagueAvg": 0.2313,
+     "percentile": 49,
+     "leagueAvg": 0.2311,
      "leagueAvgPercentile": 57,
      "derived": false
     },
@@ -650,14 +672,14 @@
      "value": 0.3654,
      "percentile": 63,
      "leagueAvg": 0.3439,
-     "leagueAvgPercentile": 52,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.3095,
-     "percentile": 55,
-     "leagueAvg": 0.3217,
+     "percentile": 56,
+     "leagueAvg": 0.3213,
      "leagueAvgPercentile": 58,
      "derived": false
     },
@@ -666,15 +688,15 @@
      "value": 0.4231,
      "percentile": 7,
      "leagueAvg": 0.2403,
-     "leagueAvgPercentile": 47,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1538,
-     "percentile": 75,
-     "leagueAvg": 0.1194,
-     "leagueAvgPercentile": 51,
+     "percentile": 76,
+     "leagueAvg": 0.1195,
+     "leagueAvgPercentile": 52,
      "derived": false
     }
    ]
@@ -688,6 +710,7 @@
   "position": "OF/UTL",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -698,8 +721,8 @@
   "asOf": "2026-07-15",
   "hitting": {
    "counting": {
-    "g": 18,
-    "ab": 57,
+    "g": 19,
+    "ab": 58,
     "r": 11,
     "h": 11,
     "d": 2,
@@ -713,60 +736,60 @@
     "cs": 0
    },
    "rates": {
-    "avg": 0.19298245614035087,
-    "obp": 0.2923076923076923,
-    "slg": 0.3333333333333333,
-    "ops": 0.6256410256410256,
-    "kPct": 0.23076923076923078,
-    "bbPct": 0.09230769230769231
+    "avg": 0.1896551724137931,
+    "obp": 0.2878787878787879,
+    "slg": 0.3275862068965517,
+    "ops": 0.6154649947753397,
+    "kPct": 0.22727272727272727,
+    "bbPct": 0.09090909090909091
    },
    "sliders": [
     {
      "metric": "ops",
-     "value": 0.6256,
-     "percentile": 47,
-     "leagueAvg": 0.6656,
+     "value": 0.6155,
+     "percentile": 45,
+     "leagueAvg": 0.6652,
      "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "avg",
-     "value": 0.193,
-     "percentile": 38,
-     "leagueAvg": 0.2313,
+     "value": 0.1897,
+     "percentile": 37,
+     "leagueAvg": 0.2311,
      "leagueAvgPercentile": 57,
      "derived": false
     },
     {
      "metric": "obp",
-     "value": 0.2923,
+     "value": 0.2879,
      "percentile": 25,
      "leagueAvg": 0.3439,
-     "leagueAvgPercentile": 52,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "slg",
-     "value": 0.3333,
-     "percentile": 61,
-     "leagueAvg": 0.3217,
+     "value": 0.3276,
+     "percentile": 60,
+     "leagueAvg": 0.3213,
      "leagueAvgPercentile": 58,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2308,
-     "percentile": 53,
+     "value": 0.2273,
+     "percentile": 54,
      "leagueAvg": 0.2403,
-     "leagueAvgPercentile": 47,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.0923,
+     "value": 0.0909,
      "percentile": 33,
-     "leagueAvg": 0.1194,
-     "leagueAvgPercentile": 51,
+     "leagueAvg": 0.1195,
+     "leagueAvgPercentile": 52,
      "derived": false
     }
    ]
@@ -780,6 +803,7 @@
   "position": "OF",
   "classYear": "SO",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -872,6 +896,7 @@
   "position": "INF/OF",
   "classYear": "SO",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -964,6 +989,7 @@
   "position": "C/INF",
   "classYear": "R-JR",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -971,24 +997,175 @@
    "leagueKey": "sfcbl"
   },
   "photo": "/headshots/nathanael-coupet.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 26,
+    "ab": 89,
+    "r": 15,
+    "h": 26,
+    "d": 8,
+    "t": 0,
+    "hr": 3,
+    "rbi": 18,
+    "bb": 9,
+    "k": 18,
+    "hbp": 3,
+    "sb": 4,
+    "cs": 2
+   },
+   "rates": {
+    "avg": 0.29213483146067415,
+    "obp": 0.36893203883495146,
+    "slg": 0.48314606741573035,
+    "ops": 0.8520781062506818,
+    "kPct": 0.17475728155339806,
+    "bbPct": 0.08737864077669903
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.8521,
+     "percentile": 77,
+     "leagueAvg": 0.7389,
+     "leagueAvgPercentile": 60,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.2921,
+     "percentile": 71,
+     "leagueAvg": 0.2577,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.3689,
+     "percentile": 42,
+     "leagueAvg": 0.3972,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.4831,
+     "percentile": 89,
+     "leagueAvg": 0.3417,
+     "leagueAvgPercentile": 60,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1748,
+     "percentile": 61,
+     "leagueAvg": 0.2009,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0874,
+     "percentile": 21,
+     "leagueAvg": 0.1482,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
   "slug": "logan-keilen",
   "name": "Logan Keilen",
   "gtStatus": "transfer",
-  "position": "",
+  "position": "C",
   "classYear": "R-SO",
   "recruit": null,
-  "playerType": null,
+  "note": "No longer on Bismarck's roster as of early July, after 13 games.",
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Bismarck Larks",
+   "leagueKey": "northwoods"
   },
   "photo": "/headshots/logan-keilen.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 13,
+    "ab": 48,
+    "r": 8,
+    "h": 11,
+    "d": 1,
+    "t": 0,
+    "hr": 2,
+    "rbi": 10,
+    "bb": 7,
+    "k": 19,
+    "hbp": 2,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.22916666666666666,
+    "obp": 0.3448275862068966,
+    "slg": 0.375,
+    "ops": 0.7198275862068966,
+    "kPct": 0.3275862068965517,
+    "bbPct": 0.1206896551724138
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.7198,
+     "percentile": 50,
+     "leagueAvg": 0.7492,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.2292,
+     "percentile": 43,
+     "leagueAvg": 0.2537,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.3448,
+     "percentile": 35,
+     "leagueAvg": 0.3833,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.375,
+     "percentile": 62,
+     "leagueAvg": 0.3659,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.3276,
+     "percentile": 11,
+     "leagueAvg": 0.2096,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1207,
+     "percentile": 41,
+     "leagueAvg": 0.1406,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -998,6 +1175,7 @@
   "position": "INF",
   "classYear": "R-SR",
   "recruit": null,
+  "note": "Committed to GT on June 26 after a 62-game season at Jacksonville State; no 2026 summer club.",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1014,6 +1192,7 @@
   "position": "INF",
   "classYear": "R-JR",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1024,8 +1203,8 @@
   "asOf": "2026-07-15",
   "hitting": {
    "counting": {
-    "g": 9,
-    "ab": 29,
+    "g": 10,
+    "ab": 30,
     "r": 6,
     "h": 9,
     "d": 3,
@@ -1039,60 +1218,60 @@
     "cs": 0
    },
    "rates": {
-    "avg": 0.3103448275862069,
-    "obp": 0.4444444444444444,
-    "slg": 0.41379310344827586,
-    "ops": 0.8582375478927202,
-    "kPct": 0.2777777777777778,
-    "bbPct": 0.16666666666666666
+    "avg": 0.3,
+    "obp": 0.43243243243243246,
+    "slg": 0.4,
+    "ops": 0.8324324324324325,
+    "kPct": 0.2702702702702703,
+    "bbPct": 0.16216216216216217
    },
    "sliders": [
     {
      "metric": "ops",
-     "value": 0.8582,
-     "percentile": 86,
-     "leagueAvg": 0.6656,
+     "value": 0.8324,
+     "percentile": 85,
+     "leagueAvg": 0.6652,
      "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "avg",
-     "value": 0.3103,
-     "percentile": 87,
-     "leagueAvg": 0.2313,
+     "value": 0.3,
+     "percentile": 85,
+     "leagueAvg": 0.2311,
      "leagueAvgPercentile": 57,
      "derived": false
     },
     {
      "metric": "obp",
-     "value": 0.4444,
-     "percentile": 88,
+     "value": 0.4324,
+     "percentile": 85,
      "leagueAvg": 0.3439,
-     "leagueAvgPercentile": 52,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "slg",
-     "value": 0.4138,
-     "percentile": 82,
-     "leagueAvg": 0.3217,
+     "value": 0.4,
+     "percentile": 80,
+     "leagueAvg": 0.3213,
      "leagueAvgPercentile": 58,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2778,
-     "percentile": 33,
+     "value": 0.2703,
+     "percentile": 36,
      "leagueAvg": 0.2403,
-     "leagueAvgPercentile": 47,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.1667,
-     "percentile": 80,
-     "leagueAvg": 0.1194,
-     "leagueAvgPercentile": 51,
+     "value": 0.1622,
+     "percentile": 79,
+     "leagueAvg": 0.1195,
+     "leagueAvgPercentile": 52,
      "derived": false
     }
    ]
@@ -1106,6 +1285,7 @@
   "position": "C",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1113,9 +1293,160 @@
    "leagueKey": "necbl"
   },
   "photo": "/headshots/eli-stephens.jpg",
-  "asOf": null,
-  "hitting": null,
-  "pitching": null
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 22,
+    "ab": 83,
+    "r": 13,
+    "h": 18,
+    "d": 2,
+    "t": 0,
+    "hr": 1,
+    "rbi": 6,
+    "bb": 13,
+    "k": 32,
+    "hbp": 3,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.21686746987951808,
+    "obp": 0.3434343434343434,
+    "slg": 0.27710843373493976,
+    "ops": 0.6205427771692832,
+    "kPct": 0.32323232323232326,
+    "bbPct": 0.13131313131313133
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.6205,
+     "percentile": 42,
+     "leagueAvg": 0.6978,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.2169,
+     "percentile": 48,
+     "leagueAvg": 0.2353,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.3434,
+     "percentile": 52,
+     "leagueAvg": 0.3584,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.2771,
+     "percentile": 39,
+     "leagueAvg": 0.3394,
+     "leagueAvgPercentile": 58,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.3232,
+     "percentile": 26,
+     "leagueAvg": 0.2373,
+     "leagueAvgPercentile": 55,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1313,
+     "percentile": 56,
+     "leagueAvg": 0.1302,
+     "leagueAvgPercentile": 56,
+     "derived": false
+    }
+   ]
+  },
+  "pitching": {
+   "counting": {
+    "g": 2,
+    "gs": 0,
+    "w": 0,
+    "l": 0,
+    "sv": 0,
+    "hld": 0,
+    "h": 4,
+    "r": 1,
+    "er": 1,
+    "bb": 3,
+    "k": 0,
+    "hb": 0,
+    "hr": 0,
+    "ip": "5.0"
+   },
+   "rates": {
+    "era": 1.8,
+    "whip": 1.4,
+    "kPct": 0.0,
+    "bbPct": 0.13636363636363635,
+    "hr9": 0.0,
+    "k9": 0.0,
+    "bb9": 5.4,
+    "oppAvg": 0.21052631578947367
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 1.8,
+     "percentile": 81,
+     "leagueAvg": 4.5237,
+     "leagueAvgPercentile": 45,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 1.4,
+     "percentile": 56,
+     "leagueAvg": 1.4539,
+     "leagueAvgPercentile": 50,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.0,
+     "percentile": 2,
+     "leagueAvg": 0.2352,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1364,
+     "percentile": 41,
+     "leagueAvg": 0.1266,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 0.0,
+     "percentile": 73,
+     "leagueAvg": 0.6075,
+     "leagueAvgPercentile": 37,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.2105,
+     "percentile": 61,
+     "leagueAvg": 0.2251,
+     "leagueAvgPercentile": 52,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "jackson-morgan",
@@ -1124,6 +1455,7 @@
   "position": "INF/OF",
   "classYear": "R-JR",
   "recruit": null,
+  "note": "No 2026 summer club found; played for the Alpharetta Aviators (Sunbelt) in 2024.",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1140,6 +1472,7 @@
   "position": "SS",
   "classYear": "SO",
   "recruit": null,
+  "note": null,
   "playerType": "hitter",
   "summer": {
    "status": "assigned",
@@ -1176,8 +1509,8 @@
     {
      "metric": "ops",
      "value": 0.7611,
-     "percentile": 78,
-     "leagueAvg": 0.6656,
+     "percentile": 77,
+     "leagueAvg": 0.6652,
      "leagueAvgPercentile": 56,
      "derived": false
     },
@@ -1185,7 +1518,7 @@
      "metric": "avg",
      "value": 0.2623,
      "percentile": 71,
-     "leagueAvg": 0.2313,
+     "leagueAvg": 0.2311,
      "leagueAvgPercentile": 57,
      "derived": false
     },
@@ -1194,14 +1527,14 @@
      "value": 0.2857,
      "percentile": 24,
      "leagueAvg": 0.3439,
-     "leagueAvgPercentile": 52,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.4754,
      "percentile": 89,
-     "leagueAvg": 0.3217,
+     "leagueAvg": 0.3213,
      "leagueAvgPercentile": 58,
      "derived": false
     },
@@ -1210,15 +1543,15 @@
      "value": 0.3175,
      "percentile": 21,
      "leagueAvg": 0.2403,
-     "leagueAvgPercentile": 47,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.0159,
      "percentile": 8,
-     "leagueAvg": 0.1194,
-     "leagueAvgPercentile": 51,
+     "leagueAvg": 0.1195,
+     "leagueAvgPercentile": 52,
      "derived": false
     }
    ]
@@ -1232,13 +1565,90 @@
   "position": "INF",
   "classYear": "SO",
   "recruit": null,
-  "playerType": null,
+  "note": null,
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Johnson City Doughboys",
+   "leagueKey": "appalachian"
   },
   "photo": "/headshots/patrick-walsh.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 3,
+    "ab": 13,
+    "r": 3,
+    "h": 4,
+    "d": 0,
+    "t": 0,
+    "hr": 2,
+    "rbi": 3,
+    "bb": 0,
+    "k": 5,
+    "hbp": 2,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.3076923076923077,
+    "obp": 0.4,
+    "slg": 0.7692307692307693,
+    "ops": 1.1692307692307693,
+    "kPct": 0.3333333333333333,
+    "bbPct": 0.0
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 1.1692,
+     "percentile": 94,
+     "leagueAvg": 0.823,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.3077,
+     "percentile": 69,
+     "leagueAvg": 0.2703,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.4,
+     "percentile": 51,
+     "leagueAvg": 0.4127,
+     "leagueAvgPercentile": 57,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.7692,
+     "percentile": 98,
+     "leagueAvg": 0.4103,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.3333,
+     "percentile": 16,
+     "leagueAvg": 0.2181,
+     "leagueAvgPercentile": 50,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.0,
+     "percentile": 3,
+     "leagueAvg": 0.1663,
+     "leagueAvgPercentile": 53,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -1248,6 +1658,7 @@
   "position": "RHP",
   "classYear": "SR",
   "recruit": null,
+  "note": "Went undrafted July 14; no 2026 summer club \u2014 likely training privately after 37.2 IP at South Carolina.",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1264,6 +1675,7 @@
   "position": "LHP",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1305,7 +1717,7 @@
      "metric": "era",
      "value": 9.0,
      "percentile": 15,
-     "leagueAvg": 4.0357,
+     "leagueAvg": 4.0273,
      "leagueAvgPercentile": 48,
      "derived": false
     },
@@ -1313,7 +1725,7 @@
      "metric": "whip",
      "value": 2.1667,
      "percentile": 15,
-     "leagueAvg": 1.3887,
+     "leagueAvg": 1.3881,
      "leagueAvgPercentile": 52,
      "derived": false
     },
@@ -1337,15 +1749,15 @@
      "metric": "hr9",
      "value": 1.5,
      "percentile": 13,
-     "leagueAvg": 0.5176,
-     "leagueAvgPercentile": 33,
+     "leagueAvg": 0.516,
+     "leagueAvgPercentile": 32,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.3333,
      "percentile": 13,
-     "leagueAvg": 0.2228,
+     "leagueAvg": 0.2226,
      "leagueAvgPercentile": 49,
      "derived": true
     }
@@ -1359,6 +1771,7 @@
   "position": "RHP/1B",
   "classYear": "JR",
   "recruit": null,
+  "note": null,
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1400,7 +1813,7 @@
      "metric": "era",
      "value": 24.5455,
      "percentile": 1,
-     "leagueAvg": 4.0357,
+     "leagueAvg": 4.0273,
      "leagueAvgPercentile": 48,
      "derived": false
     },
@@ -1408,7 +1821,7 @@
      "metric": "whip",
      "value": 2.7273,
      "percentile": 8,
-     "leagueAvg": 1.3887,
+     "leagueAvg": 1.3881,
      "leagueAvgPercentile": 52,
      "derived": false
     },
@@ -1432,15 +1845,15 @@
      "metric": "hr9",
      "value": 2.4545,
      "percentile": 6,
-     "leagueAvg": 0.5176,
-     "leagueAvgPercentile": 33,
+     "leagueAvg": 0.516,
+     "leagueAvgPercentile": 32,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.375,
      "percentile": 6,
-     "leagueAvg": 0.2228,
+     "leagueAvg": 0.2226,
      "leagueAvgPercentile": 49,
      "derived": true
     }
@@ -1454,14 +1867,94 @@
   "position": "RHP/INF",
   "classYear": "SO",
   "recruit": null,
-  "playerType": null,
+  "note": "Off Orleans' active roster since late June after three relief appearances.",
+  "playerType": "pitcher",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Orleans Firebirds",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/jayden-stroman.jpg",
-  "asOf": null,
+  "asOf": "2026-07-15",
   "hitting": null,
-  "pitching": null
+  "pitching": {
+   "counting": {
+    "g": 3,
+    "gs": 0,
+    "w": 0,
+    "l": 0,
+    "sv": 0,
+    "hld": 1,
+    "h": 1,
+    "r": 3,
+    "er": 0,
+    "bb": 2,
+    "k": 1,
+    "hb": 0,
+    "hr": 0,
+    "ip": "1.2"
+   },
+   "rates": {
+    "era": 0.0,
+    "whip": 1.7999999999999998,
+    "kPct": 0.1111111111111111,
+    "bbPct": 0.2222222222222222,
+    "hr9": 0.0,
+    "k9": 5.3999999999999995,
+    "bb9": 10.799999999999999,
+    "oppAvg": 0.14285714285714285
+   },
+   "sliders": [
+    {
+     "metric": "era",
+     "value": 0.0,
+     "percentile": 94,
+     "leagueAvg": 4.0273,
+     "leagueAvgPercentile": 48,
+     "derived": false
+    },
+    {
+     "metric": "whip",
+     "value": 1.8,
+     "percentile": 26,
+     "leagueAvg": 1.3881,
+     "leagueAvgPercentile": 52,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1111,
+     "percentile": 11,
+     "leagueAvg": 0.2356,
+     "leagueAvgPercentile": 49,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.2222,
+     "percentile": 11,
+     "leagueAvg": 0.1171,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "hr9",
+     "value": 0.0,
+     "percentile": 68,
+     "leagueAvg": 0.516,
+     "leagueAvgPercentile": 32,
+     "derived": false
+    },
+    {
+     "metric": "oppAvg",
+     "value": 0.1429,
+     "percentile": 86,
+     "leagueAvg": 0.2226,
+     "leagueAvgPercentile": 49,
+     "derived": true
+    }
+   ]
+  }
  },
  {
   "slug": "deion-cole",
@@ -1479,6 +1972,7 @@
    "pg_rank": 143,
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692757"
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1505,6 +1999,7 @@
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=817386",
    "highlight": "First-team all-state 3B/RHP as a junior; dual-sport athlete who also signed with GT football."
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1531,6 +2026,7 @@
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=537878",
    "highlight": "Prep Baseball California Hitter of the Week after a 7-for-11 road trip with Mater Dei."
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1555,13 +2051,90 @@
    "pg_rank": 500,
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=631514"
   },
-  "playerType": null,
+  "note": "Has not appeared for Brookhaven since June 17 but remains on the active roster.",
+  "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Brookhaven Bucks",
+   "leagueKey": "sunbelt"
   },
   "photo": "/headshots/kolby-martin.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-15",
+  "hitting": {
+   "counting": {
+    "g": 9,
+    "ab": 27,
+    "r": 5,
+    "h": 4,
+    "d": 0,
+    "t": 0,
+    "hr": 0,
+    "rbi": 3,
+    "bb": 5,
+    "k": 3,
+    "hbp": 1,
+    "sb": 5,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.14814814814814814,
+    "obp": 0.30303030303030304,
+    "slg": 0.14814814814814814,
+    "ops": 0.4511784511784512,
+    "kPct": 0.09090909090909091,
+    "bbPct": 0.15151515151515152
+   },
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.4512,
+     "percentile": 26,
+     "leagueAvg": 0.7705,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.1481,
+     "percentile": 25,
+     "leagueAvg": 0.2695,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.303,
+     "percentile": 32,
+     "leagueAvg": 0.3917,
+     "leagueAvgPercentile": 51,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.1481,
+     "percentile": 21,
+     "leagueAvg": 0.3787,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.0909,
+     "percentile": 82,
+     "leagueAvg": 0.2022,
+     "leagueAvgPercentile": 43,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1515,
+     "percentile": 67,
+     "leagueAvg": 0.1351,
+     "leagueAvgPercentile": 59,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -1580,6 +2153,7 @@
    "pg_rank": 386,
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1032346"
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1605,6 +2179,7 @@
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692022",
    "highlight": "Threw a nine-strikeout no-hitter for Creekview this spring; GHSA All-State first team. Son of former MLB LHP C.J. Nitkowski."
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1631,6 +2206,7 @@
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=851616",
    "highlight": "Threw back-to-back no-hitters this spring (26 K over 12 IP) \u2014 a Prep Baseball National Pitcher of the Week."
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1659,6 +2235,7 @@
    "hs_batting": ".425/.579/.975, 9 HR, 31 RBI",
    "hs_source": "https://www.maxpreps.com/ga/columbus/columbus-blue-devils/athletes/michael-nottleman/baseball/stats/?careerid=khbg2rhfu9o44"
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -1686,6 +2263,7 @@
    "hs_pitching": "7 G, 31.0 IP, 2.26 ERA, 32 K, 9 BB",
    "hs_source": "https://www.maxpreps.com/ca/san-juan-capistrano/capistrano-valley-christian-eagles/athletes/brett-slymen/baseball/stats/?careerid=g6tuo7p5v0qaa"
   },
+  "note": null,
   "playerType": null,
   "summer": {
    "status": "unassigned"

@@ -10,9 +10,11 @@
    "adam-mckelvey",
    "brady-fox",
    "caleb-daniel",
+   "cooper-underwood",
    "dimitri-angelakos",
    "drew-rogers",
    "holden-pantier",
+   "jayden-stroman",
    "jordan-lodise",
    "tyler-guerin"
   ]
@@ -26,30 +28,10 @@
   "tier": 1,
   "gtPlayers": [
    "coleman-lewis",
+   "jackson-blakely",
    "jamie-vicens",
+   "logan-keilen",
    "riley-hasenstab"
-  ]
- },
- {
-  "key": "mlb_draft",
-  "name": "MLB Draft League",
-  "abbrev": "MLBDL",
-  "officialUrl": "https://www.mlbdraftleague.com",
-  "platform": "pending",
-  "tier": null,
-  "gtPlayers": [
-   "caden-spivey"
-  ]
- },
- {
-  "key": "necbl",
-  "name": "New England Collegiate Baseball League",
-  "abbrev": "NECBL",
-  "officialUrl": "https://necbl.com",
-  "platform": "pending",
-  "tier": null,
-  "gtPlayers": [
-   "eli-stephens"
   ]
  },
  {
@@ -60,18 +42,52 @@
   "platform": "mlbstats",
   "tier": 1,
   "gtPlayers": [
-   "judson-hartwell"
+   "judson-hartwell",
+   "patrick-walsh"
+  ]
+ },
+ {
+  "key": "necbl",
+  "name": "New England Collegiate Baseball League",
+  "abbrev": "NECBL",
+  "officialUrl": "https://necbl.com",
+  "platform": "prestosports",
+  "tier": 1,
+  "gtPlayers": [
+   "eli-stephens"
   ]
  },
  {
   "key": "sfcbl",
   "name": "South Florida Collegiate Baseball League",
   "abbrev": "SFCBL",
-  "officialUrl": "https://southfloridacollegiateleague.com",
+  "officialUrl": "https://sfcbl.com",
+  "platform": "iscore",
+  "tier": 1,
+  "gtPlayers": [
+   "nathanael-coupet"
+  ]
+ },
+ {
+  "key": "alpb",
+  "name": "Atlantic League (independent pro)",
+  "abbrev": "ALPB",
+  "officialUrl": "https://atlanticleague.com",
   "platform": "pending",
   "tier": null,
   "gtPlayers": [
-   "nathanael-coupet"
+   "caden-spivey"
+  ]
+ },
+ {
+  "key": "sunbelt",
+  "name": "Sunbelt Baseball League",
+  "abbrev": "SBL",
+  "officialUrl": "https://www.sunbeltbaseballleague.net",
+  "platform": "prestosports",
+  "tier": 1,
+  "gtPlayers": [
+   "kolby-martin"
   ]
  }
 ]
