@@ -946,6 +946,8 @@ git add pipeline/validate.py pipeline/tests/test_validate.py
 git commit -m "feat: pre-publish validation gate"
 ```
 
+> **Review-fix amendment (commit d8e399d):** the gate as executed additionally (1) mirrors the counting-decrease check for PITCHING (incl. IP regression by parsing the previous `ip` display string to outs), (2) hardens against malformed previous records via `.get("counting", {})`, (3) errors when EITHER table is empty (message "league table(s) empty"), and (4) checks all 14 pitching counting keys for negatives. Four extra tests: pitching decrease, one-empty-table, malformed-previous, negative-any-key → test file totals 9. The code in the repo is the source of truth.
+
 ---
 
 ### Task 8: output — record assembly, JSON writing, history snapshot
@@ -1272,7 +1274,7 @@ Expected: `2 passed`
 - [ ] **Step 5: Run the FULL suite**
 
 Run: `.venv/bin/pytest -q`
-Expected: all tests pass (sanity 1 + registry 7 + stats_math 5 + percentiles 5 + compute 5 + fixture 3 + validate 5 + output 5 + build 2 = 38; registry and compute grew during review-fix cycles)
+Expected: all tests pass (sanity 1 + registry 7 + stats_math 5 + percentiles 5 + compute 5 + fixture 3 + validate 9 + output 5 + build 2 = 42; registry, compute, and validate grew during review-fix cycles)
 
 - [ ] **Step 6: Commit**
 
