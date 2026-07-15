@@ -1,0 +1,35 @@
+---
+interface Props {
+  name: string;
+  photo: string | null;
+  size: number;
+}
+const { name, photo, size } = Astro.props;
+const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+---
+{photo ? (
+  <img class="shot" src={photo} alt={name} width={size} height={size}
+    style={`width:${size}px;height:${size}px`} />
+) : (
+  <span class="shot initials"
+    style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.34)}px`}>
+    {initials}
+  </span>
+)}
+
+<style>
+  .shot {
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--gold-light);
+    background: linear-gradient(180deg, var(--gold), #8f8250);
+  }
+  .initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy-dark);
+    font-weight: 800;
+  }
+</style>

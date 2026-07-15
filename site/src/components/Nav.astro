@@ -1,0 +1,41 @@
+---
+const links = [
+  { href: '/', label: 'Players' },
+  { href: '/leagues', label: 'Leagues' },
+];
+---
+<nav>
+  <div class="wrap bar">
+    <a class="brand" href="/">GT SUMMER <span>TRACKER</span></a>
+    <div class="links">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </div>
+  </div>
+</nav>
+
+<style>
+  nav {
+    background: var(--navy);
+    border-top: 3px solid var(--gold);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+  }
+  .brand {
+    color: #fff;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+  .brand span { color: var(--gold); }
+  .brand:hover { text-decoration: none; }
+  .links a {
+    color: #cfd8e3;
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: 18px;
+  }
+</style>

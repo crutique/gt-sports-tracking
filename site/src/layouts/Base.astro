@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Tracking Georgia Tech baseball players across the 2026 summer leagues.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Nav />
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="wrap">
+      GT Summer Tracker — an unofficial fan project following Georgia Tech baseball's
+      2027 roster through the 2026 summer leagues. Stats update nightly from league sources.
+    </footer>
+  </body>
+</html>
+
+<style>
+  main { padding: 22px 16px 40px; }
+  footer {
+    padding: 18px 16px 30px;
+    font-size: 12px;
+    color: var(--text-mut);
+    border-top: 1px solid var(--line);
+  }
+</style>
