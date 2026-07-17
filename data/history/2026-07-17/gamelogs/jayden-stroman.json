@@ -1,0 +1,38 @@
+[
+ {
+  "date": "2026-06-26",
+  "opponent": "at Cotuit Kettleers",
+  "ip_outs": 1,
+  "h": 0,
+  "r": 0,
+  "er": 0,
+  "bb": 0,
+  "k": 0,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-21",
+  "opponent": "vs Cotuit Kettleers",
+  "ip_outs": 1,
+  "h": 1,
+  "r": 3,
+  "er": 0,
+  "bb": 2,
+  "k": 0,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-16",
+  "opponent": "at Falmouth Commodores",
+  "ip_outs": 3,
+  "h": 0,
+  "r": 0,
+  "er": 0,
+  "bb": 0,
+  "k": 1,
+  "hr": 0,
+  "dec": ""
+ }
+]
