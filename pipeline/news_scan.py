@@ -291,9 +291,14 @@ def _extract_cli(prompt):
     {"event": "none"}; this keeps the two backends' failure handling shared
     rather than duplicated.
     """
+    # Strip the token defensively: a secret pasted with a trailing newline
+    # produces "Header 'Authorization' has invalid value" (seen live 7/20).
+    env = dict(os.environ)
+    if env.get("CLAUDE_CODE_OAUTH_TOKEN"):
+        env["CLAUDE_CODE_OAUTH_TOKEN"] = env["CLAUDE_CODE_OAUTH_TOKEN"].strip()
     result = subprocess.run(
         [_CLAUDE_CLI, "-p", prompt, "--model", _MODEL, "--output-format", "text"],
-        capture_output=True, text=True, timeout=120,
+        capture_output=True, text=True, timeout=120, env=env,
     )
     if result.returncode != 0:
         raise RuntimeError(
