@@ -17,7 +17,7 @@
    "status": "unsigned",
    "signedDate": null,
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/822518/headshot/draft/current",
-   "note": null
+   "note": "Agreed to terms with the Twins per The New York Times (July 20); figure not yet reported."
   },
   {
    "name": "Drew Burress",
@@ -28,11 +28,11 @@
    "pick": 8,
    "team": "Athletics",
    "slot": 6982600,
-   "bonus": null,
-   "bonusSource": null,
-   "reportedSourceUrl": null,
+   "bonus": 7500000,
+   "bonusSource": "reported",
+   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
    "unverifiedSourceUrl": null,
-   "status": "unsigned",
+   "status": "signed",
    "signedDate": null,
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/806039/headshot/draft/current",
    "note": null
@@ -82,11 +82,11 @@
    "pick": 143,
    "team": "Athletics",
    "slot": 516300,
-   "bonus": null,
-   "bonusSource": null,
-   "reportedSourceUrl": null,
+   "bonus": 516300,
+   "bonusSource": "reported",
+   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
    "unverifiedSourceUrl": null,
-   "status": "unsigned",
+   "status": "signed",
    "signedDate": null,
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/815415/headshot/draft/current",
    "note": null
