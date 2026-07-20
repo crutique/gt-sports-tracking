@@ -4,10 +4,11 @@ import requests
 API = "https://statsapi.mlb.com/api/v1"
 DEADLINE = "2026-07-27"    # ISO date; unsigned after this -> did_not_sign
 _TIMEOUT = 30
+_HEADERS = {"User-Agent": "GT-Summer-Tracker/1.0 (unofficial fan project)"}
 
 
 def _get(url):
-    resp = requests.get(url, timeout=_TIMEOUT)
+    resp = requests.get(url, headers=_HEADERS, timeout=_TIMEOUT)
     resp.raise_for_status()
     return resp.json()
 
@@ -32,6 +33,10 @@ def fetch_picks(year=2026):
                     # pickValue/signingBonus come back as numeric strings from the
                     # live API (e.g. "9740100"), so both go through _bonus().
                     "slot": _bonus(p.get("pickValue")) or None,
+                    # Asymmetric on purpose: slot "0" collapses to None (no live slot
+                    # value for that pick), but a hypothetical signingBonus "0" is kept
+                    # as-is — a literal $0 bonus would be real data (senior signs are
+                    # commonly a nominal $500, e.g. Parker Brosius in draft.yaml).
                     "officialBonus": _bonus(p.get("signingBonus")),
                     "headshot": p.get("headshotLink"),
                 }
