@@ -83,13 +83,15 @@ def build_draft(entries, today, deadline=DEADLINE):
         rep = e.get("reported") or {}
         # Reporters only publish a figure once a deal is agreed, so a curated
         # reported bonus implies signed even before the official feed catches up.
-        signed = bool(signed_date) or official is not None or bool(rep.get("bonus"))
+        signed = bool(signed_date) or official is not None or bool(rep)
         unv = e.get("unverified") or {}
         bonus, source, rep_url, unv_url = None, None, None, None
         if official is not None:
             bonus, source = official, "official"
         elif rep.get("bonus"):
             bonus, source, rep_url = rep["bonus"], "reported", rep["source"]
+        elif rep.get("source"):
+            rep_url = rep["source"]   # signing reported, terms not yet known
         elif unv.get("bonus"):
             bonus, source, unv_url = unv["bonus"], "unverified", unv["source"]
         players.append({"name": e["name"], "personId": pid, "gtRole": e["gt_role"],

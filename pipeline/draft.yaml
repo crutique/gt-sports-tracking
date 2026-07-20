@@ -1,7 +1,7 @@
 # GT 2026 MLB Draft class. Curated fields per docs/superpowers/specs/2026-07-20-draft-tracker-design.md:
 #   reported: {bonus, source}  — reporter-broken figure (labeled until official lands)
 #   returning: true + note     — news-driven declarations; note also covers nuance
-- {name: Vahn Lackey, person_id: 822518, gt_role: departing, note: "Agreed to terms with the Twins per The New York Times (July 20); figure not yet reported."}
+- {name: Vahn Lackey, person_id: 822518, gt_role: departing, reported: {source: "https://www.nytimes.com/athletic/mlb/twins/"}, note: "Agreed to terms with the Twins per The New York Times (July 20)."}
 - {name: Drew Burress, person_id: 806039, gt_role: departing, reported: {bonus: 7500000, source: "https://www.spotrac.com/mlb/draft/2026"}}
 - {name: Jarren Advincula, person_id: 814181, gt_role: departing}
 - {name: Carson Kerce, person_id: 812668, gt_role: departing, reported: {bonus: 1900000, source: "https://www.spotrac.com/mlb/draft/2026"}}

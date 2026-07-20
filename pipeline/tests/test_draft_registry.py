@@ -113,3 +113,16 @@ def test_unverified_bonus_must_be_int(tmp_path):
                             'unverified: {bonus: "1.9M", source: "https://x", detected: "2026-07-21"}}\n')
     with pytest.raises(RegistryError, match="unverified"):
         draft_registry.load_draft(path, set())
+
+
+def test_reported_source_only_is_valid_terms_pending(tmp_path):
+    path = _write(tmp_path, '- {name: A, person_id: 1, gt_role: departing, '
+                            'reported: {source: "https://x"}}\n')
+    assert draft_registry.load_draft(path, set())[0]["reported"]["source"] == "https://x"
+
+
+def test_reported_without_source_still_rejected(tmp_path):
+    path = _write(tmp_path, '- {name: A, person_id: 1, gt_role: departing, '
+                            'reported: {bonus: 100}}\n')
+    with pytest.raises(RegistryError, match="reported"):
+        draft_registry.load_draft(path, set())

@@ -121,3 +121,12 @@ def test_reported_beats_unverified(api):
     p = draft_status.build_draft(entries, today="2026-07-21")["players"][0]
     assert p["bonus"] == 9500000 and p["bonusSource"] == "reported"
     assert p["unverifiedSourceUrl"] is None and p["status"] == "signed"
+
+
+def test_reported_signing_without_terms_is_signed_with_pending_bonus(api):
+    entries = [{"name": "Vahn Lackey", "person_id": 822518, "gt_role": "departing",
+                "reported": {"source": "https://www.nytimes.com"}}]
+    p = draft_status.build_draft(entries, today="2026-07-20")["players"][0]
+    assert p["status"] == "signed"
+    assert p["bonus"] is None and p["bonusSource"] is None
+    assert p["reportedSourceUrl"] == "https://www.nytimes.com"

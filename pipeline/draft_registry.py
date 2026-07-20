@@ -40,9 +40,12 @@ def load_draft(path, player_slugs):
             raise RegistryError(f"draft: {name}: returning must be a bool")
         rep = e.get("reported")
         if rep is not None:
-            if not (rep.get("bonus") and rep.get("source")):
-                raise RegistryError(f"draft: {name}: reported needs bonus and source")
-            if not isinstance(rep["bonus"], int):
+            # source is mandatory; bonus is optional (a signing can be
+            # reported before its terms are -- Lackey/NYT, 7/20) but must
+            # be an int when present.
+            if not rep.get("source"):
+                raise RegistryError(f"draft: {name}: reported needs source")
+            if "bonus" in rep and not isinstance(rep["bonus"], int):
                 raise RegistryError(f"draft: {name}: reported bonus must be an int")
         unv = e.get("unverified")
         if unv is not None and not (isinstance(unv.get("bonus"), int)
