@@ -139,3 +139,28 @@ def test_game_logs(monkeypatch):
     assert logs[L_PITCH] == [{"date": "2026-07-13", "opponent": "at Boca Raton Blazers",
                               "ip_outs": 7, "h": 4, "r": 6, "er": 6, "bb": 6,
                               "k": 1, "hr": 1, "dec": "L"}]
+
+
+def test_broken_hit_type_splits_derive_doubles_from_tb():
+    # iScore regression seen 2026-07-20: 1B/2B/3B zero out while H/HR/TB stay right.
+    p = {"playerId": "x", "firstName": "N", "lastName": "C",
+         "stats": {"batting": {"overall": {"GP": 28, "PA": 111, "AB": 96, "H": 28,
+                   "1B": 0, "2B": 0, "3B": 0, "HR": 4, "TB": 48, "R": 16, "RBI": 21,
+                   "BB": 10, "SO": 18, "HBP": 3, "SF": 2, "SH": 0}}}}
+    row = iscore._norm_bat(p, "T")
+    assert row["d"] == 8 and row["t"] == 0 and row["h"] == 28
+
+
+def test_healthy_hit_type_splits_untouched():
+    p = {"playerId": "x", "firstName": "N", "lastName": "C",
+         "stats": {"batting": {"overall": {"GP": 26, "PA": 103, "AB": 89, "H": 26,
+                   "1B": 15, "2B": 8, "3B": 0, "HR": 3, "TB": 43, "R": 15, "RBI": 18,
+                   "BB": 9, "SO": 18, "HBP": 3, "SF": 2, "SH": 0}}}}
+    assert iscore._norm_bat(p, "T")["d"] == 8
+
+
+def test_broken_splits_without_tb_keep_components():
+    p = {"playerId": "x", "firstName": "N", "lastName": "C",
+         "stats": {"batting": {"overall": {"GP": 5, "PA": 20, "AB": 18, "H": 6,
+                   "1B": 0, "2B": 0, "3B": 0, "HR": 1}}}}
+    assert iscore._norm_bat(p, "T")["d"] == 0

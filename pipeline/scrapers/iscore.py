@@ -68,10 +68,18 @@ def _name(p):
 
 def _norm_bat(p, team_name):
     b, r = _overall(p, "batting"), _overall(p, "running")
+    h, hr, d, t = _n(b, "H"), _n(b, "HR"), _n(b, "2B"), _n(b, "3B")
+    # iScore regression (2026-07-20): 1B/2B/3B zero out upstream while H/HR/TB
+    # stay correct. When components can't reproduce H, rebuild 2B from the
+    # total-bases identity so real doubles don't read as a decrease.
+    if _n(b, "1B") + d + t + hr != h:
+        derived = _n(b, "TB") - h - 3 * hr - 2 * t
+        if 0 <= derived <= h - hr - t:
+            d = derived
     return {
         "stats_id": str(p["playerId"]), "name": _name(p), "team": team_name,
-        "g": _n(b, "GP"), "ab": _n(b, "AB"), "r": _n(b, "R"), "h": _n(b, "H"),
-        "d": _n(b, "2B"), "t": _n(b, "3B"), "hr": _n(b, "HR"), "rbi": _n(b, "RBI"),
+        "g": _n(b, "GP"), "ab": _n(b, "AB"), "r": _n(b, "R"), "h": h,
+        "d": d, "t": t, "hr": hr, "rbi": _n(b, "RBI"),
         "bb": _n(b, "BB"), "k": _n(b, "SO"), "hbp": _n(b, "HBP"),
         "sb": _n(r, "SB"), "cs": _n(r, "CS"),
         "sf": _n(b, "SF"), "sh": _n(b, "SH"), "pa": _n(b, "PA"),

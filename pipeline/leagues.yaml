@@ -50,12 +50,16 @@ sfcbl:
   season_id: 1a8ebd76-1702-4d2e-af70-88ad3a3a9040
   season: 2026
   tier: 1
-alpb:
-  name: Atlantic League (independent pro)
-  abbrev: ALPB
-  official_url: https://atlanticleague.com
-  platform: pending
-  tier: null
+cpl:
+  name: Coastal Plain League
+  abbrev: CPL
+  official_url: https://coastalplain.com
+  platform: iscore
+  api_base: https://api.microservices.iscoresports.com/api
+  league_id: 61a894f0-7e75-4e5f-a717-f755efac0cfb
+  season_id: d7bafd19-85fb-4607-a7a7-d9e8909034cc
+  season: 2026
+  tier: 1
 sunbelt:
   name: Sunbelt Baseball League
   abbrev: SBL

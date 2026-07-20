@@ -4,17 +4,19 @@ from pipeline import registry
 
 def test_load_all_seed_files():
     players, leagues = registry.load_all("pipeline/players.yaml", "pipeline/leagues.yaml")
-    assert len(players) == 42
+    assert len(players) == 40
     slugs = [p["slug"] for p in players]
     assert len(slugs) == len(set(slugs))
     assigned = [p for p in players if p["summer"]["status"] == "assigned"]
     assert len(assigned) == 21
     slugs = {p["slug"] for p in assigned}
-    assert {"jamie-vicens", "riley-hasenstab", "coleman-lewis", "caden-spivey",
+    assert {"jamie-vicens", "riley-hasenstab", "coleman-lewis",
             "jordan-lodise", "brady-fox", "jackson-blakely", "jayden-stroman",
-            "patrick-walsh", "logan-keilen", "kolby-martin", "cooper-underwood"} <= slugs
+            "patrick-walsh", "logan-keilen", "kolby-martin", "cooper-underwood",
+            "isaiah-galason"} <= slugs
+    assert "caden-spivey" not in {p["slug"] for p in players}  # out of eligibility, removed 7/15
     not_playing = {p["slug"] for p in players if p["summer"]["status"] == "not_playing"}
-    assert not_playing == {"brett-barfield", "kayden-campbell", "caden-gaudette"}
+    assert not_playing == {"caden-gaudette"}
     assert "northwoods" in leagues and leagues["northwoods"]["tier"] == 1
 
 
