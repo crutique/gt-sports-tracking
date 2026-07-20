@@ -168,10 +168,13 @@ def _load_flags(flags_path):
 
 
 def _append_flag(flags_path, flag):
-    """Append `flag` unless one with the same source_url is already present.
-    Returns True if it was appended."""
+    """Append `flag` unless one with the same (player, source_url) is already
+    present -- the dedupe key must include the player because one URL (e.g.
+    the MLB signing tracker) legitimately names many players. Returns True if
+    it was appended."""
     flags = _load_flags(flags_path)
-    if any(f.get("source_url") == flag.get("source_url") for f in flags):
+    if any(f.get("player") == flag.get("player")
+           and f.get("source_url") == flag.get("source_url") for f in flags):
         return False
     flags.append(flag)
     p = Path(flags_path)

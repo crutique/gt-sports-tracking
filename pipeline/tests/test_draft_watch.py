@@ -113,6 +113,7 @@ def test_unverified_result_edits_yaml_preserving_flow_style_and_regenerates_json
 
     # every OTHER line -- comments included -- must survive byte-for-byte
     original_lines = REAL_DRAFT_YAML.read_text().splitlines()
+    assert len(original_lines) == len(new_lines)
     for orig, new in zip(original_lines, new_lines):
         if orig.startswith("- {name: Vahn Lackey"):
             continue
@@ -181,6 +182,39 @@ def test_flag_result_appends_to_flags_file_deduped_by_source_url(tmp_path, monke
     assert rc2 == 0
     flags2 = json.loads(flags_path.read_text())
     assert len(flags2) == 1
+
+
+def test_flag_dedupe_is_per_player_and_source_url(tmp_path, monkeypatch, api):
+    """The MLB tracker is ONE constant URL that names many players; a dedupe
+    keyed on source_url alone would suppress every player after the first.
+    The key must be (player, source_url): different players from the same URL
+    both persist, while the same player + same URL still dedupes on re-run."""
+    draft_path = _copy_draft_yaml(tmp_path)
+    out_dir = tmp_path / "out"
+    flags_path = tmp_path / "flags.json"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    tracker_url = "https://www.mlb.com/news/2026-mlb-draft-signing-tracker"
+
+    def _fake_extract(snippets, player_name):
+        if player_name in ("Drew Burress", "Tate McKee"):
+            return {"event": "expected", "amount": None, "source_url": tracker_url,
+                    "quote": f"{player_name} is expected to sign this week."}
+        return {"event": "none"}
+    monkeypatch.setattr(news_scan, "_extract", _fake_extract)
+
+    rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
+                          out_dir=str(out_dir), flags_path=str(flags_path))
+    assert rc == 0
+    flags = json.loads(flags_path.read_text())
+    assert {(f["player"], f["source_url"]) for f in flags} == {
+        ("Drew Burress", tracker_url), ("Tate McKee", tracker_url)}
+    assert len(flags) == 2
+
+    # same players + same URL on a re-run -- still no duplicates
+    rc2 = draft_watch.run(today="2026-07-22", draft_path=str(draft_path),
+                           out_dir=str(out_dir), flags_path=str(flags_path))
+    assert rc2 == 0
+    assert len(json.loads(flags_path.read_text())) == 2
 
 
 # ---------------------------------------------------------------------------
