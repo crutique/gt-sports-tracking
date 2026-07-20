@@ -26,7 +26,7 @@ const gamelog = getGamelog(player.slug);
 const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
 ---
 <Base title={`${player.name} — GT Summer Tracker`}>
-  <a class="back" href="/">← All players</a>
+  <a class="back" id="back-link" href="/">← All players</a>
   {sample && <SampleDataBanner leagueName={league?.name ?? 'League'} />}
   <article class="card profile">
     <PlayerHero player={player} league={league} />
@@ -108,6 +108,24 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
     {hasStats && <GameLogTable entries={gamelog} side={logSide} />}
   </article>
 </Base>
+
+<script>
+  // Go back via history when the visitor came from this site, so the dashboard
+  // keeps its tab/filter/sort state (carried in its URL). href="/" stays as the
+  // fallback for direct visits and new tabs.
+  document.getElementById('back-link')!.addEventListener('click', (e) => {
+    let sameOrigin = false;
+    try {
+      sameOrigin = Boolean(document.referrer) && new URL(document.referrer).origin === location.origin;
+    } catch {
+      /* unparseable referrer: use the href fallback */
+    }
+    if (sameOrigin && history.length > 1) {
+      e.preventDefault();
+      history.back();
+    }
+  });
+</script>
 
 <style>
   .back {

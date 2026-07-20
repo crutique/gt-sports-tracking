@@ -139,46 +139,100 @@ function leagueLabel(p: Player): string {
 
 <script>
   import { compareCells } from '../lib/tableSort';
-
-  document.querySelectorAll<HTMLButtonElement>('.tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach((t) => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      document.getElementById('hitters')!.toggleAttribute('hidden', tab.dataset.target !== 'hitters');
-      document.getElementById('pitchers')!.toggleAttribute('hidden', tab.dataset.target !== 'pitchers');
-    });
-  });
+  import type { SortDir } from '../lib/tableSort';
+  import { parseViewState, serializeViewState } from '../lib/viewState';
+  import type { Tab, ViewState } from '../lib/viewState';
 
   const filter = document.getElementById('league-filter') as HTMLSelectElement;
-  filter.addEventListener('change', () => {
+
+  function activateTab(tab: HTMLButtonElement) {
+    document.querySelectorAll('.tab').forEach((t) => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    document.getElementById('hitters')!.toggleAttribute('hidden', tab.dataset.target !== 'hitters');
+    document.getElementById('pitchers')!.toggleAttribute('hidden', tab.dataset.target !== 'pitchers');
+  }
+
+  function applyLeagueFilter() {
     document.querySelectorAll<HTMLTableRowElement>('tr[data-league]').forEach((row) => {
       row.style.display = !filter.value || row.dataset.league === filter.value ? '' : 'none';
     });
+  }
+
+  function applySort(table: HTMLTableElement, th: HTMLTableCellElement, dir: SortDir) {
+    const idx = th.cellIndex;
+    table.querySelectorAll('th').forEach((h) => {
+      delete h.dataset.dir;
+      h.removeAttribute('aria-sort');
+    });
+    th.dataset.dir = dir;
+    th.setAttribute('aria-sort', dir === 'asc' ? 'ascending' : 'descending');
+    const numeric = th.hasAttribute('data-numeric');
+    const body = table.tBodies[0];
+    [...body.rows]
+      .sort((a, b) => compareCells(
+        a.cells[idx].dataset.v ?? '', b.cells[idx].dataset.v ?? '', numeric, dir))
+      .forEach((r) => body.appendChild(r));
+  }
+
+  function currentState(): ViewState {
+    const active = document.querySelector<HTMLButtonElement>('.tab.active');
+    const tab: Tab = active?.dataset.target === 'pitchers' ? 'pitchers' : 'hitters';
+    const sorted = document.querySelector<HTMLTableCellElement>(`#${tab} th[data-dir]`);
+    return {
+      tab,
+      league: filter.value,
+      sort: sorted
+        ? { key: sorted.dataset.key!, dir: sorted.dataset.dir === 'desc' ? 'desc' : 'asc' }
+        : null,
+    };
+  }
+
+  function syncUrl() {
+    const qs = serializeViewState(currentState());
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      activateTab(tab);
+      syncUrl();
+    });
+  });
+
+  filter.addEventListener('change', () => {
+    applyLeagueFilter();
+    syncUrl();
   });
 
   document.querySelectorAll<HTMLTableElement>('table[data-sortable]').forEach((table) => {
-    table.querySelectorAll<HTMLTableCellElement>('th[data-key]').forEach((th, idx) => {
+    table.querySelectorAll<HTMLTableCellElement>('th[data-key]').forEach((th) => {
       th.addEventListener('click', () => {
-        const dir = th.dataset.dir === 'asc' ? 'desc' : 'asc';
-        table.querySelectorAll('th').forEach((h) => {
-          delete h.dataset.dir;
-          h.removeAttribute('aria-sort');
-        });
-        th.dataset.dir = dir;
-        th.setAttribute('aria-sort', dir === 'asc' ? 'ascending' : 'descending');
-        const numeric = th.hasAttribute('data-numeric');
-        const body = table.tBodies[0];
-        [...body.rows]
-          .sort((a, b) => compareCells(
-            a.cells[idx].dataset.v ?? '', b.cells[idx].dataset.v ?? '', numeric, dir as 'asc' | 'desc'))
-          .forEach((r) => body.appendChild(r));
+        applySort(table, th, th.dataset.dir === 'asc' ? 'desc' : 'asc');
+        syncUrl();
       });
     });
   });
+
+  // Restore view state carried in the URL (e.g. returning via browser back from a player page),
+  // driving the same code paths the click/change handlers use. Unknown values are ignored.
+  const restored = parseViewState(location.search);
+  if (restored.tab === 'pitchers') {
+    const btn = document.querySelector<HTMLButtonElement>('.tab[data-target="pitchers"]');
+    if (btn) activateTab(btn);
+  }
+  if (restored.league && [...filter.options].some((o) => o.value === restored.league)) {
+    filter.value = restored.league;
+    applyLeagueFilter();
+  }
+  if (restored.sort) {
+    const table = document.querySelector<HTMLTableElement>(`#${restored.tab} table[data-sortable]`);
+    const th = table?.querySelector<HTMLTableCellElement>(`th[data-key="${CSS.escape(restored.sort.key)}"]`);
+    if (table && th) applySort(table, th, restored.sort.dir);
+  }
 </script>
 
 <style>
