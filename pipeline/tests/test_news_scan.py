@@ -476,3 +476,45 @@ def test_default_session_get_browser_ua_timeout_and_status_check(monkeypatch):
     assert captured["headers"]["User-Agent"].startswith("Mozilla/5.0")
     assert captured["timeout"] == 30
     assert captured.get("status_checked")
+
+
+def test_parse_extraction_unwraps_markdown_fences():
+    # Observed live: the CLI backend wraps its JSON in ```json fences.
+    fenced = '```json\n{"event": "signed", "amount": 9500000, ' \
+             '"source_url": "https://www.si.com", "quote": "Lackey signed"}\n```'
+    data = news_scan._parse_extraction(fenced, "Vahn Lackey")
+    assert data["event"] == "signed" and data["amount"] == 9500000
+
+
+def test_mlb_tracker_url_is_the_real_slug():
+    # Regression: the 2026-07-20 run 404'd on a guessed slug every scan.
+    assert news_scan._MLB_TRACKER_URL == \
+        "https://www.mlb.com/news/2026-draft-signing-and-bonus-tracker"
+
+
+def test_nytimes_is_whitelisted():
+    assert news_scan._whitelisted("www.nytimes.com")
+
+
+def test_extract_failure_warns_and_counts(monkeypatch, capsys):
+    news_scan.reset_warnings()
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setattr(news_scan, "_client", lambda: (_ for _ in ()).throw(RuntimeError("boom")))
+    assert news_scan._extract([{"text": "x", "url": "u"}], "A B") == {"event": "none"}
+    assert "extract failed for 'A B'" in capsys.readouterr().out
+    assert news_scan.WARNING_COUNT == 1
+
+
+def test_parse_extraction_tolerates_trailing_prose_after_fence():
+    # Observed live 7/20: the CLI emits the fenced JSON then keeps explaining.
+    text = ('```json\n{"event": "signed", "amount": null, '
+            '"source_url": "https://www.nytimes.com", '
+            '"quote": "Vahn Lackey agree to contract terms"}\n```\n\n'
+            'Snippet [1] from The New York Times uses definitive language...')
+    data = news_scan._parse_extraction(text, "Vahn Lackey")
+    assert data["event"] == "signed" and data["amount"] is None
+
+
+def test_parse_extraction_bare_json_with_prose_around_it():
+    text = 'Here is my answer:\n{"event": "none"}\nHope that helps!'
+    assert news_scan._parse_extraction(text, "A B") == {"event": "none"}

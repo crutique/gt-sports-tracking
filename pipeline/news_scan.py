@@ -26,13 +26,29 @@ from urllib.parse import urlparse
 import requests
 
 WHITELIST = {"mlb.com", "milb.com", "mlbtraderumors.com", "si.com", "espn.com",
-             "theathletic.com", "ajc.com"}
+             "theathletic.com", "ajc.com", "nytimes.com", "cbssports.com"}
+
+# Count of warnings emitted this run -- draft_watch resets it at start and
+# surfaces the total in its summary line, so a broken scan can never
+# masquerade as a quiet news day again (the Lackey/Burress lesson, 7/20).
+WARNING_COUNT = 0
+
+
+def _warn(msg):
+    global WARNING_COUNT
+    WARNING_COUNT += 1
+    print(f"[news_scan] warning: {msg}")
+
+
+def reset_warnings():
+    global WARNING_COUNT
+    WARNING_COUNT = 0
 
 _HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                           "AppleWebKit/537.36 (KHTML, like Gecko) "
                           "Chrome/126.0.0.0 Safari/537.36"}
 _SNIPPET_RADIUS = 300
-_MLB_TRACKER_URL = "https://www.mlb.com/news/2026-mlb-draft-signing-tracker"
+_MLB_TRACKER_URL = "https://www.mlb.com/news/2026-draft-signing-and-bonus-tracker"
 _GTSWARM_THREAD = "https://gtswarm.com/threads/2026-mlb-draft.31400/"
 _MODEL = "claude-haiku-4-5-20251001"
 _CLAUDE_CLI = "claude"
@@ -237,8 +253,7 @@ def fetch_snippets(player_name, session_get):
                     seen_urls.add(snip["url"])
                     snippets.append(snip)
         except Exception as exc:  # noqa: BLE001 -- isolate one dead source
-            print(f"[news_scan] warning: {label} fetch failed for "
-                  f"{player_name!r}: {exc}")
+            _warn(f"{label} fetch failed for {player_name!r}: {exc}")
     return snippets
 
 
@@ -282,7 +297,9 @@ def _extract_cli(prompt):
     )
     if result.returncode != 0:
         raise RuntimeError(
-            f"claude CLI exited {result.returncode}: {result.stderr.strip()}")
+            f"claude CLI exited {result.returncode}: "
+            f"stderr={result.stderr.strip()[:200]!r} "
+            f"stdout={result.stdout.strip()[:200]!r}")
     return result.stdout
 
 
@@ -297,7 +314,27 @@ def _parse_extraction(text, player_name):
     model answer that latched onto a teammate in the same snippet never
     reaches decide().
     """
-    data = json.loads(text)
+    # The CLI backend (and occasionally the SDK) wraps the JSON in a markdown
+    # fence AND may append explanatory prose after it (observed live 7/20).
+    # Parse candidates in order: first fenced block anywhere, the whole text,
+    # then the outermost {...} span amid surrounding prose.
+    candidates = []
+    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    if fenced:
+        candidates.append(fenced.group(1))
+    candidates.append(text.strip())
+    braced = re.search(r"\{.*\}", text, re.DOTALL)
+    if braced:
+        candidates.append(braced.group(0))
+    data = None
+    for cand in candidates:
+        try:
+            data = json.loads(cand)
+            break
+        except ValueError:
+            continue
+    if data is None:
+        return {"event": "none"}
     if not isinstance(data, dict) or "event" not in data:
         return {"event": "none"}
     if data["event"] != "none":
@@ -345,7 +382,8 @@ def _extract(snippets, player_name):
         else:
             return {"event": "none"}
         return _parse_extraction(text, player_name)
-    except Exception:  # noqa: BLE001 -- malformed output must never crash the run
+    except Exception as e:  # noqa: BLE001 -- malformed output must never crash the run
+        _warn(f"extract failed for {player_name!r}: {type(e).__name__}: {str(e)[:200]}")
         return {"event": "none"}
 
 

@@ -237,6 +237,7 @@ def run(today=None, draft_path=DEFAULT_DRAFT_PATH, out_dir=DEFAULT_OUT_DIR,
     players_by_name = {p["name"]: p for p in draft_json["players"]}
     reported_count = unverified_count = flags_count = 0
     yaml_changed = False
+    news_scan.reset_warnings()
 
     for e in entries:
         if e.get("udfa"):
@@ -262,14 +263,17 @@ def run(today=None, draft_path=DEFAULT_DRAFT_PATH, out_dir=DEFAULT_OUT_DIR,
                 if _append_flag(flags_path, flag):
                     flags_count += 1
         except Exception as exc:  # noqa: BLE001 -- one player's scan must never sink the run
-            print(f"[news_scan] warning: scan failed for {e['name']!r}: {exc}")
+            news_scan._warn(f"scan failed for {e['name']!r}: {exc}")
 
     if yaml_changed:
         entries = draft_registry.load_draft(draft_path, slugs)
         _write_draft_json(entries, today, out_dir)
 
+    # warnings=N is the tamper-light: a fully broken scan shows a large N here
+    # instead of masquerading as a quiet news day (Lackey/Burress miss, 7/20).
     print(f"[watch] official={official_count} reported={reported_count} "
-          f"unverified={unverified_count} flags={flags_count} skipped-sources=[]")
+          f"unverified={unverified_count} flags={flags_count} "
+          f"warnings={news_scan.WARNING_COUNT}")
     return 0
 
 
