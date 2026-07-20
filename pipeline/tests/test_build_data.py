@@ -6,6 +6,15 @@ import pytest
 
 from pipeline import build_data
 
+
+@pytest.fixture(autouse=True)
+def _no_live_draft(monkeypatch, tmp_path):
+    """Keep build tests offline by default: point the default draft path at nothing.
+
+    Draft-specific tests pass an explicit draft_path, so they are unaffected.
+    """
+    monkeypatch.setattr(build_data, "DEFAULT_DRAFT_PATH", str(tmp_path / "absent-draft.yaml"))
+
 LEAGUES_TEMPLATE = (
     "northwoods:\n  name: Northwoods League\n  abbrev: NWL\n"
     "  official_url: https://northwoodsleague.com\n  platform: fixture\n"
@@ -193,16 +202,7 @@ def test_present_player_empty_log_fetch_keeps_existing_file(tmp_path):
     assert log_path.read_text() == log_before                # log file untouched
 
 
-@pytest.fixture(autouse=True)
-def _no_live_draft(request, monkeypatch, tmp_path):
-    """Keep pre-existing build tests offline: default to a nonexistent draft path."""
-    if "draft" in request.node.name:
-        return    # draft-specific tests manage their own draft_path/mocks
-    from pipeline import build_data as bd
-    monkeypatch.setattr(bd, "DEFAULT_DRAFT_PATH", str(tmp_path / "absent-draft.yaml"))
-
-
-def test_draft_json_written_and_isolated(tmp_path, monkeypatch, capsys):
+def test_draft_json_written_and_isolated(tmp_path, monkeypatch):
     players, leagues, _ = _setup(tmp_path)
     draft_yaml = tmp_path / "draft.yaml"
     draft_yaml.write_text("- {name: A, person_id: 1, gt_role: departing}\n")
@@ -215,6 +215,7 @@ def test_draft_json_written_and_isolated(tmp_path, monkeypatch, capsys):
                               draft_path=str(draft_yaml))
     assert (tmp_path / "out" / "draft.json").exists()
     assert not any(k == "draft" for k, _ in result.failures)
+    assert (tmp_path / "hist" / "2026-07-20" / "draft.json").exists()
 
 
 def test_draft_failure_keeps_previous_file(tmp_path, monkeypatch, capsys):

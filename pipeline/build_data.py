@@ -5,6 +5,7 @@ import json
 import os
 import sys
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from pipeline import compute, draft_registry, draft_status, name_watch, output, registry, validate
 from pipeline.scrapers import SCRAPERS
@@ -69,12 +70,10 @@ def build(players_path, leagues_path, out_dir, history_dir, today=None, draft_pa
             d_entries = draft_registry.load_draft(draft_path, {p["slug"] for p in players})
             draft_json = draft_status.build_draft(d_entries, today)
             os.makedirs(out_dir, exist_ok=True)
-            with open(os.path.join(out_dir, "draft.json"), "w") as f:
-                json.dump(draft_json, f, indent=1)
-            hist = os.path.join(history_dir, today)
-            os.makedirs(hist, exist_ok=True)
-            with open(os.path.join(hist, "draft.json"), "w") as f:
-                json.dump(draft_json, f, indent=1)
+            # json.dumps serializes fully before the file is touched, so a bad payload
+            # can't clobber the previous draft.json. History snapshot comes from
+            # write_outputs' copytree of out_dir below.
+            Path(out_dir, "draft.json").write_text(json.dumps(draft_json, indent=1))
         except Exception as e:  # noqa: BLE001 — same isolation ethos as leagues
             result.failures.append(("draft", str(e)))
             print(f"[build] FAILED draft: {e} — keeping previous data (if any)", file=sys.stderr)
