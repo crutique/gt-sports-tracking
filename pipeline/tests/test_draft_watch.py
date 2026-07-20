@@ -95,37 +95,37 @@ def test_unverified_result_edits_yaml_preserving_flow_style_and_regenerates_json
     out_dir = tmp_path / "out"
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setattr(news_scan, "_extract", _extract_only_for(
-        "Vahn Lackey",
+        "Tate McKee",
         {"event": "signed", "amount": 9000000,
          "source_url": "https://gtswarm.com/threads/2026-mlb-draft.31400/post-1",
-         "quote": "Lackey has agreed to terms."}))
+         "quote": "McKee has agreed to terms."}))
 
     rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
                           out_dir=str(out_dir), flags_path=str(tmp_path / "flags.json"))
     assert rc == 0
 
     new_lines = draft_path.read_text().splitlines()
-    lackey_line = next(l for l in new_lines if l.startswith("- {name: Vahn Lackey"))
-    assert lackey_line.startswith("- {name:")
-    assert "unverified: {bonus: 9000000" in lackey_line
-    assert '"https://gtswarm.com/threads/2026-mlb-draft.31400/post-1"' in lackey_line
-    assert 'detected: "2026-07-21"' in lackey_line
+    mckee_line = next(l for l in new_lines if l.startswith("- {name: Tate McKee"))
+    assert mckee_line.startswith("- {name:")
+    assert "unverified: {bonus: 9000000" in mckee_line
+    assert '"https://gtswarm.com/threads/2026-mlb-draft.31400/post-1"' in mckee_line
+    assert 'detected: "2026-07-21"' in mckee_line
 
     # every OTHER line -- comments included -- must survive byte-for-byte
     original_lines = REAL_DRAFT_YAML.read_text().splitlines()
     assert len(original_lines) == len(new_lines)
     for orig, new in zip(original_lines, new_lines):
-        if orig.startswith("- {name: Vahn Lackey"):
+        if orig.startswith("- {name: Tate McKee"):
             continue
         assert orig == new
     assert original_lines[0].startswith("#")   # sanity: this really is a comment line
     assert original_lines[0] == new_lines[0]
 
     draft_json = json.loads((out_dir / "draft.json").read_text())
-    lackey = next(p for p in draft_json["players"] if p["name"] == "Vahn Lackey")
-    assert lackey["bonus"] == 9000000
-    assert lackey["bonusSource"] == "unverified"
-    assert lackey["status"] == "unsigned"          # unverified never implies signed
+    mckee = next(p for p in draft_json["players"] if p["name"] == "Tate McKee")
+    assert mckee["bonus"] == 9000000
+    assert mckee["bonusSource"] == "unverified"
+    assert mckee["status"] == "unsigned"          # unverified never implies signed
 
 
 def test_unverified_rerun_is_idempotent_no_duplicate_key(tmp_path, monkeypatch, api):
@@ -136,8 +136,8 @@ def test_unverified_rerun_is_idempotent_no_duplicate_key(tmp_path, monkeypatch, 
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     extraction = {"event": "signed", "amount": 9000000,
                   "source_url": "https://gtswarm.com/threads/2026-mlb-draft.31400/post-1",
-                  "quote": "Lackey has agreed to terms."}
-    monkeypatch.setattr(news_scan, "_extract", _extract_only_for("Vahn Lackey", extraction))
+                  "quote": "McKee has agreed to terms."}
+    monkeypatch.setattr(news_scan, "_extract", _extract_only_for("Tate McKee", extraction))
 
     draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
                      out_dir=str(out_dir), flags_path=str(tmp_path / "flags.json"))
@@ -146,9 +146,9 @@ def test_unverified_rerun_is_idempotent_no_duplicate_key(tmp_path, monkeypatch, 
     assert rc2 == 0
 
     lines = draft_path.read_text().splitlines()
-    lackey_line = next(l for l in lines if l.startswith("- {name: Vahn Lackey"))
-    assert lackey_line.count("unverified:") == 1
-    assert 'detected: "2026-07-21"' in lackey_line   # not overwritten with the 2nd run's date
+    mckee_line = next(l for l in lines if l.startswith("- {name: Tate McKee"))
+    assert mckee_line.count("unverified:") == 1
+    assert 'detected: "2026-07-21"' in mckee_line   # not overwritten with the 2nd run's date
 
 
 # ---------------------------------------------------------------------------
@@ -274,15 +274,15 @@ def test_run_with_only_oauth_token_runs_scan(tmp_path, monkeypatch, api):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
     monkeypatch.setattr(news_scan, "_extract", _extract_only_for(
-        "Vahn Lackey",
+        "Tate McKee",
         {"event": "signed", "amount": 9000000,
          "source_url": "https://gtswarm.com/threads/2026-mlb-draft.31400/post-1",
-         "quote": "Lackey has agreed to terms."}))
+         "quote": "McKee has agreed to terms."}))
 
     rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
                           out_dir=str(out_dir), flags_path=str(tmp_path / "flags.json"))
     assert rc == 0
 
     new_lines = draft_path.read_text().splitlines()
-    lackey_line = next(l for l in new_lines if l.startswith("- {name: Vahn Lackey"))
-    assert "unverified: {bonus: 9000000" in lackey_line
+    mckee_line = next(l for l in new_lines if l.startswith("- {name: Tate McKee"))
+    assert "unverified: {bonus: 9000000" in mckee_line
