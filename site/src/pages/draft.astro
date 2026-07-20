@@ -21,7 +21,7 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
     <div class="scroll">
       <table>
         <thead>
-          <tr><th>Pick</th><th>Player</th><th>Drafted by</th><th>Slot value</th><th>Bonus</th><th>Status</th></tr>
+          <tr><th scope="col">Pick</th><th scope="col">Player</th><th scope="col">Drafted by</th><th scope="col">Slot value</th><th scope="col">Bonus</th><th scope="col">Status</th></tr>
         </thead>
         <tbody>
           {draft.players.map((p) => {
@@ -30,14 +30,16 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
               <tr>
                 <td class="pick">{p.pick != null ? `R${p.round} · #${p.pick}` : '—'}</td>
                 <td class="player">
-                  {reg
-                    ? <Headshot name={p.name} photo={reg.photo} size={32} />
-                    : (p.headshot ? <img class="hs" src={p.headshot} alt="" width="32" height="32" loading="lazy" /> : <Headshot name={p.name} photo={null} size={32} />)}
-                  <span class="pcell">
-                    {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : p.name}
-                    <span class="role">{p.gtRole === 'signee' ? 'Incoming signee' : 'GT 2026'}</span>
-                    {p.note && <span class="pnote">{p.note}</span>}
-                  </span>
+                  <div class="pwrap">
+                    {reg
+                      ? <Headshot name={p.name} photo={reg.photo} size={32} />
+                      : (p.headshot ? <img class="hs" src={p.headshot} alt="" width="32" height="32" loading="lazy" /> : <Headshot name={p.name} photo={null} size={32} />)}
+                    <span class="pcell">
+                      {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : p.name}
+                      <span class="role">{p.gtRole === 'signee' ? 'Incoming signee' : 'GT 2026'}</span>
+                      {p.note && <span class="pnote">{p.note}</span>}
+                    </span>
+                  </div>
                 </td>
                 <td>{p.team ?? '—'}</td>
                 <td class="num">{fmtMoney(p.slot)}</td>
@@ -83,7 +85,8 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
   th { text-align: left; font-size: 12px; color: var(--text-mut); border-bottom: 2px solid var(--line); padding: 6px 10px; }
   td { border-bottom: 1px solid var(--line); padding: 8px 10px; vertical-align: middle; }
   .pick { white-space: nowrap; color: var(--text-mut); }
-  .player { display: flex; align-items: center; gap: 10px; min-width: 220px; }
+  .player { min-width: 220px; }
+  .pwrap { display: flex; align-items: center; gap: 10px; }
   .hs { border-radius: 50%; object-fit: cover; background: var(--line); }
   .pcell { display: flex; flex-direction: column; }
   .role { font-size: 11px; color: var(--text-mut); }
