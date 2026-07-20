@@ -2,6 +2,8 @@ import json
 import shutil
 from pathlib import Path
 
+import pytest
+
 from pipeline import build_data
 
 LEAGUES_TEMPLATE = (
@@ -189,3 +191,54 @@ def test_present_player_empty_log_fetch_keeps_existing_file(tmp_path):
     recs = {r["slug"]: r for r in json.loads((out / "players.json").read_text())}
     assert recs["jackson-blakely"]["asOf"] == "2026-07-15"   # stats ARE fresh
     assert log_path.read_text() == log_before                # log file untouched
+
+
+@pytest.fixture(autouse=True)
+def _no_live_draft(request, monkeypatch, tmp_path):
+    """Keep pre-existing build tests offline: default to a nonexistent draft path."""
+    if "draft" in request.node.name:
+        return    # draft-specific tests manage their own draft_path/mocks
+    from pipeline import build_data as bd
+    monkeypatch.setattr(bd, "DEFAULT_DRAFT_PATH", str(tmp_path / "absent-draft.yaml"))
+
+
+def test_draft_json_written_and_isolated(tmp_path, monkeypatch, capsys):
+    players, leagues, _ = _setup(tmp_path)
+    draft_yaml = tmp_path / "draft.yaml"
+    draft_yaml.write_text("- {name: A, person_id: 1, gt_role: departing}\n")
+    from pipeline import draft_status
+    monkeypatch.setattr(draft_status, "build_draft",
+                        lambda entries, today, deadline=draft_status.DEADLINE:
+                        {"asOf": today, "players": [], "udfa": []})
+    result = build_data.build(players, leagues, str(tmp_path / "out"),
+                              str(tmp_path / "hist"), today="2026-07-20",
+                              draft_path=str(draft_yaml))
+    assert (tmp_path / "out" / "draft.json").exists()
+    assert not any(k == "draft" for k, _ in result.failures)
+
+
+def test_draft_failure_keeps_previous_file(tmp_path, monkeypatch, capsys):
+    players, leagues, _ = _setup(tmp_path)
+    draft_yaml = tmp_path / "draft.yaml"
+    draft_yaml.write_text("- {name: A, person_id: 1, gt_role: departing}\n")
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "draft.json").write_text('{"asOf": "2026-07-19", "players": [], "udfa": []}')
+    from pipeline import draft_status
+    def boom(entries, today, deadline=draft_status.DEADLINE):
+        raise RuntimeError("api down")
+    monkeypatch.setattr(draft_status, "build_draft", boom)
+    result = build_data.build(players, leagues, str(out),
+                              str(tmp_path / "hist"), today="2026-07-20",
+                              draft_path=str(draft_yaml))
+    assert ("draft", "api down") in [(k, e) for k, e in result.failures]
+    assert '"2026-07-19"' in (out / "draft.json").read_text()   # previous file untouched
+    assert "FAILED draft" in capsys.readouterr().err
+
+
+def test_missing_draft_yaml_is_not_an_error(tmp_path):
+    players, leagues, _ = _setup(tmp_path)
+    result = build_data.build(players, leagues, str(tmp_path / "out"),
+                              str(tmp_path / "hist"), today="2026-07-20",
+                              draft_path=str(tmp_path / "nope.yaml"))
+    assert not any(k == "draft" for k, _ in result.failures)

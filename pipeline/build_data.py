@@ -1,11 +1,15 @@
 """Orchestrator: registry -> scrape -> validate -> compute -> write. CLI entry."""
 import argparse
 import datetime
+import json
+import os
 import sys
 from dataclasses import dataclass, field
 
-from pipeline import compute, name_watch, output, registry, validate
+from pipeline import compute, draft_registry, draft_status, name_watch, output, registry, validate
 from pipeline.scrapers import SCRAPERS
+
+DEFAULT_DRAFT_PATH = "pipeline/draft.yaml"
 
 
 @dataclass
@@ -19,8 +23,9 @@ class ValidationFailure(Exception):
     pass
 
 
-def build(players_path, leagues_path, out_dir, history_dir, today=None):
+def build(players_path, leagues_path, out_dir, history_dir, today=None, draft_path=None):
     today = today or datetime.date.today().isoformat()
+    draft_path = draft_path or DEFAULT_DRAFT_PATH
     players, leagues = registry.load_all(players_path, leagues_path)
     previous = output.load_previous(out_dir)
     result = BuildResult()
@@ -59,6 +64,21 @@ def build(players_path, leagues_path, out_dir, history_dir, today=None):
             result.failures.append((key, str(e)))
             print(f"[build] FAILED {key}: {e} — keeping previous data (if any)", file=sys.stderr)
 
+    if os.path.exists(draft_path):
+        try:
+            d_entries = draft_registry.load_draft(draft_path, {p["slug"] for p in players})
+            draft_json = draft_status.build_draft(d_entries, today)
+            os.makedirs(out_dir, exist_ok=True)
+            with open(os.path.join(out_dir, "draft.json"), "w") as f:
+                json.dump(draft_json, f, indent=1)
+            hist = os.path.join(history_dir, today)
+            os.makedirs(hist, exist_ok=True)
+            with open(os.path.join(hist, "draft.json"), "w") as f:
+                json.dump(draft_json, f, indent=1)
+        except Exception as e:  # noqa: BLE001 — same isolation ethos as leagues
+            result.failures.append(("draft", str(e)))
+            print(f"[build] FAILED draft: {e} — keeping previous data (if any)", file=sys.stderr)
+
     records = output.assemble(players, leagues, league_bundles, previous, today)
     output.write_outputs(records, leagues, gamelogs_by_slug, out_dir, history_dir, today)
     print(f"[build] wrote {len(records)} players; "
@@ -73,8 +93,9 @@ def main():
     ap.add_argument("--leagues", default="pipeline/leagues.yaml")
     ap.add_argument("--out", default="site/src/data")
     ap.add_argument("--history", default="data/history")
+    ap.add_argument("--draft", default=None)
     args = ap.parse_args()
-    result = build(args.players, args.leagues, args.out, args.history)
+    result = build(args.players, args.leagues, args.out, args.history, draft_path=args.draft)
     sys.exit(1 if result.failures else 0)
 
 
