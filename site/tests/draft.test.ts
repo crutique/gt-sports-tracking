@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fmtMoney, getDraft, STATUS_LABEL } from '../src/lib/draft';
+import { fmtMoney, getDraft, STATUS_LABEL, type DraftPlayer } from '../src/lib/draft';
 
 describe('draft data', () => {
   it('loads the draft file with players and udfa arrays', () => {
@@ -19,5 +19,28 @@ describe('draft data', () => {
   it('formats money and em-dashes null', () => {
     expect(fmtMoney(9740100)).toBe('$9,740,100');
     expect(fmtMoney(null)).toBe('—');
+  });
+
+  it('typechecks a DraftPlayer with the unverified bonus tier', () => {
+    const p: DraftPlayer = {
+      name: 'Test Player',
+      personId: 1,
+      gtRole: 'signee',
+      slug: null,
+      round: null,
+      pick: null,
+      team: null,
+      slot: null,
+      bonus: 9000000,
+      bonusSource: 'unverified',
+      reportedSourceUrl: null,
+      unverifiedSourceUrl: 'https://fan.example',
+      status: 'unsigned',
+      signedDate: null,
+      headshot: null,
+      note: null,
+    };
+    expect(p.bonusSource).toBe('unverified');
+    expect(p.unverifiedSourceUrl).toBe('https://fan.example');
   });
 });

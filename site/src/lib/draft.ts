@@ -12,8 +12,9 @@ export interface DraftPlayer {
   team: string | null;
   slot: number | null;
   bonus: number | null;
-  bonusSource: 'official' | 'reported' | null;
+  bonusSource: 'official' | 'reported' | 'unverified' | null;
   reportedSourceUrl: string | null;
+  unverifiedSourceUrl: string | null;
   status: DraftStatus;
   signedDate: string | null;
   headshot: string | null;
