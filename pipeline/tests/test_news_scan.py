@@ -21,10 +21,41 @@ def test_decide_whitelisted_signed_is_reported():
                         "source": "https://si.com/mlb-draft/carson-kerce-signs"}
 
 
+def test_decide_www_prefix_passes_whitelist():
+    """Real feeds publish www-prefixed URLs (the committed gnews fixture's SI
+    source is literally https://www.si.com) — the whitelist check must
+    normalize the leading www. or every RSS report lands as unverified."""
+    extraction = {"event": "signed", "amount": 1900000,
+                  "source_url": "https://www.si.com",
+                  "quote": "Kerce has signed with the Diamondbacks."}
+    tier, payload = news_scan.decide(extraction, {}, TODAY)
+    assert tier == "reported"
+    assert payload == {"bonus": 1900000, "source": "https://www.si.com"}
+
+
+def test_decide_whitelist_subdomain_passes():
+    extraction = {"event": "signed", "amount": 1900000,
+                  "source_url": "https://news.si.com/mlb/kerce-signs",
+                  "quote": "Kerce has signed with the Diamondbacks."}
+    tier, _ = news_scan.decide(extraction, {}, TODAY)
+    assert tier == "reported"
+
+
+def test_decide_lookalike_domain_is_not_whitelisted():
+    """`notsi.com` merely ends with the characters "si.com" — the suffix rule
+    must match on `.si.com` (dot included) so lookalikes stay unverified."""
+    extraction = {"event": "signed", "amount": 1900000,
+                  "source_url": "https://notsi.com/mlb/kerce-signs",
+                  "quote": "Kerce has signed with the Diamondbacks."}
+    tier, payload = news_scan.decide(extraction, {}, TODAY)
+    assert tier == "unverified"
+    assert payload["detected"] == TODAY
+
+
 def test_decide_mlb_com_subdomain_passes_whitelist():
     """`mlb.com` itself is in WHITELIST, but real MLB pages hang off subdomains
-    (e.g. www.mlb.com) which are not literally in the set -- decide() special-
-    cases anything ending in `.mlb.com`."""
+    (e.g. www.mlb.com) which are not literally in the set -- the whitelist
+    suffix rule must catch anything ending in `.mlb.com`."""
     extraction = {"event": "signed", "amount": 500000,
                   "source_url": "https://www.mlb.com/news/2026-draft-signing-tracker",
                   "quote": "Kerce has signed with the Diamondbacks."}
@@ -206,3 +237,46 @@ def test_extract_client_raising_returns_none_event(monkeypatch):
     result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
                                  "Carson Kerce")
     assert result == {"event": "none"}
+
+
+def test_extract_quote_about_different_player_downgraded_to_none(monkeypatch):
+    """Spec guard: exact player-name match required in the quote. A model
+    answer whose quote never mentions the player's last name (it latched onto
+    a teammate in the same snippet) must be downgraded to none, enforced in
+    _extract post-validation so decide() stays a pure tier policy."""
+    payload = ('{"event": "signed", "amount": 500000, '
+               '"source_url": "https://si.com/x", '
+               '"quote": "Tate McKee has agreed to terms with the Braves."}')
+    monkeypatch.setattr(news_scan, "_client", lambda: _FakeClient(payload))
+    result = news_scan._extract(
+        [{"text": "McKee signed; Kerce still unsigned.", "url": "https://si.com/x"}],
+        "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+# ---------------------------------------------------------------------------
+# default_session_get() -- the production session_get for draft_watch
+# ---------------------------------------------------------------------------
+
+def test_default_session_get_browser_ua_timeout_and_status_check(monkeypatch):
+    captured = {}
+
+    class _FakeResp:
+        content = b"<rss>payload</rss>"
+
+        def raise_for_status(self):
+            captured["status_checked"] = True
+
+    def fake_get(url, headers=None, timeout=None):
+        captured["url"] = url
+        captured["headers"] = headers
+        captured["timeout"] = timeout
+        return _FakeResp()
+
+    monkeypatch.setattr(news_scan.requests, "get", fake_get)
+    out = news_scan.default_session_get("https://news.google.com/rss/search?q=x")
+    assert out == b"<rss>payload</rss>"
+    assert captured["url"] == "https://news.google.com/rss/search?q=x"
+    assert captured["headers"]["User-Agent"].startswith("Mozilla/5.0")
+    assert captured["timeout"] == 30
+    assert captured.get("status_checked")

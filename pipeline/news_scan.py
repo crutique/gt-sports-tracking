@@ -21,6 +21,8 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 
+import requests
+
 WHITELIST = {"mlb.com", "milb.com", "mlbtraderumors.com", "si.com", "espn.com",
              "theathletic.com", "ajc.com"}
 
@@ -199,6 +201,21 @@ _SOURCES = (
 )
 
 
+def default_session_get(url):
+    """The production `session_get` for pipeline/draft_watch.py.
+
+    fetch_snippets() takes `session_get` injected so tests stay offline; this
+    is the real one — requests.get with the browser _HEADERS (GTSwarm and
+    Google News both 403/302 plain-library UAs), a 30s timeout, and
+    raise_for_status() so a dead source trips fetch_snippets' per-source
+    isolation instead of feeding a parser an error page. Returns resp.content
+    (bytes; every fetch_snippets source path decodes via _decode()).
+    """
+    resp = requests.get(url, headers=_HEADERS, timeout=30)
+    resp.raise_for_status()
+    return resp.content
+
+
 def fetch_snippets(player_name, session_get):
     """Fetch news snippets for player_name, deduped by url.
 
@@ -248,6 +265,12 @@ def _extract(snippets, player_name):
     Any failure -- network error, missing/invalid API key, non-JSON or
     schema-less model output -- degrades to {"event": "none"} rather than
     raising, so a bad model response never crashes the watcher run.
+
+    Post-validation guard (spec: "exact player-name match required in the
+    quote"): a non-none event whose quote does not contain the player's last
+    name (case-insensitive) is downgraded to {"event": "none"} here, so a
+    model answer that latched onto a teammate in the same snippet never
+    reaches decide().
     """
     prompt = _build_prompt(snippets, player_name)
     try:
@@ -259,6 +282,10 @@ def _extract(snippets, player_name):
         data = json.loads(resp.content[0].text)
         if not isinstance(data, dict) or "event" not in data:
             return {"event": "none"}
+        if data["event"] != "none":
+            quote = str(data.get("quote") or "")
+            if _last_name(player_name).lower() not in quote.lower():
+                return {"event": "none"}
         return data
     except Exception:  # noqa: BLE001 -- malformed output must never crash the run
         return {"event": "none"}
@@ -270,6 +297,22 @@ def _extract(snippets, player_name):
 
 def _domain(url):
     return (urlparse(url).netloc or "").lower()
+
+
+def _whitelisted(domain):
+    """True if `domain` belongs to a WHITELIST outlet.
+
+    Real feeds publish www-prefixed and sectioned hosts (the committed gnews
+    fixture's SI source is literally https://www.si.com), so a bare set-
+    membership test would misfile every such report as unverified. Normalize
+    a leading "www." and treat each whitelist entry as a suffix: the entry
+    itself or any subdomain of it (`endswith("." + d)` -- the dot keeps
+    lookalikes like notsi.com out). The suffix rule on the mlb.com entry
+    subsumes decide()'s original explicit `.mlb.com` special case.
+    """
+    if domain.startswith("www."):
+        domain = domain[4:]
+    return any(domain == d or domain.endswith("." + d) for d in WHITELIST)
 
 
 def _official_known(entry):
@@ -298,8 +341,7 @@ def decide(extraction, entry, today):
     if extraction.get("event") == "signed" and isinstance(extraction.get("amount"), int):
         if entry.get("reported") or _official_known(entry):   # never downgrade/overwrite
             return None, None
-        domain = _domain(extraction["source_url"])
-        if domain in WHITELIST or domain.endswith(".mlb.com"):
+        if _whitelisted(_domain(extraction["source_url"])):
             return "reported", {"bonus": extraction["amount"], "source": extraction["source_url"]}
         if (entry.get("unverified") or {}).get("source") == extraction["source_url"]:
             return None, None                                  # idempotent
