@@ -31,7 +31,7 @@ def fetch_picks(year=2026):
                     "team": (p.get("team") or {}).get("name"),
                     # pickValue/signingBonus come back as numeric strings from the
                     # live API (e.g. "9740100"), so both go through _bonus().
-                    "slot": _bonus(p.get("pickValue")),
+                    "slot": _bonus(p.get("pickValue")) or None,
                     "officialBonus": _bonus(p.get("signingBonus")),
                     "headshot": p.get("headshotLink"),
                 }

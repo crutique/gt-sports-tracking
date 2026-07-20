@@ -30,6 +30,7 @@ def test_pick_fields_from_api(api):
     assert lackey["round"] == "1" and lackey["pick"] == 3
     assert lackey["team"] == "Minnesota Twins" and lackey["slot"] == 9740100
     assert lackey["officialBonus"] is None and lackey["headshot"]
+    assert picks[834497]["slot"] is None      # round-17 pickValue "0" must not surface as $0
 
 
 def test_bonus_string_and_none():
