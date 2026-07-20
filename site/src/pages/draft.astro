@@ -1,0 +1,101 @@
+---
+import Headshot from '../components/Headshot.astro';
+import Base from '../layouts/Base.astro';
+import { fmtMoney, getDraft, STATUS_LABEL } from '../lib/draft';
+import { getPlayer } from '../lib/data';
+
+const draft = getDraft();
+const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
+---
+<Base title="2026 MLB Draft — GT Summer Tracker">
+  <h1>2026 MLB Draft — Georgia Tech</h1>
+  <p class="sub">
+    GT's draft class: who signed, for how much, and who's headed (back) to campus.
+    {anyUnsigned && <span class="deadline">Signing deadline: July 27, 5 p.m. ET</span>}
+    {draft.asOf && <span class="asof">Updated {draft.asOf}</span>}
+  </p>
+
+  {draft.players.length === 0 && <p class="empty">Draft data loads with the next nightly refresh.</p>}
+
+  {draft.players.length > 0 && (
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Pick</th><th>Player</th><th>Drafted by</th><th>Slot value</th><th>Bonus</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {draft.players.map((p) => {
+            const reg = p.slug ? getPlayer(p.slug) : undefined;
+            return (
+              <tr>
+                <td class="pick">{p.pick != null ? `R${p.round} · #${p.pick}` : '—'}</td>
+                <td class="player">
+                  {reg
+                    ? <Headshot name={p.name} photo={reg.photo} size={32} />
+                    : (p.headshot ? <img class="hs" src={p.headshot} alt="" width="32" height="32" loading="lazy" /> : <Headshot name={p.name} photo={null} size={32} />)}
+                  <span class="pcell">
+                    {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : p.name}
+                    <span class="role">{p.gtRole === 'signee' ? 'Incoming signee' : 'GT 2026'}</span>
+                    {p.note && <span class="pnote">{p.note}</span>}
+                  </span>
+                </td>
+                <td>{p.team ?? '—'}</td>
+                <td class="num">{fmtMoney(p.slot)}</td>
+                <td class="num">
+                  {fmtMoney(p.bonus)}
+                  {p.bonusSource === 'reported' && p.reportedSourceUrl &&
+                    <a class="reported" href={p.reportedSourceUrl} rel="noopener">reported</a>}
+                </td>
+                <td><span class={`chip ${p.status}`}>{STATUS_LABEL[p.status]}</span></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+
+  {draft.udfa.length > 0 && (
+    <section class="quiet">
+      <h2 class="section-title">Undrafted free agents</h2>
+      <p>
+        {draft.udfa.map((p, i) => (
+          <>
+            <span>{p.name}</span>
+            <span class="where"> — {p.team}{p.signedDate ? `, signed ${p.signedDate}` : ''}</span>
+            {p.reportedSourceUrl && <> (<a href={p.reportedSourceUrl} rel="noopener">source</a>)</>}
+            {i < draft.udfa.length - 1 ? ' · ' : ''}
+          </>
+        ))}
+      </p>
+    </section>
+  )}
+</Base>
+
+<style>
+  h1 { margin: 0 0 2px; font-size: 24px; }
+  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
+  .deadline { margin-left: 10px; color: var(--navy); font-weight: 600; }
+  .asof { margin-left: 10px; font-size: 12px; }
+  .empty { color: var(--text-mut); font-size: 14px; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th { text-align: left; font-size: 12px; color: var(--text-mut); border-bottom: 2px solid var(--line); padding: 6px 10px; }
+  td { border-bottom: 1px solid var(--line); padding: 8px 10px; vertical-align: middle; }
+  .pick { white-space: nowrap; color: var(--text-mut); }
+  .player { display: flex; align-items: center; gap: 10px; min-width: 220px; }
+  .hs { border-radius: 50%; object-fit: cover; background: var(--line); }
+  .pcell { display: flex; flex-direction: column; }
+  .role { font-size: 11px; color: var(--text-mut); }
+  .pnote { font-size: 12px; color: var(--text-mut); font-style: italic; max-width: 380px; }
+  .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .reported { margin-left: 6px; font-size: 11px; color: var(--text-mut); text-decoration: underline dotted; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .chip.signed, .chip.signed_udfa { background: #e2efe4; color: #1e5b2a; }
+  .chip.unsigned { background: #eef1f5; color: #5b6472; }
+  .chip.returning { background: var(--navy); color: var(--gold); }
+  .chip.did_not_sign { background: #f3e9e9; color: #7a3535; }
+  .quiet { margin-top: 26px; }
+  .quiet p { font-size: 13px; line-height: 2; margin: 0; }
+  .where { color: var(--text-mut); }
+</style>
