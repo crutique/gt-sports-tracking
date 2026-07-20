@@ -4,10 +4,10 @@
 - {name: Vahn Lackey, person_id: 822518, gt_role: departing}
 - {name: Drew Burress, person_id: 806039, gt_role: departing}
 - {name: Jarren Advincula, person_id: 814181, gt_role: departing}
-- {name: Carson Kerce, person_id: 812668, gt_role: departing}
+- {name: Carson Kerce, person_id: 812668, gt_role: departing, reported: {bonus: 1900000, source: "https://www.spotrac.com/mlb/draft/2026"}}
 - {name: Alex Hernandez, person_id: 815415, gt_role: departing}
 - {name: Parker Brosius, person_id: 702701, gt_role: departing, note: "Senior sign — a literal $500 bonus ($211,500 under slot), one of three such Braves picks."}
 - {name: Tate McKee, person_id: 806156, gt_role: departing}
 - {name: Porter Buursema, person_id: 806040, gt_role: departing}
-- {name: Isaiah Galason, person_id: 834497, gt_role: signee, slug: isaiah-galason, note: "Viewed as an unlikely-to-sign insurance pick — expected at GT barring a surprise before the July 27 deadline."}
+- {name: Isaiah Galason, person_id: 834497, gt_role: signee, slug: isaiah-galason, note: "Drafted in round 17 (No. 496) by Washington on July 12 — unsigned; the July 27 deadline decides whether he turns pro or arrives at GT."}
 - {name: Mason Patel, gt_role: departing, udfa: {team: Athletics, date: "2026-07-13", source: "https://nripulse.com/georgia-techs-mason-patel-joins-as-boosts-indian-american-presence-in-pro-baseball/"}}

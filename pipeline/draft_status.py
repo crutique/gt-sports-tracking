@@ -80,7 +80,9 @@ def build_draft(entries, today, deadline=DEADLINE):
         signed_date = fetch_signing(pid, today)
         official = pick.get("officialBonus")
         rep = e.get("reported") or {}
-        signed = bool(signed_date) or official is not None
+        # Reporters only publish a figure once a deal is agreed, so a curated
+        # reported bonus implies signed even before the official feed catches up.
+        signed = bool(signed_date) or official is not None or bool(rep.get("bonus"))
         bonus, source, rep_url = None, None, None
         if official is not None:
             bonus, source = official, "official"

@@ -68,12 +68,22 @@ def test_build_draft_merges_curation(api):
     lackey = next(p for p in out["players"] if p["name"] == "Vahn Lackey")
     assert lackey["bonus"] == 9500000 and lackey["bonusSource"] == "reported"
     assert lackey["reportedSourceUrl"] == "https://example.com/callis"
-    assert lackey["status"] == "unsigned"          # reported figure alone is not proof of signing
+    assert lackey["status"] == "signed"            # a reported figure implies an agreed deal (label stays "reported" until official)
     galason = next(p for p in out["players"] if p["slug"] == "isaiah-galason")
     assert galason["status"] == "unsigned" and galason["note"] == "insurance pick"
     assert [p["name"] for p in out["udfa"]] == ["Mason Patel"]
     assert out["udfa"][0]["status"] == "signed_udfa"
     assert out["players"] == sorted(out["players"], key=lambda p: p["pick"])
+
+
+def test_reported_bonus_implies_signed(api):
+    entries = [{"name": "Carson Kerce", "person_id": 812668, "gt_role": "departing",
+                "reported": {"bonus": 1900000, "source": "https://example.com/spotrac"}}]
+    out = draft_status.build_draft(entries, today="2026-07-20")
+    p = out["players"][0]
+    assert p["status"] == "signed"
+    assert p["bonus"] == 1900000 and p["bonusSource"] == "reported"
+    assert p["signedDate"] is None
 
 
 def test_official_bonus_beats_reported(api, monkeypatch):
