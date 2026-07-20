@@ -61,10 +61,10 @@
    "pick": 53,
    "team": "Arizona Diamondbacks",
    "slot": 1848200,
-   "bonus": null,
-   "bonusSource": null,
-   "reportedSourceUrl": null,
-   "status": "unsigned",
+   "bonus": 1900000,
+   "bonusSource": "reported",
+   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
+   "status": "signed",
    "signedDate": null,
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/812668/headshot/draft/current",
    "note": null
@@ -152,7 +152,7 @@
    "status": "unsigned",
    "signedDate": null,
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/834497/headshot/draft/current",
-   "note": "Viewed as an unlikely-to-sign insurance pick \u2014 expected at GT barring a surprise before the July 27 deadline."
+   "note": "Drafted in round 17 (No. 496) by Washington on July 12 \u2014 unsigned; the July 27 deadline decides whether he turns pro or arrives at GT."
   }
  ],
  "udfa": [

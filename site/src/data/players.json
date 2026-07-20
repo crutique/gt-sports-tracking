@@ -974,7 +974,7 @@
      "metric": "ops",
      "value": 0.8694,
      "percentile": 81,
-     "leagueAvg": 0.7413,
+     "leagueAvg": 0.7411,
      "leagueAvgPercentile": 61,
      "derived": false
     },
@@ -983,14 +983,14 @@
      "value": 0.2917,
      "percentile": 70,
      "leagueAvg": 0.2593,
-     "leagueAvgPercentile": 58,
+     "leagueAvgPercentile": 57,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3694,
      "percentile": 43,
-     "leagueAvg": 0.3967,
+     "leagueAvg": 0.3966,
      "leagueAvgPercentile": 56,
      "derived": false
     },
@@ -998,7 +998,7 @@
      "metric": "slg",
      "value": 0.5,
      "percentile": 90,
-     "leagueAvg": 0.3446,
+     "leagueAvg": 0.3445,
      "leagueAvgPercentile": 61,
      "derived": false
     },
@@ -1006,7 +1006,7 @@
      "metric": "kPct",
      "value": 0.1622,
      "percentile": 65,
-     "leagueAvg": 0.2013,
+     "leagueAvg": 0.2011,
      "leagueAvgPercentile": 51,
      "derived": false
     },
@@ -2036,7 +2036,7 @@
      "metric": "ops",
      "value": 0.4512,
      "percentile": 23,
-     "leagueAvg": 0.7744,
+     "leagueAvg": 0.7723,
      "leagueAvgPercentile": 58,
      "derived": false
     },
@@ -2044,7 +2044,7 @@
      "metric": "avg",
      "value": 0.1481,
      "percentile": 24,
-     "leagueAvg": 0.2694,
+     "leagueAvg": 0.2693,
      "leagueAvgPercentile": 60,
      "derived": false
     },
@@ -2052,7 +2052,7 @@
      "metric": "obp",
      "value": 0.303,
      "percentile": 31,
-     "leagueAvg": 0.395,
+     "leagueAvg": 0.3941,
      "leagueAvgPercentile": 54,
      "derived": false
     },
@@ -2060,24 +2060,24 @@
      "metric": "slg",
      "value": 0.1481,
      "percentile": 21,
-     "leagueAvg": 0.3795,
-     "leagueAvgPercentile": 57,
+     "leagueAvg": 0.3782,
+     "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.0909,
      "percentile": 82,
-     "leagueAvg": 0.2051,
-     "leagueAvgPercentile": 45,
+     "leagueAvg": 0.2041,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1515,
-     "percentile": 66,
-     "leagueAvg": 0.1392,
-     "leagueAvgPercentile": 57,
+     "percentile": 67,
+     "leagueAvg": 0.1379,
+     "leagueAvgPercentile": 59,
      "derived": false
     }
    ]
