@@ -74,3 +74,14 @@ def load_previous(out_dir):
         print(f"[output] WARNING: previous players.json unreadable ({e}); starting fresh",
               file=sys.stderr)
         return {}
+
+
+def write_meta(out_dir, source):
+    """Stamp site/src/data/meta.json with the run time -- the site footer's
+    "last updated" heartbeat. Written on EVERY successful run (nightly build
+    and draft-watch), so each run commits and the footer proves liveness."""
+    import datetime as _dt
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    meta = {"generatedAt": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
+            "source": source}
+    Path(out_dir, "meta.json").write_text(json.dumps(meta, indent=1))

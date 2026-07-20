@@ -24,7 +24,7 @@ from pathlib import Path
 
 import yaml
 
-from pipeline import draft_registry, draft_status, news_scan
+from pipeline import draft_registry, draft_status, news_scan, output
 
 WINDOW = ("2026-06-10", "2026-08-05")
 
@@ -229,6 +229,7 @@ def run(today=None, draft_path=DEFAULT_DRAFT_PATH, out_dir=DEFAULT_OUT_DIR,
         return 1
 
     official_count = sum(1 for p in draft_json["players"] if p["bonusSource"] == "official")
+    output.write_meta(out_dir, "draft-watch")   # heartbeat: stamps every successful run, incl. scan-skipped
 
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")):
         print(f"[watch] official={official_count} reported=0 unverified=0 flags=0 scan=skipped")

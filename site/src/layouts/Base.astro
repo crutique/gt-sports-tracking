@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import meta from '../data/meta.json';
 import Nav from '../components/Nav.astro';
 
 interface Props {
@@ -24,12 +25,20 @@ const { title, description = 'Tracking Georgia Tech baseball players across the 
     <footer class="wrap">
       GT Summer Tracker — an unofficial fan project following Georgia Tech baseball's
       2027 roster through the 2026 summer leagues. Stats update nightly from league sources.
+      {meta.generatedAt && (
+        <span class="stamp">
+          Data last updated {new Date(meta.generatedAt).toLocaleString('en-US', {
+            timeZone: 'America/New_York', month: 'short', day: 'numeric',
+            hour: 'numeric', minute: '2-digit' })} ET
+        </span>
+      )}
     </footer>
   </body>
 </html>
 
 <style>
   main { padding: 22px 16px 40px; }
+  .stamp { display: block; margin-top: 4px; }
   footer {
     padding: 18px 16px 30px;
     font-size: 12px;

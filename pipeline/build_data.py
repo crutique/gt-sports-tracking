@@ -80,6 +80,7 @@ def build(players_path, leagues_path, out_dir, history_dir, today=None, draft_pa
 
     records = output.assemble(players, leagues, league_bundles, previous, today)
     output.write_outputs(records, leagues, gamelogs_by_slug, out_dir, history_dir, today)
+    output.write_meta(out_dir, "nightly")
     print(f"[build] wrote {len(records)} players; "
           f"{len(result.failures)} league failure(s), {len(result.skipped)} skipped, "
           f"{len(result.warnings)} warning(s)")

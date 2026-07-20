@@ -103,3 +103,12 @@ def test_load_previous_corrupted_returns_empty(tmp_path):
     out.mkdir()
     (out / "players.json").write_text("{truncated")
     assert output.load_previous(out) == {}
+
+
+def test_write_meta_stamps_generated_at(tmp_path):
+    from pipeline import output
+    output.write_meta(str(tmp_path), "draft-watch")
+    import json, datetime
+    meta = json.loads((tmp_path / "meta.json").read_text())
+    assert meta["source"] == "draft-watch"
+    datetime.datetime.fromisoformat(meta["generatedAt"])  # parses

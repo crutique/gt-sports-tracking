@@ -286,3 +286,20 @@ def test_run_with_only_oauth_token_runs_scan(tmp_path, monkeypatch, api):
     new_lines = draft_path.read_text().splitlines()
     mckee_line = next(l for l in new_lines if l.startswith("- {name: Tate McKee"))
     assert "unverified: {bonus: 9000000" in mckee_line
+
+
+def test_run_stamps_meta_heartbeat(tmp_path, monkeypatch):
+    import json as _json
+    draft_path = tmp_path / "draft.yaml"
+    draft_path.write_text("- {name: A, person_id: 1, gt_role: departing}\n")
+    out = tmp_path / "out"
+    monkeypatch.setattr(draft_status, "build_draft",
+                        lambda entries, today, deadline=draft_status.DEADLINE:
+                        {"asOf": today, "players": [], "udfa": []})
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("CLAUDE_CODE_OAUTH_TOKEN", raising=False)
+    rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path), out_dir=str(out),
+                         flags_path=str(tmp_path / "f.json"))
+    assert rc == 0
+    meta = _json.loads((out / "meta.json").read_text())
+    assert meta["source"] == "draft-watch" and meta["generatedAt"]
