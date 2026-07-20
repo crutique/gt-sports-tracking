@@ -218,16 +218,20 @@ def test_flag_dedupe_is_per_player_and_source_url(tmp_path, monkeypatch, api):
 
 
 # ---------------------------------------------------------------------------
-# (d) missing ANTHROPIC_API_KEY -- scan skipped, official refresh still runs
+# (d) missing credentials -- scan skipped, official refresh still runs;
+#     scan runs when EITHER ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN is set
 # ---------------------------------------------------------------------------
 
-def test_missing_api_key_skips_scan_but_refreshes_official(tmp_path, monkeypatch, api, capsys):
+def test_missing_both_credentials_skips_scan_but_refreshes_official(
+        tmp_path, monkeypatch, api, capsys):
     draft_path = _copy_draft_yaml(tmp_path)
     out_dir = tmp_path / "out"
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("CLAUDE_CODE_OAUTH_TOKEN", raising=False)
 
     def _must_not_be_called(*a, **k):
-        pytest.fail("news_scan._extract should not be called when the key is absent")
+        pytest.fail("news_scan._extract should not be called when neither "
+                    "credential is present")
     monkeypatch.setattr(news_scan, "_extract", _must_not_be_called)
 
     rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
@@ -239,3 +243,46 @@ def test_missing_api_key_skips_scan_but_refreshes_official(tmp_path, monkeypatch
 
     captured = capsys.readouterr()
     assert "scan=skipped" in captured.out
+
+
+def test_missing_both_credentials_as_empty_strings_skips_scan(
+        tmp_path, monkeypatch, api, capsys):
+    """Empty-string env vars (e.g. an unset GitHub Actions secret, which
+    resolves to '') must be treated as absent -- truthiness, not `in`."""
+    draft_path = _copy_draft_yaml(tmp_path)
+    out_dir = tmp_path / "out"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "")
+
+    def _must_not_be_called(*a, **k):
+        pytest.fail("news_scan._extract should not be called for empty-string credentials")
+    monkeypatch.setattr(news_scan, "_extract", _must_not_be_called)
+
+    rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
+                          out_dir=str(out_dir), flags_path=str(tmp_path / "flags.json"))
+    assert rc == 0
+
+    captured = capsys.readouterr()
+    assert "scan=skipped" in captured.out
+
+
+def test_run_with_only_oauth_token_runs_scan(tmp_path, monkeypatch, api):
+    """The scan gate accepts EITHER credential -- with only CLAUDE_CODE_OAUTH_TOKEN
+    set (no ANTHROPIC_API_KEY), the scan must still run and apply verdicts."""
+    draft_path = _copy_draft_yaml(tmp_path)
+    out_dir = tmp_path / "out"
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    monkeypatch.setattr(news_scan, "_extract", _extract_only_for(
+        "Vahn Lackey",
+        {"event": "signed", "amount": 9000000,
+         "source_url": "https://gtswarm.com/threads/2026-mlb-draft.31400/post-1",
+         "quote": "Lackey has agreed to terms."}))
+
+    rc = draft_watch.run(today="2026-07-21", draft_path=str(draft_path),
+                          out_dir=str(out_dir), flags_path=str(tmp_path / "flags.json"))
+    assert rc == 0
+
+    new_lines = draft_path.read_text().splitlines()
+    lackey_line = next(l for l in new_lines if l.startswith("- {name: Vahn Lackey"))
+    assert "unverified: {bonus: 9000000" in lackey_line

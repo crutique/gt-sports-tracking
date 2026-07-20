@@ -1,4 +1,7 @@
+import subprocess
 from pathlib import Path
+
+import pytest
 
 from pipeline import news_scan
 
@@ -206,6 +209,7 @@ class _FakeClient:
 
 
 def test_extract_malformed_json_returns_none_event(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setattr(news_scan, "_client", lambda: _FakeClient("not valid json {{"))
     result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
                                  "Carson Kerce")
@@ -213,6 +217,7 @@ def test_extract_malformed_json_returns_none_event(monkeypatch):
 
 
 def test_extract_missing_event_key_returns_none_event(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setattr(news_scan, "_client",
                          lambda: _FakeClient('{"amount": 100, "source_url": "https://x"}'))
     result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
@@ -221,6 +226,7 @@ def test_extract_missing_event_key_returns_none_event(monkeypatch):
 
 
 def test_extract_valid_json_passes_through(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     payload = ('{"event": "signed", "amount": 1900000, '
                '"source_url": "https://si.com/x", "quote": "Kerce signed."}')
     monkeypatch.setattr(news_scan, "_client", lambda: _FakeClient(payload))
@@ -231,6 +237,8 @@ def test_extract_valid_json_passes_through(monkeypatch):
 
 
 def test_extract_client_raising_returns_none_event(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+
     def _boom():
         raise RuntimeError("no api key configured")
     monkeypatch.setattr(news_scan, "_client", _boom)
@@ -244,6 +252,7 @@ def test_extract_quote_about_different_player_downgraded_to_none(monkeypatch):
     answer whose quote never mentions the player's last name (it latched onto
     a teammate in the same snippet) must be downgraded to none, enforced in
     _extract post-validation so decide() stays a pure tier policy."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     payload = ('{"event": "signed", "amount": 500000, '
                '"source_url": "https://si.com/x", '
                '"quote": "Tate McKee has agreed to terms with the Braves."}')
@@ -251,6 +260,193 @@ def test_extract_quote_about_different_player_downgraded_to_none(monkeypatch):
     result = news_scan._extract(
         [{"text": "McKee signed; Kerce still unsigned.", "url": "https://si.com/x"}],
         "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_neither_env_var_set_returns_none_event_without_calling_client(monkeypatch):
+    """No backend is configured -- must degrade to none without attempting the
+    SDK seam or the CLI subprocess."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("CLAUDE_CODE_OAUTH_TOKEN", raising=False)
+
+    def _must_not_be_called():
+        pytest.fail("_client should not be called when no backend is configured")
+    monkeypatch.setattr(news_scan, "_client", _must_not_be_called)
+
+    def _run_must_not_be_called(*a, **k):
+        pytest.fail("subprocess.run should not be called when no backend is configured")
+    monkeypatch.setattr(news_scan.subprocess, "run", _run_must_not_be_called)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+# ---------------------------------------------------------------------------
+# _extract() -- the Claude Code CLI (subscription-token) backend
+# ---------------------------------------------------------------------------
+
+class _FakeCompletedProcess:
+    def __init__(self, returncode=0, stdout="", stderr=""):
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+
+
+def _fake_run_factory(returncode=0, stdout="", stderr=""):
+    """Build a fake subprocess.run(args, **kwargs) that records what it was
+    called with (on .captured) and returns a fixed result."""
+    captured = {}
+
+    def _fake_run(args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+        return _FakeCompletedProcess(returncode=returncode, stdout=stdout, stderr=stderr)
+
+    _fake_run.captured = captured
+    return _fake_run
+
+
+def test_extract_cli_backend_used_when_only_oauth_token_set(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    payload = ('{"event": "signed", "amount": 1900000, '
+               '"source_url": "https://si.com/x", "quote": "Kerce signed."}')
+    fake_run = _fake_run_factory(returncode=0, stdout=payload)
+    monkeypatch.setattr(news_scan.subprocess, "run", fake_run)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+
+    assert result == {"event": "signed", "amount": 1900000,
+                       "source_url": "https://si.com/x", "quote": "Kerce signed."}
+    args = fake_run.captured["args"]
+    assert args[0] == news_scan._CLAUDE_CLI
+    assert "-p" in args
+    assert args[args.index("-p") + 1]   # a prompt string was passed
+    assert "--model" in args
+    assert args[args.index("--model") + 1] == "claude-haiku-4-5-20251001"
+    assert "--output-format" in args
+    assert args[args.index("--output-format") + 1] == "text"
+    kwargs = fake_run.captured["kwargs"]
+    assert kwargs.get("capture_output") is True
+    assert kwargs.get("text") is True
+    assert kwargs.get("timeout") == 120
+
+
+def test_extract_cli_uses_claude_cli_constant_for_binary_name(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    monkeypatch.setattr(news_scan, "_CLAUDE_CLI", "custom-claude-binary")
+    fake_run = _fake_run_factory(returncode=0, stdout='{"event": "none"}')
+    monkeypatch.setattr(news_scan.subprocess, "run", fake_run)
+
+    news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}], "Carson Kerce")
+
+    assert fake_run.captured["args"][0] == "custom-claude-binary"
+
+
+def test_extract_sdk_wins_when_both_env_vars_set(monkeypatch):
+    """Deterministic backend precedence: ANTHROPIC_API_KEY wins over
+    CLAUDE_CODE_OAUTH_TOKEN when both are present."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    payload = ('{"event": "signed", "amount": 1900000, '
+               '"source_url": "https://si.com/x", "quote": "Kerce signed."}')
+    monkeypatch.setattr(news_scan, "_client", lambda: _FakeClient(payload))
+
+    def _run_must_not_be_called(*a, **k):
+        pytest.fail("subprocess.run (CLI backend) must not be used when "
+                    "ANTHROPIC_API_KEY is also set")
+    monkeypatch.setattr(news_scan.subprocess, "run", _run_must_not_be_called)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "signed", "amount": 1900000,
+                       "source_url": "https://si.com/x", "quote": "Kerce signed."}
+
+
+def test_extract_cli_nonzero_exit_returns_none_event(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    fake_run = _fake_run_factory(returncode=1, stdout="", stderr="auth failed")
+    monkeypatch.setattr(news_scan.subprocess, "run", fake_run)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_cli_malformed_json_returns_none_event(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    fake_run = _fake_run_factory(returncode=0, stdout="not valid json {{")
+    monkeypatch.setattr(news_scan.subprocess, "run", fake_run)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_cli_timeout_returns_none_event(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+
+    def _timeout(*a, **k):
+        raise subprocess.TimeoutExpired(cmd=["claude"], timeout=120)
+    monkeypatch.setattr(news_scan.subprocess, "run", _timeout)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_cli_missing_binary_returns_none_event(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+
+    def _missing(*a, **k):
+        raise FileNotFoundError("claude: command not found")
+    monkeypatch.setattr(news_scan.subprocess, "run", _missing)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_cli_quote_about_different_player_downgraded_to_none(monkeypatch):
+    """The name guard applies identically to the CLI backend (shared
+    parsing+guard, not duplicated per backend)."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "test-oauth-token")
+    payload = ('{"event": "signed", "amount": 500000, '
+               '"source_url": "https://si.com/x", '
+               '"quote": "Tate McKee has agreed to terms with the Braves."}')
+    fake_run = _fake_run_factory(returncode=0, stdout=payload)
+    monkeypatch.setattr(news_scan.subprocess, "run", fake_run)
+
+    result = news_scan._extract(
+        [{"text": "McKee signed; Kerce still unsigned.", "url": "https://si.com/x"}],
+        "Carson Kerce")
+    assert result == {"event": "none"}
+
+
+def test_extract_empty_string_env_vars_treated_as_absent(monkeypatch):
+    """An empty-string env var (e.g. a workflow secret that resolves to '' when
+    absent) must be treated the same as an unset var -- truthiness, not `in`."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "")
+
+    def _must_not_be_called():
+        pytest.fail("_client should not be called for an empty-string API key")
+    monkeypatch.setattr(news_scan, "_client", _must_not_be_called)
+
+    def _run_must_not_be_called(*a, **k):
+        pytest.fail("subprocess.run should not be called for an empty-string oauth token")
+    monkeypatch.setattr(news_scan.subprocess, "run", _run_must_not_be_called)
+
+    result = news_scan._extract([{"text": "Kerce signed.", "url": "https://si.com/x"}],
+                                 "Carson Kerce")
     assert result == {"event": "none"}
 
 

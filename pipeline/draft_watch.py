@@ -6,9 +6,12 @@ for every open player and apply its verdicts. CLI entry:
 Per docs/superpowers/specs/2026-07-20-draft-watch-design.md ("Orchestrator"):
   1. Date gate: exit 0 quietly outside WINDOW.
   2. Refresh official signals via draft_registry/draft_status, write draft.json.
-  3. If ANTHROPIC_API_KEY is set, scan each open player and apply news_scan's
-     verdict: reported/unverified edits pipeline/draft.yaml, flag appends to
-     the flags file. Skipped (with a visible summary note) if the key is absent.
+  3. If either ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN is set, scan each
+     open player and apply news_scan's verdict: reported/unverified edits
+     pipeline/draft.yaml, flag appends to the flags file (news_scan._extract
+     picks the backend -- SDK vs. the Claude Code CLI -- from those same two
+     env vars; see its docstring). Skipped (with a visible summary note) only
+     when neither is present.
   4. Print a one-line summary; return 0 on success (per-source/per-player
      failures are isolated and logged, never fatal), nonzero only if the
      official refresh itself fails outright.
@@ -227,7 +230,7 @@ def run(today=None, draft_path=DEFAULT_DRAFT_PATH, out_dir=DEFAULT_OUT_DIR,
 
     official_count = sum(1 for p in draft_json["players"] if p["bonusSource"] == "official")
 
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")):
         print(f"[watch] official={official_count} reported=0 unverified=0 flags=0 scan=skipped")
         return 0
 

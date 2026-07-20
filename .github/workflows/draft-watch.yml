@@ -13,8 +13,11 @@ jobs:
         with: {python-version: "3.12"}
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
+      - run: npm install -g @anthropic-ai/claude-code
       - run: python -m pipeline.draft_watch
-        env: {ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}"}
+        env:
+          ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}"
+          CLAUDE_CODE_OAUTH_TOKEN: "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}"
       - run: |
           git config user.name "gt-summer-tracker-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

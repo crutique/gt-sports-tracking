@@ -16,7 +16,9 @@ scanner"):
   unit-tested. See its docstring for the `_official_known` contract.
 """
 import json
+import os
 import re
+import subprocess
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from urllib.parse import urlparse
@@ -33,6 +35,7 @@ _SNIPPET_RADIUS = 300
 _MLB_TRACKER_URL = "https://www.mlb.com/news/2026-mlb-draft-signing-tracker"
 _GTSWARM_THREAD = "https://gtswarm.com/threads/2026-mlb-draft.31400/"
 _MODEL = "claude-haiku-4-5-20251001"
+_CLAUDE_CLI = "claude"
 
 _PROMPT_TEMPLATE = (
     'You classify draft-signing news for MLB draftee {player_name}. From the snippets below,\n'
@@ -259,12 +262,34 @@ def _build_prompt(snippets, player_name):
     return f"{body}\n\n{blocks}"
 
 
-def _extract(snippets, player_name):
-    """Classify `snippets` for player_name via the Anthropic API.
+def _extract_cli(prompt):
+    """Run `prompt` through the Claude Code CLI headlessly -- the
+    subscription-token backend, for owners who authenticate with a Claude
+    subscription (via `claude setup-token`) rather than an ANTHROPIC_API_KEY.
 
-    Any failure -- network error, missing/invalid API key, non-JSON or
-    schema-less model output -- degrades to {"event": "none"} rather than
-    raising, so a bad model response never crashes the watcher run.
+    `subprocess.run` is called with no `env=` override, so the subprocess
+    inherits this process's environment -- that's how the CLI sees
+    CLAUDE_CODE_OAUTH_TOKEN. Returns the CLI's stdout text on a clean (exit 0)
+    run. Any subprocess-level failure (nonzero exit, timeout, missing `claude`
+    binary) raises -- `_extract`'s single try/except is what degrades all of
+    that, plus JSON-parsing and the name-guard failures below, to
+    {"event": "none"}; this keeps the two backends' failure handling shared
+    rather than duplicated.
+    """
+    result = subprocess.run(
+        [_CLAUDE_CLI, "-p", prompt, "--model", _MODEL, "--output-format", "text"],
+        capture_output=True, text=True, timeout=120,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"claude CLI exited {result.returncode}: {result.stderr.strip()}")
+    return result.stdout
+
+
+def _parse_extraction(text, player_name):
+    """Parse `text` as the single JSON object both backends produce, and apply
+    the post-validation name guard. Shared by both the SDK and CLI backends so
+    the guard behaves identically regardless of which one ran.
 
     Post-validation guard (spec: "exact player-name match required in the
     quote"): a non-none event whose quote does not contain the player's last
@@ -272,21 +297,54 @@ def _extract(snippets, player_name):
     model answer that latched onto a teammate in the same snippet never
     reaches decide().
     """
+    data = json.loads(text)
+    if not isinstance(data, dict) or "event" not in data:
+        return {"event": "none"}
+    if data["event"] != "none":
+        quote = str(data.get("quote") or "")
+        if _last_name(player_name).lower() not in quote.lower():
+            return {"event": "none"}
+    return data
+
+
+def _extract(snippets, player_name):
+    """Classify `snippets` for player_name via Claude.
+
+    Backend selection (checked in this order, every call):
+      1. ANTHROPIC_API_KEY set (non-empty) -> the Anthropic SDK, via the lazy
+         `_client()` seam (unchanged). This wins whenever both env vars are
+         present -- a deterministic, documented precedence, so a runner
+         configured with both always takes the SDK path.
+      2. Otherwise, CLAUDE_CODE_OAUTH_TOKEN set (non-empty) -> `_extract_cli()`,
+         which shells out to the Claude Code CLI headlessly, authenticated by
+         that long-lived OAuth token (`claude setup-token`) -- for owners
+         using a Claude subscription instead of a pay-per-token API key.
+      3. Neither set -> {"event": "none"}; no backend is available.
+    Presence is checked via `os.environ.get(...)` truthiness, not `in` --
+    an empty-string env var (e.g. an unset GitHub Actions secret) is treated
+    as absent, not present.
+
+    Any failure -- network error, missing/invalid API key, a nonzero CLI
+    exit, a CLI timeout, a missing `claude` binary, non-JSON or schema-less
+    model output -- degrades to {"event": "none"} rather than raising, so a
+    bad model response or backend failure never crashes the watcher run. The
+    post-validation name guard (see `_parse_extraction`) applies identically
+    to both backends.
+    """
     prompt = _build_prompt(snippets, player_name)
     try:
-        client = _client()
-        resp = client.messages.create(
-            model=_MODEL, max_tokens=500, temperature=0,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        data = json.loads(resp.content[0].text)
-        if not isinstance(data, dict) or "event" not in data:
+        if os.environ.get("ANTHROPIC_API_KEY"):
+            client = _client()
+            resp = client.messages.create(
+                model=_MODEL, max_tokens=500, temperature=0,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            text = resp.content[0].text
+        elif os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"):
+            text = _extract_cli(prompt)
+        else:
             return {"event": "none"}
-        if data["event"] != "none":
-            quote = str(data.get("quote") or "")
-            if _last_name(player_name).lower() not in quote.lower():
-                return {"event": "none"}
-        return data
+        return _parse_extraction(text, player_name)
     except Exception:  # noqa: BLE001 -- malformed output must never crash the run
         return {"event": "none"}
 
