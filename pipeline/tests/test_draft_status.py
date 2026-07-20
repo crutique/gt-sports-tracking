@@ -103,3 +103,21 @@ def test_signed_transaction_sets_status_and_date(api):
     out = draft_status.build_draft(entries, today="2026-07-20")
     p = out["players"][0]
     assert p["status"] == "signed" and p["signedDate"] == "2026-07-14"
+
+
+def test_unverified_tier_displays_but_does_not_sign(api):
+    entries = [{"name": "Vahn Lackey", "person_id": 822518, "gt_role": "departing",
+                "unverified": {"bonus": 9000000, "source": "https://fan.example", "detected": "2026-07-21"}}]
+    p = draft_status.build_draft(entries, today="2026-07-21")["players"][0]
+    assert p["bonus"] == 9000000 and p["bonusSource"] == "unverified"
+    assert p["unverifiedSourceUrl"] == "https://fan.example"
+    assert p["status"] == "unsigned"          # unverified never implies signed
+
+
+def test_reported_beats_unverified(api):
+    entries = [{"name": "Vahn Lackey", "person_id": 822518, "gt_role": "departing",
+                "reported": {"bonus": 9500000, "source": "https://mlb.example"},
+                "unverified": {"bonus": 9000000, "source": "https://fan.example", "detected": "2026-07-21"}}]
+    p = draft_status.build_draft(entries, today="2026-07-21")["players"][0]
+    assert p["bonus"] == 9500000 and p["bonusSource"] == "reported"
+    assert p["unverifiedSourceUrl"] is None and p["status"] == "signed"
