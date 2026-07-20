@@ -93,3 +93,23 @@ def test_non_int_reported_bonus_rejected(tmp_path):
                             " reported: {bonus: lots, source: s}}\n")
     with pytest.raises(RegistryError, match="reported"):
         draft_registry.load_draft(path, set())
+
+
+def test_unverified_block_valid(tmp_path):
+    path = _write(tmp_path, '- {name: A, person_id: 1, gt_role: departing, '
+                            'unverified: {bonus: 1900000, source: "https://x", detected: "2026-07-21"}}\n')
+    assert draft_registry.load_draft(path, set())[0]["unverified"]["bonus"] == 1900000
+
+
+def test_unverified_requires_all_fields(tmp_path):
+    path = _write(tmp_path, '- {name: A, person_id: 1, gt_role: departing, '
+                            'unverified: {bonus: 1900000, source: "https://x"}}\n')
+    with pytest.raises(RegistryError, match="unverified"):
+        draft_registry.load_draft(path, set())
+
+
+def test_unverified_bonus_must_be_int(tmp_path):
+    path = _write(tmp_path, '- {name: A, person_id: 1, gt_role: departing, '
+                            'unverified: {bonus: "1.9M", source: "https://x", detected: "2026-07-21"}}\n')
+    with pytest.raises(RegistryError, match="unverified"):
+        draft_registry.load_draft(path, set())

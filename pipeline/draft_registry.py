@@ -44,6 +44,10 @@ def load_draft(path, player_slugs):
                 raise RegistryError(f"draft: {name}: reported needs bonus and source")
             if not isinstance(rep["bonus"], int):
                 raise RegistryError(f"draft: {name}: reported bonus must be an int")
+        unv = e.get("unverified")
+        if unv is not None and not (isinstance(unv.get("bonus"), int)
+                                    and unv.get("source") and unv.get("detected")):
+            raise RegistryError(f"draft: {name}: unverified needs int bonus, source, detected")
         slug = e.get("slug")
         if slug:
             if slug in seen_slugs:
