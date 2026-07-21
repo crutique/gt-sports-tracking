@@ -46,6 +46,10 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
                 <td class="num">
                   {p.bonus == null && (p.status === 'signed' || p.status === 'signed_udfa') && p.reportedSourceUrl
                     ? <a class="pending" href={p.reportedSourceUrl} rel="noopener">terms not yet reported</a>
+                    : (p.bonusSource === 'reported' && p.reportedSourceUrl)
+                    ? <a class="valuelink" href={p.reportedSourceUrl} rel="noopener">{fmtMoney(p.bonus)}</a>
+                    : (p.bonusSource === 'unverified' && p.unverifiedSourceUrl)
+                    ? <a class="valuelink" href={p.unverifiedSourceUrl} rel="noopener">{fmtMoney(p.bonus)}</a>
                     : fmtMoney(p.bonus)}
                   {p.bonusSource === 'reported' && p.reportedSourceUrl &&
                     <a class="reported" href={p.reportedSourceUrl} rel="noopener">reported</a>}
@@ -97,6 +101,7 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
   .pnote { font-size: 12px; color: var(--text-mut); font-style: italic; max-width: 380px; }
   .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .reported { margin-left: 6px; font-size: 11px; color: var(--text-mut); text-decoration: underline dotted; }
+  .valuelink { text-decoration: underline dotted; color: inherit; }
   .pending { font-size: 11px; font-style: italic; color: #6b7280; text-decoration: underline dotted; }
   .unverified { margin-left: 6px; font-size: 11px; font-style: italic; color: #6b7280; text-decoration: underline dotted; }
   .chip { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
