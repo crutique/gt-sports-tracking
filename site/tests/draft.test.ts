@@ -1,5 +1,58 @@
 import { describe, expect, it } from 'vitest';
-import { fmtMoney, getDraft, STATUS_LABEL, type DraftPlayer } from '../src/lib/draft';
+import { fmtMoney, fmtMoneyDelta, getDraft, poolSummary, STATUS_LABEL, type DraftPlayer } from '../src/lib/draft';
+
+describe('poolSummary', () => {
+  const base: Omit<DraftPlayer, 'name' | 'slot' | 'bonus' | 'status'> = {
+    personId: null, gtRole: 'departing', slug: null, round: null, pick: null,
+    team: null, bonusSource: null, reportedSourceUrl: null,
+    unverifiedSourceUrl: null, signedDate: null, headshot: null, note: null,
+  };
+  const mk = (name: string, slot: number | null, bonus: number | null, status: DraftPlayer['status']): DraftPlayer =>
+    ({ ...base, name, slot, bonus, status });
+
+  it('sums slot pool, known bonuses, and counts unreported signings', () => {
+    const s = poolSummary([
+      mk('A', 1_000_000, 1_200_000, 'signed'),
+      mk('B', 500_000, null, 'signed'),      // signed, terms not reported
+      mk('C', 400_000, null, 'unsigned'),
+      mk('D', null, 97_500, 'signed'),        // no slot (late round)
+    ]);
+    expect(s.slotPool).toBe(1_900_000);
+    expect(s.signedKnown).toBe(1_297_500);
+    expect(s.signedCount).toBe(3);
+    expect(s.unreportedCount).toBe(1);
+    expect(s.unsignedCount).toBe(1);
+  });
+
+  it('handles an empty class', () => {
+    const s = poolSummary([]);
+    expect(s.slotPool).toBe(0);
+    expect(s.signedCount).toBe(0);
+  });
+});
+
+describe('fmtMoneyDelta', () => {
+  it('em-dashes when either side is unknown', () => {
+    expect(fmtMoneyDelta(null, 1848200)).toBe('—');
+    expect(fmtMoneyDelta(97500, null)).toBe('—');
+    expect(fmtMoneyDelta(null, null)).toBe('—');
+  });
+
+  it('labels an exact-slot signing', () => {
+    expect(fmtMoneyDelta(516300, 516300)).toBe('slot');
+  });
+
+  it('formats thousands with sign and one decimal', () => {
+    expect(fmtMoneyDelta(7500000, 6982600)).toBe('+$517.4K');
+    expect(fmtMoneyDelta(1900000, 1848200)).toBe('+$51.8K');
+    expect(fmtMoneyDelta(500, 212000)).toBe('−$211.5K');
+  });
+
+  it('formats millions and sub-thousand deltas', () => {
+    expect(fmtMoneyDelta(9000000, 6982600)).toBe('+$2M');
+    expect(fmtMoneyDelta(1000, 1500)).toBe('−$500');
+  });
+});
 
 describe('draft data', () => {
   it('loads the draft file with players and udfa arrays', () => {

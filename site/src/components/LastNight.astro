@@ -1,0 +1,92 @@
+---
+import { getDisplayablePlayers, getGamelog } from '../lib/data';
+import type { HitterGame, PitcherGame } from '../lib/data';
+import { fmtDate, outsToIp } from '../lib/format';
+
+// Live-ness made visible: the most recent night of games across every league,
+// one terse line per player. Skips itself entirely on an off night.
+
+interface Entry {
+  slug: string;
+  name: string;
+  line: string;
+  big: boolean;
+}
+
+const players = getDisplayablePlayers();
+const latest = players
+  .flatMap((p) => getGamelog(p.slug).map((g) => g.date))
+  .sort()
+  .at(-1);
+
+function hitterLine(g: HitterGame): { line: string; big: boolean } {
+  const extras: string[] = [];
+  if (g.hr) extras.push(g.hr > 1 ? `${g.hr} HR` : 'HR');
+  if (g.rbi > 1) extras.push(`${g.rbi} RBI`);
+  if (g.sb) extras.push(g.sb > 1 ? `${g.sb} SB` : 'SB');
+  if (g.bb > 1) extras.push(`${g.bb} BB`);
+  return {
+    line: `${g.h}-${g.ab}${extras.length ? ', ' + extras.join(', ') : ''}`,
+    big: g.hr >= 1 || g.h >= 3,
+  };
+}
+
+function pitcherLine(g: PitcherGame): { line: string; big: boolean } {
+  const dec = g.dec ? ` (${g.dec})` : '';
+  return {
+    line: `${outsToIp(g.ip_outs)} IP, ${g.er} ER, ${g.k} K${dec}`,
+    big: g.k >= 7 || (g.er === 0 && g.ip_outs >= 12),
+  };
+}
+
+const entries: Entry[] = latest
+  ? players.flatMap((p) => {
+      const games = getGamelog(p.slug).filter((g) => g.date === latest);
+      const side = p.pitching && !p.hitting ? 'pitching' : 'hitting';
+      return games.map((g) => {
+        const { line, big } = side === 'hitting'
+          ? hitterLine(g as HitterGame)
+          : pitcherLine(g as PitcherGame);
+        const last = p.name.split(' ').slice(-1)[0];
+        return { slug: p.slug, name: last, line, big };
+      });
+    })
+  : [];
+entries.sort((a, b) => Number(b.big) - Number(a.big) || a.name.localeCompare(b.name));
+---
+{latest && entries.length > 0 && (
+  <p class="night">
+    <span class="when">Last night · {fmtDate(latest)}</span>
+    {entries.map((e, i) => (
+      <span class={`e ${e.big ? 'big' : ''}`}>
+        <a href={`/players/${e.slug}`}>{e.name}</a> {e.line}{i < entries.length - 1 ? '' : ''}
+      </span>
+    ))}
+  </p>
+)}
+
+<style>
+  .night {
+    margin: 0 0 16px;
+    font-size: 12.5px;
+    color: var(--text-mut);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    align-items: baseline;
+    font-variant-numeric: tabular-nums;
+  }
+  .when {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 1px;
+  }
+  .e a { font-weight: 700; margin-right: 4px; }
+  .e.big { color: var(--text); }
+  .e.big a { color: var(--pct-high); }
+</style>

@@ -1,6 +1,9 @@
-const LOW: [number, number, number] = [0x4a, 0x7d, 0xe0];
-const MID: [number, number, number] = [0x8e, 0x9b, 0xb0];
-const HIGH: [number, number, number] = [0xd9, 0x30, 0x25];
+// Anchors are tuned so that every interpolated color keeps white text at
+// ≥4.5:1 (WCAG AA) — the ramp's worst case is ~5.25:1 at the midpoint.
+// Verified by the contrast sweep in tests/colors.test.ts.
+const LOW: [number, number, number] = [0x35, 0x66, 0xcc];
+const MID: [number, number, number] = [0x5f, 0x6d, 0x83];
+const HIGH: [number, number, number] = [0xc5, 0x30, 0x22];
 
 function mix(a: [number, number, number], b: [number, number, number], t: number): string {
   const ch = a.map((av, i) => Math.round(av + (b[i] - av) * t));

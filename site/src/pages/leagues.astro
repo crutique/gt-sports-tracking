@@ -1,9 +1,30 @@
 ---
 import Headshot from '../components/Headshot.astro';
+import PercentileChip from '../components/PercentileChip.astro';
 import Base from '../layouts/Base.astro';
 import { getLeagues, getPlayer } from '../lib/data';
+import type { Player } from '../lib/data';
 
 const leagues = getLeagues();
+
+function headlinePct(p: Player): number | null {
+  const side = p.hitting ? 'hitting' : p.pitching ? 'pitching' : null;
+  if (!side) return null;
+  const metric = side === 'hitting' ? 'ops' : 'era';
+  return p[side]?.sliders?.find((s) => s.metric === metric)?.percentile ?? null;
+}
+
+function medianPct(slugs: string[], platform: string): number | null {
+  if (platform === 'fixture') return null; // fixture stats never feed a display
+  const vals = slugs
+    .map((s) => getPlayer(s))
+    .map((p) => (p ? headlinePct(p) : null))
+    .filter((v): v is number => v !== null)
+    .sort((a, b) => a - b);
+  if (vals.length === 0) return null;
+  const mid = Math.floor(vals.length / 2);
+  return vals.length % 2 ? vals[mid] : Math.round((vals[mid - 1] + vals[mid]) / 2);
+}
 ---
 <Base title="Leagues — GT Summer Tracker">
   <h1>Leagues</h1>
@@ -13,9 +34,16 @@ const leagues = getLeagues();
       <section class="card league">
         <header>
           <h2>{league.name}</h2>
-          <span class="count">{league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}</span>
+          <span class="count">
+            {league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}
+            {medianPct(league.gtPlayers, league.platform) !== null && (
+              <span class="med" title="Median percentile of GT players in this league">
+                med <PercentileChip percentile={medianPct(league.gtPlayers, league.platform)} />
+              </span>
+            )}
+          </span>
         </header>
-        {league.platform === 'fixture' && <p class="sample">Sample data — live stats coming soon</p>}
+        {league.platform === 'fixture' && <p class="sample">Live stats feed coming soon — no numbers shown until they're real</p>}
         <ul>
           {league.gtPlayers.map((slug) => {
             const p = getPlayer(slug);
@@ -37,8 +65,8 @@ const leagues = getLeagues();
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; font-size: 24px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
+  h1 { margin: 0 0 2px; }
+  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -49,16 +77,18 @@ const leagues = getLeagues();
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 12px;
     border-bottom: 2px solid var(--gold);
     padding-bottom: 6px;
   }
   .league h2 { margin: 0; font-size: 16px; color: var(--navy); }
-  .count { font-size: 12px; color: var(--text-mut); }
+  .count { font-size: 12px; color: var(--text-mut); display: inline-flex; align-items: center; gap: 8px; }
+  .med { display: inline-flex; align-items: center; gap: 4px; }
   .sample {
     margin: 8px 0 0;
     font-size: 11px;
-    color: #92600a;
-    background: #fdf3dd;
+    color: var(--warn-ink);
+    background: var(--warn-bg);
     border-radius: 5px;
     padding: 4px 8px;
     display: inline-block;

@@ -1,18 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
+import GlanceStrip from '../components/GlanceStrip.astro';
+import LastNight from '../components/LastNight.astro';
 import RosterTable from '../components/RosterTable.astro';
-import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers } from '../lib/data';
+import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague } from '../lib/data';
 
 const unassigned = getUnassignedPlayers();
 const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
 const freshmen = unassigned.filter((p) => p.gtStatus === 'freshman');
 const notPlaying = unassigned.filter((p) => p.summer.status === 'not_playing');
-// Assigned but no stats yet (scraper pending) — must not silently disappear from the page.
-const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
+// Assigned but nothing displayable — no stats yet, or a fixture-only league
+// feed (fake stats never render). Must not silently disappear from the page.
+const awaiting = getAssignedPlayers().filter(
+  (p) => (!p.hitting && !p.pitching) || isSampleLeague(p.summer.leagueKey),
+);
 ---
 <Base title="GT Summer Tracker — Georgia Tech baseball in the summer leagues">
   <h1>2026 Summer League Tracker</h1>
-  <p class="sub">2027 Georgia Tech players tracked Summer League performances</p>
+  <p class="sub">Tracking Georgia Tech's 2027 roster through the 2026 summer leagues.</p>
+  <GlanceStrip />
+  <LastNight />
   <RosterTable />
 
   {awaiting.length > 0 && (
@@ -72,10 +79,10 @@ const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; font-size: 24px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
+  h1 { margin: 0 0 2px; }
+  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
   .quiet { margin-top: 26px; }
-  .quiet p { font-size: 13px; line-height: 2; margin: 0; }
+  .quiet p { font-size: 13px; line-height: 2; margin: 0; max-width: 72ch; }
   .where { color: var(--text-mut); }
   .note { font-size: 12px; color: var(--text-mut); margin: 0 0 4px; }
 </style>

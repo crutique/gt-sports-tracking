@@ -12,13 +12,32 @@ const headers = side === 'hitting'
   ? ['Date', 'Opponent', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'SB']
   : ['Date', 'Opponent', 'IP', 'H', 'R', 'ER', 'BB', 'K', 'HR', 'Dec'];
 
-function cells(e: GameLogEntry): (string | number)[] {
+interface Cell {
+  v: string | number;
+  cls?: string;
+}
+
+// Big games get quiet emphasis: multi-hit and HR games for hitters,
+// big strikeout days for pitchers. Weight and one accent only — the
+// table stays a table.
+function cells(e: GameLogEntry): Cell[] {
   if (side === 'hitting') {
     const g = e as HitterGame;
-    return [fmtDate(g.date), g.opponent, g.ab, g.r, g.h, g.d, g.t, g.hr, g.rbi, g.bb, g.k, g.sb];
+    return [
+      { v: fmtDate(g.date) }, { v: g.opponent }, { v: g.ab }, { v: g.r },
+      { v: g.h, cls: g.h >= 2 ? 'big' : undefined },
+      { v: g.d }, { v: g.t },
+      { v: g.hr, cls: g.hr >= 1 ? 'hot' : undefined },
+      { v: g.rbi }, { v: g.bb }, { v: g.k }, { v: g.sb },
+    ];
   }
   const g = e as PitcherGame;
-  return [fmtDate(g.date), g.opponent, outsToIp(g.ip_outs), g.h, g.r, g.er, g.bb, g.k, g.hr, g.dec || '—'];
+  return [
+    { v: fmtDate(g.date) }, { v: g.opponent }, { v: outsToIp(g.ip_outs) },
+    { v: g.h }, { v: g.r }, { v: g.er }, { v: g.bb },
+    { v: g.k, cls: g.k >= 7 ? 'hot' : undefined },
+    { v: g.hr }, { v: g.dec || '—' },
+  ];
 }
 ---
 <section>
@@ -32,7 +51,7 @@ function cells(e: GameLogEntry): (string | number)[] {
           <tr>{headers.map((h) => <th scope="col">{h}</th>)}</tr>
         </thead>
         <tbody>
-          {entries.map((e) => <tr>{cells(e).map((c) => <td>{c}</td>)}</tr>)}
+          {entries.map((e) => <tr>{cells(e).map((c) => <td class={c.cls}>{c.v}</td>)}</tr>)}
         </tbody>
       </table>
     </div>
@@ -46,7 +65,7 @@ function cells(e: GameLogEntry): (string | number)[] {
   table { background: var(--card); border-radius: 6px; font-size: 12.5px; }
   th {
     text-align: left;
-    font-size: 10.5px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-mut);
@@ -54,7 +73,9 @@ function cells(e: GameLogEntry): (string | number)[] {
     padding: 6px 8px;
     border-bottom: 2px solid var(--gold);
   }
-  td { padding: 6px 8px; border-bottom: 1px solid #eef1f5; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line-soft); }
+  .big { font-weight: 700; }
+  .hot { font-weight: 700; color: var(--pct-high); }
   tr:last-child td { border-bottom: none; }
   th:nth-child(n + 3), td:nth-child(n + 3) { text-align: center; }
 </style>

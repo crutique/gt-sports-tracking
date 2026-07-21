@@ -1,19 +1,20 @@
 ---
+import DraftPool from '../components/DraftPool.astro';
 import Headshot from '../components/Headshot.astro';
 import Base from '../layouts/Base.astro';
-import { fmtMoney, getDraft, STATUS_LABEL } from '../lib/draft';
+import { fmtMoney, fmtMoneyDelta, getDraft, STATUS_LABEL } from '../lib/draft';
 import { getPlayer } from '../lib/data';
 
 const draft = getDraft();
-const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
 ---
 <Base title="2026 MLB Draft — GT Summer Tracker">
   <h1>2026 MLB Draft — Georgia Tech</h1>
   <p class="sub">
     GT's draft class: who signed, for how much, and who's headed (back) to campus.
-    {anyUnsigned && <span class="deadline">Signing deadline: July 27, 5 p.m. ET</span>}
     {draft.asOf && <span class="asof">Updated {draft.asOf}</span>}
   </p>
+
+  {draft.players.length > 0 && <DraftPool players={draft.players} />}
 
   {draft.players.length === 0 && <p class="empty">Draft data loads with the next nightly refresh.</p>}
 
@@ -21,7 +22,7 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
     <div class="scroll">
       <table>
         <thead>
-          <tr><th scope="col">Pick</th><th scope="col">Player</th><th scope="col">Drafted by</th><th scope="col">Slot value</th><th scope="col">Bonus</th><th scope="col">Status</th></tr>
+          <tr><th scope="col">Pick</th><th scope="col">Player</th><th scope="col">Drafted by</th><th scope="col">Slot value</th><th scope="col">Bonus</th><th scope="col" class="num-h">vs slot</th><th scope="col">Status</th></tr>
         </thead>
         <tbody>
           {draft.players.map((p) => {
@@ -55,6 +56,9 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
                   {p.bonusSource === 'unverified' && p.unverifiedSourceUrl &&
                     <a class="unverified" href={p.unverifiedSourceUrl} rel="noopener">unverified</a>}
                 </td>
+                <td class={`num delta ${p.bonus != null && p.slot != null ? (p.bonus > p.slot ? 'over' : p.bonus < p.slot ? 'under' : 'even') : ''}`}>
+                  {fmtMoneyDelta(p.bonus, p.slot)}
+                </td>
                 <td><span class={`chip ${p.status}`}>{STATUS_LABEL[p.status]}</span></td>
               </tr>
             );
@@ -82,8 +86,13 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; font-size: 24px; }
+  h1 { margin: 0 0 2px; }
   .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
+  .num-h { text-align: right; }
+  .delta { font-weight: 700; font-size: 13px; }
+  .delta.over { color: var(--up); }
+  .delta.under { color: var(--down); }
+  .delta.even { color: var(--text-mut); font-weight: 400; font-style: italic; }
   .deadline { margin-left: 10px; color: var(--navy); font-weight: 600; }
   .asof { margin-left: 10px; font-size: 12px; }
   .empty { color: var(--text-mut); font-size: 14px; }
@@ -100,14 +109,14 @@ const anyUnsigned = draft.players.some((p) => p.status === 'unsigned');
   .pnote { font-size: 12px; color: var(--text-mut); font-style: italic; max-width: 380px; }
   .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .valuelink { text-decoration: underline dotted; color: inherit; }
-  .pending { font-size: 11px; font-style: italic; color: #6b7280; text-decoration: underline dotted; }
-  .unverified { margin-left: 6px; font-size: 11px; font-style: italic; color: #6b7280; text-decoration: underline dotted; }
+  .pending { font-size: 11px; font-style: italic; color: var(--text-mut); text-decoration: underline dotted; }
+  .unverified { margin-left: 6px; font-size: 11px; font-style: italic; color: var(--text-mut); text-decoration: underline dotted; }
   .chip { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
-  .chip.signed, .chip.signed_udfa { background: #e2efe4; color: #1e5b2a; }
-  .chip.unsigned { background: #eef1f5; color: #5b6472; }
+  .chip.signed, .chip.signed_udfa { background: var(--ok-bg); color: var(--ok-ink); }
+  .chip.unsigned { background: var(--line-soft); color: var(--text-mut); }
   .chip.returning { background: var(--navy); color: var(--gold); }
-  .chip.did_not_sign { background: #f3e9e9; color: #7a3535; }
+  .chip.did_not_sign { background: var(--bad-bg); color: var(--bad-ink); }
   .quiet { margin-top: 26px; }
-  .quiet p { font-size: 13px; line-height: 2; margin: 0; }
+  .quiet p { font-size: 13px; line-height: 2; margin: 0; max-width: 72ch; }
   .where { color: var(--text-mut); }
 </style>

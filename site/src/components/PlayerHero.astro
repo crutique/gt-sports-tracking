@@ -38,7 +38,7 @@ if (player.hitting) {
 
 <style>
   .hero {
-    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, #00406f 100%);
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-bright) 100%);
     border-top: 3px solid var(--gold);
     border-radius: 8px 8px 0 0;
     padding: 20px 22px;
@@ -50,9 +50,9 @@ if (player.hitting) {
   .row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   h1 {
     margin: 0;
-    color: #fff;
-    font-size: 24px;
-    letter-spacing: -0.02em;
+    color: var(--on-navy);
+    font-size: 36px;
+    letter-spacing: 0.01em;
   }
   .meta {
     color: var(--gold);
@@ -62,7 +62,7 @@ if (player.hitting) {
     letter-spacing: 0.08em;
   }
   .team-row { margin-top: 6px; align-items: center; }
-  .team { color: #cfd8e3; font-size: 13px; }
+  .team { color: var(--on-navy-mut); font-size: 13px; }
   .pill {
     background: var(--gold);
     color: var(--navy-dark);
@@ -75,12 +75,12 @@ if (player.hitting) {
   }
   .context { text-align: right; flex-shrink: 0; }
   .season {
-    color: #a9bfd1;
+    color: var(--on-navy-faint);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
-  .line { color: #cfd8e3; font-size: 13px; margin-top: 2px; }
+  .line { color: var(--on-navy-mut); font-size: 13px; margin-top: 2px; }
   @media (max-width: 560px) {
     .hero { flex-wrap: wrap; }
     .context { text-align: left; }

@@ -96,6 +96,17 @@ export function isSampleLeague(key: string | undefined): boolean {
   return getLeagueByKey(key)?.platform === 'fixture';
 }
 
+/**
+ * Players whose stats may be DISPLAYED: assigned, has a stat block, and the
+ * league feed is real. Fixture-league stats exist in the data files but must
+ * never render (hard product rule: no fake data, ever).
+ */
+export function getDisplayablePlayers(): Player[] {
+  return getAssignedPlayers().filter(
+    (p) => (p.hitting || p.pitching) && !isSampleLeague(p.summer.leagueKey),
+  );
+}
+
 export function getGamelog(slug: string): GameLogEntry[] {
   return gamelogModules[`../data/gamelogs/${slug}.json`] ?? [];
 }

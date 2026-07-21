@@ -1,0 +1,70 @@
+---
+// Source of truth for public/og.png — screenshot this page at 1200×630:
+//   npx playwright screenshot --viewport-size=1200,630 http://localhost:4321/og-card public/og.png
+// Not linked from anywhere; exists so the social card can be regenerated
+// with the site's real fonts whenever the brand changes.
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>OG card — GT Summer Tracker</title>
+  </head>
+  <body>
+    <div class="card-og">
+      <div class="stripe"></div>
+      <div class="text">
+        <div class="brand">GT SUMMER<br /><span>TRACKER</span></div>
+        <p>Georgia Tech baseball across the 2026 summer leagues</p>
+      </div>
+      <svg class="ball" viewBox="0 0 64 64" width="300" height="300" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#b3a369"/>
+        <path d="M12 10 C 26 21, 26 43, 12 54" fill="none" stroke="#003057" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M52 10 C 38 21, 38 43, 52 54" fill="none" stroke="#003057" stroke-width="3.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </body>
+</html>
+
+<style>
+  html, body { margin: 0; }
+  .card-og {
+    width: 1200px;
+    height: 630px;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-bright) 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .stripe {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background: var(--gold);
+  }
+  .text { padding: 0 90px; position: relative; z-index: 1; }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 130px;
+    line-height: 0.95;
+    letter-spacing: 0.03em;
+    color: var(--on-navy);
+  }
+  .brand span { color: var(--gold); }
+  .text p {
+    margin: 28px 0 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    color: var(--on-navy-mut);
+  }
+  .ball {
+    position: absolute;
+    right: -30px;
+    bottom: -50px;
+    opacity: 0.92;
+  }
+</style>

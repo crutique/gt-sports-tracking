@@ -1,0 +1,109 @@
+---
+import { fmtMoneyCompact, poolSummary } from '../lib/draft';
+import type { DraftPlayer } from '../lib/draft';
+
+// The draft-week signature: how much of the class's slot-value pool has turned
+// into signed money, with the deadline visible. After July 27 it degrades into
+// the archival "how the class signed" display.
+
+interface Props {
+  players: DraftPlayer[];
+}
+const { players } = Astro.props;
+const s = poolSummary(players);
+const pctFilled = s.slotPool > 0 ? Math.min(1, s.signedKnown / s.slotPool) : 0;
+const drafted = players.length;
+const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
+---
+{s.slotPool > 0 && (
+  <section class="pool" aria-label="Draft bonus pool tracker">
+    <div class="top">
+      <span class="money">
+        <strong>{fmtMoneyCompact(s.signedKnown)}</strong> of {fmtMoneyCompact(s.slotPool)} slot pool committed
+      </span>
+      <span class="deadline" id="pool-deadline" data-deadline={DEADLINE_ISO}>
+        Signing deadline: July 27, 5 p.m. ET
+      </span>
+    </div>
+    <div class="bar" role="img" aria-label={`${fmtMoneyCompact(s.signedKnown)} of ${fmtMoneyCompact(s.slotPool)} slot pool committed`}>
+      <div class="fill" style={`width:${(pctFilled * 100).toFixed(1)}%`}></div>
+    </div>
+    <div class="bottom">
+      <span>{s.signedCount} of {drafted} drafted Jackets signed</span>
+      {s.unsignedCount > 0 && <span>· {s.unsignedCount} unsigned</span>}
+      {s.unreportedCount > 0 && <span>· {s.unreportedCount} signed, terms not yet reported</span>}
+    </div>
+  </section>
+)}
+
+<script>
+  // Countdown is display-only; the static fallback text stays correct without JS.
+  const el = document.getElementById('pool-deadline');
+  if (el?.dataset.deadline) {
+    const ms = Date.parse(el.dataset.deadline) - Date.now();
+    if (ms <= 0) {
+      el.textContent = 'Signing deadline passed — July 27';
+    } else {
+      const days = Math.floor(ms / 86_400_000);
+      const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+      el.textContent = days > 0
+        ? `Deadline in ${days}d ${hours}h — July 27, 5 p.m. ET`
+        : `Deadline in ${hours}h — today, 5 p.m. ET`;
+    }
+  }
+</script>
+
+<style>
+  .pool {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-bright) 100%);
+    border-top: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px 20px 18px;
+    margin: 0 0 20px;
+    color: var(--on-navy);
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .money { font-size: 14px; color: var(--on-navy-mut); }
+  .money strong {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--on-navy);
+    letter-spacing: 0.01em;
+    margin-right: 2px;
+  }
+  .deadline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gold-light);
+  }
+  .bar {
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-light));
+  }
+  .bottom {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--on-navy-mut);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+</style>

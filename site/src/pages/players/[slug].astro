@@ -1,13 +1,16 @@
 ---
 import CountingList from '../../components/CountingList.astro';
 import StatGrid from '../../components/StatGrid.astro';
-import SampleDataBanner from '../../components/SampleDataBanner.astro';
 import PlayerHero from '../../components/PlayerHero.astro';
 import SliderPanel from '../../components/SliderPanel.astro';
+import Sparkline from '../../components/Sparkline.astro';
 import GameLogTable from '../../components/GameLogTable.astro';
 import Base from '../../layouts/Base.astro';
 import { getGamelog, getLeagueByKey, getPlayers, isSampleLeague } from '../../lib/data';
-import type { Player } from '../../lib/data';
+import type { HitterGame, PitcherGame, Player } from '../../lib/data';
+import { rollingEra, rollingOps } from '../../lib/stats';
+import { detectHitterEvents, detectPitcherEvents } from '../../lib/events';
+import { fmtDate, fmtEra, fmtRate3 } from '../../lib/format';
 
 export function getStaticPaths() {
   return getPlayers().map((p) => ({ params: { slug: p.slug }, props: { player: p } }));
@@ -20,14 +23,42 @@ const { player } = Astro.props;
 const league = getLeagueByKey(player.summer.leagueKey);
 const sample = isSampleLeague(player.summer.leagueKey);
 const firstName = player.name.split(' ')[0];
-const hasStats = Boolean(player.hitting || player.pitching);
+// Fixture-league stat blocks exist in data but must never render (no fake
+// data, ever) — a sample-league player reads as awaiting stats.
+const hasStats = Boolean(player.hitting || player.pitching) && !sample;
 const side = player.hitting ? 'hitters' : 'pitchers';
 const gamelog = getGamelog(player.slug);
 const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
+
+// Trend: trailing-10-game OPS for hitters, trailing-5-outing ERA for pitchers,
+// with the league season average as the dashed reference line.
+const TREND_MIN_GAMES = 4;
+const trend = hasStats && gamelog.length >= TREND_MIN_GAMES
+  ? logSide === 'hitting'
+    ? rollingOps(gamelog as HitterGame[], 10)
+    : rollingEra(gamelog as PitcherGame[], 5)
+  : [];
+const trendBaseline = player[logSide]?.sliders
+  ?.find((s) => s.metric === (logSide === 'hitting' ? 'ops' : 'era'))?.leagueAvg ?? null;
+const trendLast = [...trend].reverse().find((p) => p.value !== null)?.value ?? null;
+const trendLabelStat = logSide === 'hitting' ? 'Rolling 10-game OPS' : 'Rolling 5-start ERA';
+const fmtTrend = logSide === 'hitting' ? fmtRate3 : fmtEra;
+
+// Season notes: notable games (sparse by design) marked on the trend line
+// and listed beneath it, newest first.
+const events = trend.length > 0
+  ? logSide === 'hitting'
+    ? detectHitterEvents(gamelog as HitterGame[])
+    : detectPitcherEvents(gamelog as PitcherGame[])
+  : [];
+const eventMarks = events
+  .map((e) => trend.findIndex((t) => t.date === e.date))
+  .filter((i) => i >= 0);
+const NOTES_SHOWN = 5;
+const notes = [...events].reverse().slice(0, NOTES_SHOWN);
 ---
 <Base title={`${player.name} — GT Summer Tracker`}>
   <a class="back" id="back-link" href="/">← All players</a>
-  {sample && <SampleDataBanner leagueName={league?.name ?? 'League'} />}
   <article class="card profile">
     <PlayerHero player={player} league={league} />
 
@@ -93,6 +124,29 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
               </section>
             ) : null
           )}
+          {trend.length > 0 && trendLast !== null && (
+            <section class="trend">
+              <h2 class="section-title">Trend</h2>
+              <div class="trend-now">
+                <span class="trend-value">{fmtTrend(trendLast)}</span>
+                <span class="trend-cap">{trendLabelStat}{trendBaseline !== null ? ` · dashed = lg avg ${fmtTrend(trendBaseline)}` : ''}</span>
+              </div>
+              <Sparkline
+                points={trend}
+                baseline={trendBaseline}
+                marks={eventMarks}
+                label={`${trendLabelStat}, currently ${fmtTrend(trendLast)}`}
+                width={280}
+              />
+              {notes.length > 0 && (
+                <ul class="notes">
+                  {notes.map((e) => (
+                    <li><span class="nd">{fmtDate(e.date)}</span> {e.label}</li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
         </div>
         <div class="right">
           {(['hitting', 'pitching'] as const).map((s) =>
@@ -136,11 +190,11 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
   }
   .profile { overflow: hidden; }
   .strip {
-    background: #eef1f5;
+    background: var(--line-soft);
     border-bottom: 1px solid var(--line);
     padding: 7px 22px;
     font-size: 12px;
-    color: #5b6472;
+    color: var(--text-mut);
   }
   .dot {
     display: inline-block;
@@ -188,6 +242,27 @@ const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
   .left { flex: 0 0 40%; min-width: 0; }
   .right { flex: 1; min-width: 0; }
   .left section + section { margin-top: 20px; }
+  .trend-now { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .trend-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .trend-cap { font-size: 11px; color: var(--text-mut); }
+  .notes { list-style: none; margin: 10px 0 0; padding: 0; font-size: 12.5px; }
+  .notes li { padding: 3px 0; border-bottom: 1px dotted var(--line); }
+  .notes li:last-child { border-bottom: none; }
+  .nd {
+    display: inline-block;
+    min-width: 46px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
   @media (max-width: 700px) {
     .body { flex-direction: column; }
     .left { flex: 1; }
