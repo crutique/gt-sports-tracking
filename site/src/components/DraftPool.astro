@@ -56,7 +56,8 @@ const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
 <style>
   .pool {
     background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-bright) 100%);
-    border-top: 3px solid var(--gold);
+    /* inset bar follows the rounded corners; a border-top would not */
+    box-shadow: inset 0 3px 0 var(--gold);
     border-radius: 8px;
     padding: 16px 20px 18px;
     margin: 0 0 20px;

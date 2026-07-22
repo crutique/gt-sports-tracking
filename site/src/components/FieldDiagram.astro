@@ -1,8 +1,6 @@
 ---
 import Headshot from './Headshot.astro';
 import type { Player } from '../lib/data';
-import { isSampleLeague } from '../lib/data';
-import { fmtEra, fmtRate3 } from '../lib/format';
 
 // Mac Nease Baseball Park (at Russ Chandler Stadium), drawn from its real
 // dimensions (330-358-394-390-362-339-335), flat MLB-app style: asymmetric
@@ -24,13 +22,11 @@ function group(pos: string): Group {
   const tokens = (pos || '').split('/').map((t) => t.trim().toUpperCase()).filter(Boolean);
   const first = tokens[0] ?? '';
   if (['RHP', 'LHP', 'P'].includes(first)) return 'P';
+  // Catching is scarce — anyone who can catch is charted at C.
+  if (tokens.includes('C')) return 'C';
   if (tokens.some((t) => ['UTL', 'UT', 'UTIL'].includes(t))) return 'UT';
   const mapped = new Set(
-    tokens.map((t) => {
-      if (t === 'C') return 'C';
-      if (['OF', 'CF', 'LF', 'RF'].includes(t)) return 'OF';
-      return 'IF';
-    }),
+    tokens.map((t) => (['OF', 'CF', 'LF', 'RF'].includes(t) ? 'OF' : 'IF')),
   );
   return mapped.size > 1 ? 'UT' : ([...mapped][0] as Group);
 }
@@ -40,38 +36,17 @@ interface Member {
   arriving: boolean;
   meta: string;
   status: string;
-  stat: string | null;
-}
-
-function statLine(p: Player): string | null {
-  if (isSampleLeague(p.summer.leagueKey)) return null;
-  if (p.hitting) {
-    const pct = p.hitting.sliders?.find((s) => s.metric === 'ops')?.percentile;
-    const ops = p.hitting.rates.ops;
-    if (ops == null) return null;
-    return `${fmtRate3(ops)} OPS${pct != null ? ` · ${pct}th pct` : ''}`;
-  }
-  if (p.pitching) {
-    const pct = p.pitching.sliders?.find((s) => s.metric === 'era')?.percentile;
-    const era = p.pitching.rates.era;
-    if (era == null) return null;
-    return `${fmtEra(era)} ERA${pct != null ? ` · ${pct}th pct` : ''}`;
-  }
-  return null;
 }
 
 function member(p: Player, arr: boolean): Member {
   const status = p.gtStatus === 'freshman' ? 'Incoming freshman'
     : p.gtStatus === 'transfer' ? 'Incoming transfer'
     : 'Returning';
-  const hometown = p.recruit?.hometown ? String(p.recruit.hometown) : null;
-  const stat = statLine(p) ?? (p.gtStatus === 'freshman' && hometown ? hometown : null);
   return {
     p,
     arriving: arr,
     meta: [p.position || '—', p.classYear].filter(Boolean).join(' · '),
     status,
-    stat,
   };
 }
 
@@ -152,14 +127,13 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
             <a
               class={m.arriving ? 'arr' : 'ret'}
               href={`/players/${m.p.slug}`}
-              aria-label={`${m.p.name} — ${m.meta}, ${m.status}${m.stat ? `, ${m.stat}` : ''}`}
+              aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
             >
-              <Headshot name={m.p.name} photo={m.p.photo} size={30} />
+              <Headshot name={m.p.name} photo={m.p.photo} size={40} />
               <span class="tip" role="tooltip">
                 <strong>{m.p.name}</strong>
                 <span class="meta">{m.meta}</span>
                 <span class="st">{m.status}</span>
-                {m.stat && <span class="stat">{m.stat}</span>}
               </span>
             </a>
           ))}
@@ -177,14 +151,13 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
           <a
             class={m.arriving ? 'arr-l' : ''}
             href={`/players/${m.p.slug}`}
-            aria-label={`${m.p.name} — ${m.meta}, ${m.status}${m.stat ? `, ${m.stat}` : ''}`}
+            aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
           >
-            <Headshot name={m.p.name} photo={m.p.photo} size={30} />
+            <Headshot name={m.p.name} photo={m.p.photo} size={36} />
             <span class="tip" role="tooltip">
               <strong>{m.p.name}</strong>
               <span class="meta">{m.meta}</span>
               <span class="st">{m.status}</span>
-              {m.stat && <span class="stat">{m.stat}</span>}
             </span>
           </a>
         ))}
@@ -237,7 +210,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    max-width: 210px; /* six 32px chips per row — clusters stack instead of stretching */
+    max-width: 270px; /* six 42px chips per row — clusters stack instead of stretching */
   }
   .chips {
     display: flex;
@@ -311,13 +284,6 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     color: var(--gold-light);
     white-space: nowrap;
   }
-  .tip .stat {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--on-navy);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
   .chips a:hover .tip,
   .chips a:focus-visible .tip {
     opacity: 1;
@@ -349,8 +315,8 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     .layout { flex-direction: column; }
     .field-crop { flex: none; width: 100%; }
     .staff { flex: none; width: 100%; }
-    .zone { max-width: 240px; }
-    .chips :global(.shot) { width: 22px !important; height: 22px !important; }
+    .zone { max-width: 260px; }
+    .chips :global(.shot) { width: 30px !important; height: 30px !important; }
     .tag { font-size: 12px; padding: 1px 8px; }
   }
   /* Phones, Gameday-style: the field bleeds to the card edge and crops foul
@@ -359,9 +325,9 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
   @media (max-width: 560px) {
     .field-crop { margin: 0 -14px; }
     .field { width: 150%; margin-left: -25%; }
-    .zone { max-width: 130px; }
+    .zone { max-width: 170px; }
     .chips { gap: 1px; }
-    .chips :global(.shot) { width: 20px !important; height: 20px !important; }
+    .chips :global(.shot) { width: 26px !important; height: 26px !important; }
     .tag { font-size: 12px; }
     .wm { font-size: 26px; }
     .dist { font-size: 20px; }

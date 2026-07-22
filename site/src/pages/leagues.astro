@@ -14,17 +14,6 @@ function headlinePct(p: Player): number | null {
   return p[side]?.sliders?.find((s) => s.metric === metric)?.percentile ?? null;
 }
 
-function medianPct(slugs: string[], platform: string): number | null {
-  if (platform === 'fixture') return null; // fixture stats never feed a display
-  const vals = slugs
-    .map((s) => getPlayer(s))
-    .map((p) => (p ? headlinePct(p) : null))
-    .filter((v): v is number => v !== null)
-    .sort((a, b) => a - b);
-  if (vals.length === 0) return null;
-  const mid = Math.floor(vals.length / 2);
-  return vals.length % 2 ? vals[mid] : Math.round((vals[mid - 1] + vals[mid]) / 2);
-}
 ---
 <Base title="Leagues — GT Summer Tracker">
   <h1>Leagues</h1>
@@ -38,11 +27,6 @@ function medianPct(slugs: string[], platform: string): number | null {
         </header>
         <div class="meta">
           <span class="count">{league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}</span>
-          {medianPct(league.gtPlayers, league.platform) !== null && (
-            <span class="med" title="Median percentile of GT players in this league">
-              median <PercentileChip percentile={medianPct(league.gtPlayers, league.platform)} />
-            </span>
-          )}
         </div>
         {league.platform === 'fixture' && <p class="sample">Live stats feed coming soon — no numbers shown until they're real</p>}
         <ul>
@@ -102,7 +86,6 @@ function medianPct(slugs: string[], platform: string): number | null {
     font-size: 12px;
     color: var(--text-mut);
   }
-  .med { display: inline-flex; align-items: center; gap: 5px; }
   .sample {
     margin: 8px 0 0;
     font-size: 11px;
