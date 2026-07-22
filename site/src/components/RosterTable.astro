@@ -16,9 +16,24 @@ function sliderPct(p: Player, side: 'hitting' | 'pitching', metric: string): num
 // so the client script and screen readers see the same state.
 const byPct = (side: 'hitting' | 'pitching', metric: string) => (a: Player, b: Player) =>
   (sliderPct(b, side, metric) ?? -1) - (sliderPct(a, side, metric) ?? -1);
-const hitters = assigned.filter((p) => p.hitting).sort(byPct('hitting', 'ops'));
-const pitchers = assigned.filter((p) => p.pitching).sort(byPct('pitching', 'era'));
-const statted = [...hitters, ...pitchers];
+
+// Rankings only mean something with a real sample behind them — sub-threshold
+// players keep their rows but sit in a separate band below the line.
+const QUALIFY_AB = 25;
+const QUALIFY_IP_OUTS = 24; // 8.0 IP
+function ipOuts(ip: number | string | undefined): number {
+  const [w, f = '0'] = String(ip ?? 0).split('.');
+  return Number(w) * 3 + Number(f);
+}
+
+const hittersAll = assigned.filter((p) => p.hitting).sort(byPct('hitting', 'ops'));
+const hitters = hittersAll.filter((p) => Number(p.hitting!.counting.ab) >= QUALIFY_AB);
+const hittersSub = hittersAll.filter((p) => Number(p.hitting!.counting.ab) < QUALIFY_AB);
+const pitchersAll = assigned.filter((p) => p.pitching).sort(byPct('pitching', 'era'));
+const pitchers = pitchersAll.filter((p) => ipOuts(p.pitching!.counting.ip) >= QUALIFY_IP_OUTS);
+const pitchersSub = pitchersAll.filter((p) => ipOuts(p.pitching!.counting.ip) < QUALIFY_IP_OUTS);
+
+const statted = [...hittersAll, ...pitchersAll];
 const leagues = [...new Set(statted.map((p) => p.summer.leagueKey!))]
   .map((k) => getLeagueByKey(k)!)
   .filter(Boolean);
@@ -29,15 +44,50 @@ function leagueAbbrev(p: Player): string {
 function leagueName(p: Player): string {
   return getLeagueByKey(p.summer.leagueKey)?.name ?? '';
 }
+function searchKey(p: Player): string {
+  return `${p.name} ${p.summer.team ?? ''}`.toLowerCase();
+}
+
+const HIT_COLS = [
+  { key: 'name', label: 'Player' },
+  { key: 'pos', label: 'Pos', opt: true },
+  { key: 'cls', label: 'Class', opt: true },
+  { key: 'lg', label: 'League', opt: true },
+  { key: 'g', label: 'G', num: true, opt: true, gsep: true },
+  { key: 'ab', label: 'AB', num: true, opt: true },
+  { key: 'avg', label: 'AVG', num: true, gsep: true },
+  { key: 'obp', label: 'OBP', num: true },
+  { key: 'slg', label: 'SLG', num: true },
+  { key: 'ops', label: 'OPS', num: true },
+  { key: 'hr', label: 'HR', num: true, gsep: true },
+  { key: 'rbi', label: 'RBI', num: true },
+  { key: 'sb', label: 'SB', num: true },
+  { key: 'pct', label: 'OPS %ile', num: true, gsep: true, defaultSort: true },
+];
+const PIT_COLS = [
+  { key: 'name', label: 'Player' },
+  { key: 'pos', label: 'Pos', opt: true },
+  { key: 'cls', label: 'Class', opt: true },
+  { key: 'lg', label: 'League', opt: true },
+  { key: 'g', label: 'G', num: true, opt: true, gsep: true },
+  { key: 'gs', label: 'GS', num: true, opt: true },
+  { key: 'ip', label: 'IP', num: true, gsep: true },
+  { key: 'era', label: 'ERA', num: true },
+  { key: 'whip', label: 'WHIP', num: true },
+  { key: 'k', label: 'K', num: true, gsep: true },
+  { key: 'bb', label: 'BB', num: true },
+  { key: 'sv', label: 'SV', num: true },
+  { key: 'pct', label: 'ERA %ile', num: true, gsep: true, defaultSort: true },
+];
 ---
 <div class="card shell">
   <div class="toolbar">
     <span class="ttl">Player statistics</span>
-    <div class="tabs seg" role="tablist">
+    <div class="tabs seg" role="tablist" aria-label="Player type">
       <button class="tab active" data-target="hitters" type="button" role="tab"
-        aria-selected="true" aria-controls="hitters">Hitters</button>
+        aria-selected="true" aria-controls="hitters" tabindex="0">Hitters</button>
       <button class="tab" data-target="pitchers" type="button" role="tab"
-        aria-selected="false" aria-controls="pitchers">Pitchers</button>
+        aria-selected="false" aria-controls="pitchers" tabindex="-1">Pitchers</button>
     </div>
     <div class="filters">
       <input type="search" id="player-search" placeholder="Find a player…"
@@ -46,30 +96,29 @@ function leagueName(p: Player): string {
         <option value="">All Leagues</option>
         {leagues.map((l) => <option value={l.key}>{l.name}</option>)}
       </select>
+      <span class="count" id="result-count" aria-live="polite"></span>
     </div>
   </div>
 
   <div class="panel" id="hitters" role="tabpanel">
-  {hitters.length === 0 ? (
+  {hittersAll.length === 0 ? (
     <p class="none">No GT hitters with summer stats yet.</p>
   ) : (
-    <table data-sortable>
+    <table data-sortable data-side="hitters">
       <thead>
         <tr>
-          <th data-key="name" tabindex="0" scope="col">Player</th>
-          <th data-key="pos" tabindex="0" scope="col" class="opt">Pos</th>
-          <th data-key="cls" tabindex="0" scope="col" class="opt">Class</th>
-          <th data-key="lg" tabindex="0" scope="col" class="opt">League</th>
-          <th data-key="g" data-numeric tabindex="0" scope="col" class="opt gsep">G</th>
-          <th data-key="ab" data-numeric tabindex="0" scope="col" class="opt">AB</th>
-          <th data-key="avg" data-numeric tabindex="0" scope="col" class="gsep">AVG</th>
-          <th data-key="obp" data-numeric tabindex="0" scope="col">OBP</th>
-          <th data-key="slg" data-numeric tabindex="0" scope="col">SLG</th>
-          <th data-key="ops" data-numeric tabindex="0" scope="col">OPS</th>
-          <th data-key="hr" data-numeric tabindex="0" scope="col" class="gsep">HR</th>
-          <th data-key="rbi" data-numeric tabindex="0" scope="col">RBI</th>
-          <th data-key="sb" data-numeric tabindex="0" scope="col">SB</th>
-          <th data-key="pct" data-numeric data-dir="desc" aria-sort="descending" tabindex="0" scope="col" class="gsep">OPS %ile</th>
+          {HIT_COLS.map((c) => (
+            <th
+              data-key={c.key}
+              data-numeric={c.num ? '' : undefined}
+              data-dir={c.defaultSort ? 'desc' : undefined}
+              aria-sort={c.defaultSort ? 'descending' : undefined}
+              scope="col"
+              class:list={[{ opt: c.opt, gsep: c.gsep }]}
+            >
+              <button type="button" aria-label={`Sort by ${c.label}`}>{c.label}</button>
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
@@ -78,11 +127,11 @@ function leagueName(p: Player): string {
           const r = p.hitting!.rates;
           const pct = sliderPct(p, 'hitting', 'ops');
           return (
-            <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+            <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
+              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
               <td data-v={c.ab} class="opt">{c.ab}</td>
               <td data-v={r.avg ?? '—'} class="gsep">{fmtRate3(r.avg)}</td>
@@ -92,35 +141,69 @@ function leagueName(p: Player): string {
               <td data-v={c.hr} class="gsep">{c.hr}</td>
               <td data-v={c.rbi}>{c.rbi}</td>
               <td data-v={c.sb}>{c.sb}</td>
-              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} /></td>
+              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="OPS" /></td>
             </tr>
           );
         })}
       </tbody>
+      <tbody class="empty-band" hidden>
+        <tr><td colspan="14">
+          <span class="empty-msg"></span>
+          <button type="button" class="switch-tab" hidden></button>
+          <button type="button" class="clear-filters">Clear filters</button>
+        </td></tr>
+      </tbody>
+      {hittersSub.length > 0 && (
+        <tbody class="subq">
+          <tr class="subhead"><td colspan="14">Below qualifying threshold · under {QUALIFY_AB} AB</td></tr>
+          {hittersSub.map((p) => {
+            const c = p.hitting!.counting;
+            const r = p.hitting!.rates;
+            const pct = sliderPct(p, 'hitting', 'ops');
+            return (
+              <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+                <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
+                <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
+                <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
+                <td data-v={c.g} class="opt gsep">{c.g}</td>
+                <td data-v={c.ab} class="opt">{c.ab}</td>
+                <td data-v={r.avg ?? '—'} class="gsep">{fmtRate3(r.avg)}</td>
+                <td data-v={r.obp ?? '—'}>{fmtRate3(r.obp)}</td>
+                <td data-v={r.slg ?? '—'}>{fmtRate3(r.slg)}</td>
+                <td data-v={r.ops ?? '—'} class="key">{fmtRate3(r.ops)}</td>
+                <td data-v={c.hr} class="gsep">{c.hr}</td>
+                <td data-v={c.rbi}>{c.rbi}</td>
+                <td data-v={c.sb}>{c.sb}</td>
+                <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="OPS" /></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      )}
     </table>
   )}
   </div>
 
   <div class="panel" id="pitchers" role="tabpanel" hidden>
-  {pitchers.length === 0 ? (
+  {pitchersAll.length === 0 ? (
     <p class="none">No GT pitchers with summer stats yet.</p>
   ) : (
-    <table data-sortable>
+    <table data-sortable data-side="pitchers">
       <thead>
         <tr>
-          <th data-key="name" tabindex="0" scope="col">Player</th>
-          <th data-key="pos" tabindex="0" scope="col" class="opt">Pos</th>
-          <th data-key="cls" tabindex="0" scope="col" class="opt">Class</th>
-          <th data-key="lg" tabindex="0" scope="col" class="opt">League</th>
-          <th data-key="g" data-numeric tabindex="0" scope="col" class="opt gsep">G</th>
-          <th data-key="gs" data-numeric tabindex="0" scope="col" class="opt">GS</th>
-          <th data-key="ip" data-numeric tabindex="0" scope="col" class="gsep">IP</th>
-          <th data-key="era" data-numeric tabindex="0" scope="col">ERA</th>
-          <th data-key="whip" data-numeric tabindex="0" scope="col">WHIP</th>
-          <th data-key="k" data-numeric tabindex="0" scope="col" class="gsep">K</th>
-          <th data-key="bb" data-numeric tabindex="0" scope="col">BB</th>
-          <th data-key="sv" data-numeric tabindex="0" scope="col">SV</th>
-          <th data-key="pct" data-numeric data-dir="desc" aria-sort="descending" tabindex="0" scope="col" class="gsep">ERA %ile</th>
+          {PIT_COLS.map((c) => (
+            <th
+              data-key={c.key}
+              data-numeric={c.num ? '' : undefined}
+              data-dir={c.defaultSort ? 'desc' : undefined}
+              aria-sort={c.defaultSort ? 'descending' : undefined}
+              scope="col"
+              class:list={[{ opt: c.opt, gsep: c.gsep }]}
+            >
+              <button type="button" aria-label={`Sort by ${c.label}`}>{c.label}</button>
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
@@ -129,11 +212,11 @@ function leagueName(p: Player): string {
           const r = p.pitching!.rates;
           const pct = sliderPct(p, 'pitching', 'era');
           return (
-            <tr data-league={p.summer.leagueKey}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+            <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
+              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
               <td data-v={c.gs} class="opt">{c.gs}</td>
               <td data-v={c.ip} class="gsep">{c.ip}</td>
@@ -142,14 +225,53 @@ function leagueName(p: Player): string {
               <td data-v={c.k} class="gsep">{c.k}</td>
               <td data-v={c.bb}>{c.bb}</td>
               <td data-v={c.sv}>{c.sv}</td>
-              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} /></td>
+              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="ERA" /></td>
             </tr>
           );
         })}
       </tbody>
+      <tbody class="empty-band" hidden>
+        <tr><td colspan="13">
+          <span class="empty-msg"></span>
+          <button type="button" class="switch-tab" hidden></button>
+          <button type="button" class="clear-filters">Clear filters</button>
+        </td></tr>
+      </tbody>
+      {pitchersSub.length > 0 && (
+        <tbody class="subq">
+          <tr class="subhead"><td colspan="13">Below qualifying threshold · under 8.0 IP</td></tr>
+          {pitchersSub.map((p) => {
+            const c = p.pitching!.counting;
+            const r = p.pitching!.rates;
+            const pct = sliderPct(p, 'pitching', 'era');
+            return (
+              <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+                <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
+                <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
+                <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
+                <td data-v={c.g} class="opt gsep">{c.g}</td>
+                <td data-v={c.gs} class="opt">{c.gs}</td>
+                <td data-v={c.ip} class="gsep">{c.ip}</td>
+                <td data-v={r.era ?? '—'} class="key">{fmtEra(r.era)}</td>
+                <td data-v={r.whip ?? '—'}>{fmtEra(r.whip)}</td>
+                <td data-v={c.k} class="gsep">{c.k}</td>
+                <td data-v={c.bb}>{c.bb}</td>
+                <td data-v={c.sv}>{c.sv}</td>
+                <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="ERA" /></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      )}
     </table>
   )}
   </div>
+
+  <p class="tfoot">
+    Percentiles rank each player against all hitters or pitchers in his league, 2026 season.
+    Qualified: {QUALIFY_AB}+ AB (hitters) or 8.0+ IP (pitchers) — others sit below the threshold line.
+  </p>
 </div>
 
 <script>
@@ -160,34 +282,88 @@ function leagueName(p: Player): string {
 
   const filter = document.getElementById('league-filter') as HTMLSelectElement;
   const search = document.getElementById('player-search') as HTMLInputElement;
+  const countEl = document.getElementById('result-count');
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tab')];
+
+  const SIDE_LABEL: Record<Tab, [string, string]> = {
+    hitters: ['hitter', 'hitters'],
+    pitchers: ['pitcher', 'pitchers'],
+  };
+
+  function activeTab(): Tab {
+    return document.querySelector<HTMLButtonElement>('.tab.active')?.dataset.target === 'pitchers'
+      ? 'pitchers'
+      : 'hitters';
+  }
 
   function activateTab(tab: HTMLButtonElement) {
-    document.querySelectorAll('.tab').forEach((t) => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
+    tabs.forEach((t) => {
+      const active = t === tab;
+      t.classList.toggle('active', active);
+      t.setAttribute('aria-selected', String(active));
+      t.tabIndex = active ? 0 : -1;
     });
-    tab.classList.add('active');
-    tab.setAttribute('aria-selected', 'true');
     document.getElementById('hitters')!.toggleAttribute('hidden', tab.dataset.target !== 'hitters');
     document.getElementById('pitchers')!.toggleAttribute('hidden', tab.dataset.target !== 'pitchers');
+    applyFilters();
   }
 
-  function applyLeagueFilter() {
+  function rowsOf(side: Tab): HTMLTableRowElement[] {
+    return [...document.querySelectorAll<HTMLTableRowElement>(`#${side} tr[data-league]`)];
+  }
+
+  function matches(row: HTMLTableRowElement, q: string): boolean {
+    const leagueOk = !filter.value || row.dataset.league === filter.value;
+    const nameOk = !q || (row.dataset.q ?? '').includes(q);
+    return leagueOk && nameOk;
+  }
+
+  function applyFilters() {
     const q = search.value.trim().toLowerCase();
-    document.querySelectorAll<HTMLTableRowElement>('tr[data-league]').forEach((row) => {
-      const leagueOk = !filter.value || row.dataset.league === filter.value;
-      const nameOk = !q || (row.cells[0].textContent ?? '').toLowerCase().includes(q);
-      row.style.display = leagueOk && nameOk ? '' : 'none';
+    const counts: Record<Tab, number> = { hitters: 0, pitchers: 0 };
+    (['hitters', 'pitchers'] as Tab[]).forEach((side) => {
+      rowsOf(side).forEach((row) => {
+        const ok = matches(row, q);
+        row.style.display = ok ? '' : 'none';
+        if (ok) counts[side]++;
+      });
+      // hide the sub-threshold band header when the whole band is filtered out
+      const sub = document.querySelector<HTMLElement>(`#${side} tbody.subq`);
+      if (sub) {
+        const anySub = [...sub.querySelectorAll<HTMLTableRowElement>('tr[data-league]')]
+          .some((r) => r.style.display !== 'none');
+        sub.querySelector<HTMLElement>('.subhead')!.style.display = anySub ? '' : 'none';
+      }
+    });
+
+    const side = activeTab();
+    const other: Tab = side === 'hitters' ? 'pitchers' : 'hitters';
+    const filtered = Boolean(q || filter.value);
+    if (countEl) {
+      countEl.textContent = filtered ? `${counts[side]} shown` : '';
+    }
+
+    // empty band with the reason and a way out
+    (['hitters', 'pitchers'] as Tab[]).forEach((s) => {
+      const band = document.querySelector<HTMLElement>(`#${s} .empty-band`);
+      if (!band) return;
+      const show = filtered && counts[s] === 0;
+      band.toggleAttribute('hidden', !show);
+      if (!show) return;
+      const o: Tab = s === 'hitters' ? 'pitchers' : 'hitters';
+      const leagueText = filter.value ? ` in the ${filter.options[filter.selectedIndex].text}` : '';
+      const qText = q ? ` match “${search.value.trim()}”` : '';
+      band.querySelector('.empty-msg')!.textContent = `No ${SIDE_LABEL[s][1]}${leagueText}${qText}.`;
+      const switcher = band.querySelector<HTMLButtonElement>('.switch-tab')!;
+      if (counts[o] > 0) {
+        const n = counts[o];
+        switcher.textContent = `Show ${n} ${n === 1 ? SIDE_LABEL[o][0] : SIDE_LABEL[o][1]}`;
+        switcher.hidden = false;
+      } else {
+        switcher.hidden = true;
+      }
     });
   }
-
-  search.addEventListener('input', applyLeagueFilter);
-  search.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      search.value = '';
-      applyLeagueFilter();
-    }
-  });
 
   function applySort(table: HTMLTableElement, th: HTMLTableCellElement, dir: SortDir) {
     const idx = th.cellIndex;
@@ -198,16 +374,20 @@ function leagueName(p: Player): string {
     th.dataset.dir = dir;
     th.setAttribute('aria-sort', dir === 'asc' ? 'ascending' : 'descending');
     const numeric = th.hasAttribute('data-numeric');
-    const body = table.tBodies[0];
+    const body = table.tBodies[0]; // qualified band only; the threshold band stays pinned below
     [...body.rows]
       .sort((a, b) => compareCells(
         a.cells[idx].dataset.v ?? '', b.cells[idx].dataset.v ?? '', numeric, dir))
       .forEach((r) => body.appendChild(r));
   }
 
+  function defaultSort(table: HTMLTableElement) {
+    const pct = table.querySelector<HTMLTableCellElement>('th[data-key="pct"]');
+    if (pct) applySort(table, pct, 'desc');
+  }
+
   function currentState(): ViewState {
-    const active = document.querySelector<HTMLButtonElement>('.tab.active');
-    const tab: Tab = active?.dataset.target === 'pitchers' ? 'pitchers' : 'hitters';
+    const tab = activeTab();
     const sorted = document.querySelector<HTMLTableCellElement>(`#${tab} th[data-dir]`);
     return {
       tab,
@@ -215,6 +395,7 @@ function leagueName(p: Player): string {
       sort: sorted
         ? { key: sorted.dataset.key!, dir: sorted.dataset.dir === 'desc' ? 'desc' : 'asc' }
         : null,
+      q: search.value.trim(),
     };
   }
 
@@ -223,30 +404,79 @@ function leagueName(p: Player): string {
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
   }
 
-  document.querySelectorAll<HTMLButtonElement>('.tab').forEach((tab) => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       activateTab(tab);
       syncUrl();
     });
   });
+  // APG tabs pattern: arrow keys move and activate within the tablist
+  document.querySelector('.tabs')?.addEventListener('keydown', (e) => {
+    const key = (e as KeyboardEvent).key;
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
+    e.preventDefault();
+    const current = tabs.findIndex((t) => t.classList.contains('active'));
+    let next = current;
+    if (key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+    if (key === 'ArrowRight') next = (current + 1) % tabs.length;
+    if (key === 'Home') next = 0;
+    if (key === 'End') next = tabs.length - 1;
+    tabs[next].focus();
+    activateTab(tabs[next]);
+    syncUrl();
+  });
 
   filter.addEventListener('change', () => {
-    applyLeagueFilter();
+    applyFilters();
     syncUrl();
+  });
+  search.addEventListener('input', () => {
+    applyFilters();
+    syncUrl();
+  });
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      search.value = '';
+      applyFilters();
+      syncUrl();
+    }
+  });
+  // '/' focuses search from anywhere outside a field
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLSelectElement)) {
+      e.preventDefault();
+      search.focus();
+    }
+  });
+
+  document.querySelectorAll<HTMLElement>('.empty-band').forEach((band) => {
+    band.querySelector('.clear-filters')?.addEventListener('click', () => {
+      search.value = '';
+      filter.value = '';
+      applyFilters();
+      syncUrl();
+    });
+    band.querySelector('.switch-tab')?.addEventListener('click', () => {
+      const other = tabs.find((t) => !t.classList.contains('active'));
+      if (other) {
+        activateTab(other);
+        syncUrl();
+      }
+    });
   });
 
   document.querySelectorAll<HTMLTableElement>('table[data-sortable]').forEach((table) => {
     table.querySelectorAll<HTMLTableCellElement>('th[data-key]').forEach((th) => {
-      th.addEventListener('click', () => {
-        applySort(table, th, th.dataset.dir === 'asc' ? 'desc' : 'asc');
+      th.querySelector('button')?.addEventListener('click', () => {
+        // tri-state: first click (numeric → best-first desc, text → asc),
+        // second click flips, third returns to the default percentile order
+        const numeric = th.hasAttribute('data-numeric');
+        const first: SortDir = numeric ? 'desc' : 'asc';
+        const cur = th.dataset.dir as SortDir | undefined;
+        if (!cur) applySort(table, th, first);
+        else if (cur === first) applySort(table, th, first === 'desc' ? 'asc' : 'desc');
+        else defaultSort(table);
         syncUrl();
-      });
-      // Headers are focusable (tabindex in markup); Enter/Space must sort too.
-      th.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          th.click();
-        }
       });
     });
   });
@@ -262,18 +492,19 @@ function leagueName(p: Player): string {
   // driving the same code paths the click/change handlers use. Unknown values are ignored.
   const restored = parseViewState(location.search);
   if (restored.tab === 'pitchers') {
-    const btn = document.querySelector<HTMLButtonElement>('.tab[data-target="pitchers"]');
+    const btn = tabs.find((t) => t.dataset.target === 'pitchers');
     if (btn) activateTab(btn);
   }
   if (restored.league && [...filter.options].some((o) => o.value === restored.league)) {
     filter.value = restored.league;
-    applyLeagueFilter();
   }
+  if (restored.q) search.value = restored.q;
   if (restored.sort) {
     const table = document.querySelector<HTMLTableElement>(`#${restored.tab} table[data-sortable]`);
     const th = table?.querySelector<HTMLTableCellElement>(`th[data-key="${CSS.escape(restored.sort.key)}"]`);
     if (table && th) applySort(table, th, restored.sort.dir);
   }
+  applyFilters();
 </script>
 
 <style>
@@ -311,7 +542,7 @@ function leagueName(p: Player): string {
   .tab + .tab { border-left: 1px solid var(--line); }
   .tab:hover:not(.active) { background: var(--line-soft); }
   .tab.active { background: var(--navy); color: var(--on-navy); }
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; align-items: center; }
   select,
   input[type='search'] {
     font-size: 12px;
@@ -323,34 +554,48 @@ function leagueName(p: Player): string {
   input[type='search'] { width: 160px; }
   select:hover,
   input[type='search']:hover { border-color: var(--text-mut); }
+  .count { font-size: 12px; color: var(--text-mut); min-width: 58px; }
 
   .panel { overflow-x: auto; }
   table { font-size: 12.5px; }
   th {
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+    padding: 0;
+  }
+  th > button {
+    all: unset;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
     cursor: pointer;
     user-select: none;
-    text-align: left;
-    font-size: 10px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-mut);
     font-weight: 700;
     padding: 9px 9px;
-    border-bottom: 1px solid var(--line);
-    white-space: nowrap;
   }
-  th[data-key]::after { content: ' ↕'; opacity: 0; }
-  th[data-key]:hover::after,
-  th[data-key]:focus-visible::after { opacity: 0.55; }
-  th[data-dir='asc']::after { content: ' ↑'; opacity: 1; }
-  th[data-dir='desc']::after { content: ' ↓'; opacity: 1; }
+  th > button:focus-visible {
+    outline: 2px solid var(--navy);
+    outline-offset: -2px;
+    border-radius: 2px;
+  }
+  th > button::after { content: ' ↕'; opacity: 0; }
+  th:hover > button::after,
+  th > button:focus-visible::after { opacity: 0.55; }
+  th[data-dir='asc'] > button::after { content: ' ↑'; opacity: 1; }
+  th[data-dir='desc'] > button::after { content: ' ↓'; opacity: 1; }
   td {
     padding: 9px 9px;
     border-bottom: 1px solid var(--line-soft);
     white-space: nowrap;
   }
-  tbody tr:last-child td { border-bottom: none; }
+  tbody:last-of-type tr:last-child td { border-bottom: none; }
   th:first-child, td:first-child { padding-left: 14px; }
+  th:first-child > button { padding-left: 0; }
   th:last-child, td:last-child { padding-right: 14px; }
   .gsep { border-left: 1px solid var(--line-soft); }
   th.gsep { border-left-color: var(--line); }
@@ -379,6 +624,43 @@ function leagueName(p: Player): string {
   .mchip { display: none; }
   .none { padding: 16px; color: var(--text-mut); font-size: 13px; }
 
+  .subhead td {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-mut);
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    padding: 6px 14px;
+  }
+  .subq tr:hover td { background: var(--line-soft); }
+
+  .empty-band td { padding: 16px 14px; color: var(--text-mut); font-size: 13px; }
+  .empty-msg { margin-right: 10px; }
+  .empty-band button {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    margin-right: 6px;
+  }
+  .empty-band button:hover { border-color: var(--navy); }
+
+  .tfoot {
+    margin: 0;
+    padding: 9px 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 11.5px;
+    color: var(--text-mut);
+    max-width: none;
+  }
+
   @media (max-width: 700px) {
     th:first-child, td:first-child {
       position: sticky;
@@ -397,11 +679,12 @@ function leagueName(p: Player): string {
        (and its horizontal scroll cost) goes away on phones. */
     .mchip { display: inline-flex; vertical-align: 1px; }
     th[data-key='pct'], td:last-child { display: none; }
+    .empty-band td:last-child, .subhead td:last-child { display: table-cell; }
     .ttl { width: 100%; }
   }
   @media (prefers-reduced-motion: no-preference) {
     td { transition: background-color var(--t-fast) var(--ease-out); }
-    th[data-key]::after { transition: opacity var(--t-fast) var(--ease-out); }
+    th > button::after { transition: opacity var(--t-fast) var(--ease-out); }
     .tab { transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out); }
   }
 </style>

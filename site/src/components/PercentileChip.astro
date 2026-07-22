@@ -3,13 +3,25 @@ import { percentileColor } from '../lib/colors';
 
 interface Props {
   percentile: number | null;
+  /** Stat the percentile describes (e.g. "OPS") — spoken to screen readers
+      and shown as a hover tooltip so the bare number always has context. */
+  metric?: string;
 }
-const { percentile } = Astro.props;
+const { percentile, metric } = Astro.props;
+const label = percentile === null
+  ? 'no percentile yet'
+  : `${percentile}th percentile${metric ? ` ${metric}` : ''}`;
 ---
 {percentile === null ? (
-  <span class="chip none">—</span>
+  <span class="chip none" role="img" aria-label={label} title={label}>—</span>
 ) : (
-  <span class="chip" style={`background:${percentileColor(percentile)}`}>{percentile}</span>
+  <span
+    class="chip"
+    style={`background:${percentileColor(percentile)}`}
+    role="img"
+    aria-label={label}
+    title={label}
+  >{percentile}</span>
 )}
 
 <style>

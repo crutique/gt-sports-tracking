@@ -9,11 +9,17 @@ describe('parseViewState', () => {
   });
 
   it('parses a fully specified state', () => {
-    expect(parseViewState('?tab=pitchers&league=cape_cod&sort=era&dir=desc')).toEqual({
+    expect(parseViewState('?tab=pitchers&league=cape_cod&sort=era&dir=desc&q=lewis')).toEqual({
       tab: 'pitchers',
       league: 'cape_cod',
       sort: { key: 'era', dir: 'desc' },
+      q: 'lewis',
     });
+  });
+
+  it('defaults q to empty and preserves its text', () => {
+    expect(parseViewState('').q).toBe('');
+    expect(parseViewState('?q=van%20wreck').q).toBe('van wreck');
   });
 
   it('accepts search with or without a leading question mark', () => {
@@ -52,26 +58,27 @@ describe('serializeViewState', () => {
   });
 
   it('omits params at their defaults', () => {
-    expect(serializeViewState({ tab: 'hitters', league: 'cape_cod', sort: null })).toBe('league=cape_cod');
-    expect(serializeViewState({ tab: 'pitchers', league: '', sort: null })).toBe('tab=pitchers');
+    expect(serializeViewState({ tab: 'hitters', league: 'cape_cod', sort: null, q: '' })).toBe('league=cape_cod');
+    expect(serializeViewState({ tab: 'pitchers', league: '', sort: null, q: '' })).toBe('tab=pitchers');
     // asc is the default direction, so dir is omitted
-    expect(serializeViewState({ tab: 'hitters', league: '', sort: { key: 'ops', dir: 'asc' } })).toBe('sort=ops');
+    expect(serializeViewState({ tab: 'hitters', league: '', sort: { key: 'ops', dir: 'asc' }, q: '' })).toBe('sort=ops');
+    expect(serializeViewState({ tab: 'hitters', league: '', sort: null, q: 'lew' })).toBe('q=lew');
   });
 
   it('serializes a fully non-default state', () => {
     expect(
-      serializeViewState({ tab: 'pitchers', league: 'cape_cod', sort: { key: 'era', dir: 'desc' } }),
-    ).toBe('tab=pitchers&league=cape_cod&sort=era&dir=desc');
+      serializeViewState({ tab: 'pitchers', league: 'cape_cod', sort: { key: 'era', dir: 'desc' }, q: 'fox' }),
+    ).toBe('tab=pitchers&league=cape_cod&sort=era&dir=desc&q=fox');
   });
 });
 
 describe('round trips', () => {
   const states: ViewState[] = [
-    { tab: 'hitters', league: '', sort: null },
-    { tab: 'pitchers', league: '', sort: null },
-    { tab: 'hitters', league: 'northwoods', sort: null },
-    { tab: 'pitchers', league: 'cape_cod', sort: { key: 'era', dir: 'asc' } },
-    { tab: 'hitters', league: 'appalachian', sort: { key: 'ops', dir: 'desc' } },
+    { tab: 'hitters', league: '', sort: null, q: '' },
+    { tab: 'pitchers', league: '', sort: null, q: '' },
+    { tab: 'hitters', league: 'northwoods', sort: null, q: '' },
+    { tab: 'pitchers', league: 'cape_cod', sort: { key: 'era', dir: 'asc' }, q: '' },
+    { tab: 'hitters', league: 'appalachian', sort: { key: 'ops', dir: 'desc' }, q: 'lodise' },
   ];
 
   it('parse(serialize(state)) preserves every state', () => {
@@ -81,7 +88,7 @@ describe('round trips', () => {
   });
 
   it('serialize(parse(url)) is stable (normalizing) for already-clean URLs', () => {
-    for (const url of ['', 'tab=pitchers', 'league=cape_cod&sort=ops', 'tab=pitchers&sort=era&dir=desc']) {
+    for (const url of ['', 'tab=pitchers', 'league=cape_cod&sort=ops', 'tab=pitchers&sort=era&dir=desc', 'league=northwoods&q=keilen']) {
       expect(serializeViewState(parseViewState(url))).toBe(url);
     }
   });

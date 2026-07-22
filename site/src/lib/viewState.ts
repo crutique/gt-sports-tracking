@@ -6,9 +6,10 @@ export interface ViewState {
   tab: Tab;
   league: string;
   sort: { key: string; dir: SortDir } | null;
+  q: string;
 }
 
-export const DEFAULT_VIEW: ViewState = Object.freeze({ tab: 'hitters', league: '', sort: null });
+export const DEFAULT_VIEW: ViewState = Object.freeze({ tab: 'hitters', league: '', sort: null, q: '' });
 
 /**
  * Parse a query string (with or without leading "?") into a dashboard view state.
@@ -21,7 +22,8 @@ export function parseViewState(search: string): ViewState {
   const league = params.get('league') ?? '';
   const key = params.get('sort') ?? '';
   const dir: SortDir = params.get('dir') === 'desc' ? 'desc' : 'asc';
-  return { tab, league, sort: key ? { key, dir } : null };
+  const q = params.get('q') ?? '';
+  return { tab, league, sort: key ? { key, dir } : null, q };
 }
 
 /** Serialize a view state to a query string, omitting params at their defaults ("" when all default). */
@@ -33,5 +35,6 @@ export function serializeViewState(state: ViewState): string {
     params.set('sort', state.sort.key);
     if (state.sort.dir !== 'asc') params.set('dir', state.sort.dir);
   }
+  if (state.q) params.set('q', state.q);
   return params.toString();
 }
