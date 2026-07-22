@@ -30,7 +30,8 @@ function leagueName(p: Player): string {
   return getLeagueByKey(p.summer.leagueKey)?.name ?? '';
 }
 ---
-<div class="controls">
+<div class="card shell">
+  <div class="toolbar">
   <div class="tabs" role="tablist">
     <button class="tab active" data-target="hitters" type="button" role="tab"
       aria-selected="true" aria-controls="hitters">Hitters</button>
@@ -45,9 +46,9 @@ function leagueName(p: Player): string {
       {leagues.map((l) => <option value={l.key}>{l.name}</option>)}
     </select>
   </div>
-</div>
+  </div>
 
-<div class="card" id="hitters" role="tabpanel">
+  <div class="panel" id="hitters" role="tabpanel">
   {hitters.length === 0 ? (
     <p class="none">No GT hitters with summer stats yet.</p>
   ) : (
@@ -99,7 +100,8 @@ function leagueName(p: Player): string {
   )}
 </div>
 
-<div class="card" id="pitchers" role="tabpanel" hidden>
+<div class="panel" id="pitchers" role="tabpanel" hidden>
+
   {pitchers.length === 0 ? (
     <p class="none">No GT pitchers with summer stats yet.</p>
   ) : (
@@ -147,6 +149,7 @@ function leagueName(p: Player): string {
       </tbody>
     </table>
   )}
+</div>
 </div>
 
 <script>
@@ -249,7 +252,7 @@ function leagueName(p: Player): string {
   });
 
   // Edge shadow on the sticky player column while the table is scrolled.
-  document.querySelectorAll<HTMLElement>('.card[role="tabpanel"]').forEach((panel) => {
+  document.querySelectorAll<HTMLElement>('[role="tabpanel"]').forEach((panel) => {
     const update = () => panel.toggleAttribute('data-scrolled', panel.scrollLeft > 2);
     panel.addEventListener('scroll', update, { passive: true });
     update();
@@ -274,13 +277,14 @@ function leagueName(p: Player): string {
 </script>
 
 <style>
-  .controls {
+  .toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 0 10px;
     gap: 10px;
     flex-wrap: wrap;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line-soft);
   }
   .tabs { display: flex; gap: 6px; }
   .tab {
@@ -307,7 +311,7 @@ function leagueName(p: Player): string {
   input[type='search'] { width: 150px; }
   select:hover,
   input[type='search']:hover { border-color: var(--text-mut); }
-  .card { overflow-x: auto; }
+  .panel { overflow-x: auto; }
   table { font-size: 12.5px; }
   th {
     cursor: pointer;
@@ -344,7 +348,7 @@ function leagueName(p: Player): string {
     font-size: 11px;
   }
   .strong { font-weight: 800; }
-  abbr { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
+  abbr { text-decoration: none; cursor: help; }
   .mchip { display: none; }
   .none { padding: 16px; color: var(--text-mut); font-size: 13px; }
 

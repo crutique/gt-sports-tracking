@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import Headshot from '../components/Headshot.astro';
 import HomeHero from '../components/HomeHero.astro';
 import RosterTable from '../components/RosterTable.astro';
 import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague } from '../lib/data';
+import type { Player } from '../lib/data';
 
 const unassigned = getUnassignedPlayers();
 const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
@@ -13,72 +15,98 @@ const notPlaying = unassigned.filter((p) => p.summer.status === 'not_playing');
 const awaiting = getAssignedPlayers().filter(
   (p) => (!p.hitting && !p.pitching) || isSampleLeague(p.summer.leagueKey),
 );
+
+interface QuietGroup {
+  title: string;
+  note?: string;
+  players: { p: Player; sub: string }[];
+}
+const quietGroups: QuietGroup[] = [
+  {
+    title: 'Assigned · awaiting stats',
+    players: awaiting.map((p) => ({
+      p,
+      sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
+    })),
+  },
+  {
+    title: 'No summer assignment yet',
+    players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+  },
+  {
+    title: 'Incoming freshmen',
+    note: "High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.",
+    players: freshmen.map((p) => ({ p, sub: p.position || 'signee' })),
+  },
+  {
+    title: 'Not playing this summer',
+    players: notPlaying.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+  },
+].filter((g) => g.players.length > 0);
 ---
 <Base title="GT Summer Tracker — Georgia Tech baseball in the summer leagues">
   <HomeHero slot="bleed" />
   <h2 class="section-title roster-head">Player statistics</h2>
   <RosterTable />
 
-  {awaiting.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Assigned — awaiting stats</h2>
-      <p>
-        {awaiting.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>
-            <span class="where"> ({p.summer.team}, {getLeagueByKey(p.summer.leagueKey)?.name})</span>
-            {i < awaiting.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
-  )}
-
-  {pending.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">No summer assignment yet</h2>
-      <p>
-        {pending.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < pending.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
-  )}
-
-  {freshmen.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Incoming Freshmen</h2>
-      <p class="note">High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.</p>
-      <p>
-        {freshmen.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < freshmen.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
-  )}
-
-  {notPlaying.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Not playing this summer</h2>
-      <p>
-        {notPlaying.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < notPlaying.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
+  {quietGroups.length > 0 && (
+    <div class="quiet-grid">
+      {quietGroups.map((g) => (
+        <section class="card q">
+          <header>
+            <span class="qcount">{g.players.length}</span>
+            <h2 class="section-title">{g.title}</h2>
+          </header>
+          {g.note && <p class="qnote">{g.note}</p>}
+          <ul>
+            {g.players.map(({ p, sub }) => (
+              <li>
+                <a href={`/players/${p.slug}`}>
+                  <Headshot name={p.name} photo={p.photo} size={26} />
+                  <span class="who">{p.name}<span class="sub">{sub}</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   )}
 </Base>
 
 <style>
-  .roster-head { margin-bottom: 12px; }
-  .quiet { margin-top: 26px; }
-  .quiet p { font-size: 13px; line-height: 2; margin: 0; max-width: 72ch; }
-  .where { color: var(--text-mut); }
-  .note { font-size: 12px; color: var(--text-mut); margin: 0 0 4px; }
+  .roster-head { margin: 4px 0 12px; }
+  .quiet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 14px;
+    align-items: start;
+    margin-top: 18px;
+  }
+  .q { padding: 16px; }
+  .q header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .qcount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .q header .section-title { flex: 1; margin: 0; }
+  .qnote { margin: 0 0 8px; font-size: 12px; color: var(--text-mut); max-width: 42ch; }
+  .q ul { list-style: none; margin: 0; padding: 0; }
+  .q li a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 0;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .q li a:hover { text-decoration: none; }
+  .q li a:hover .who { color: var(--navy); text-decoration: underline; }
+  .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+  .sub { color: var(--text-mut); font-weight: 400; font-size: 11px; }
 </style>

@@ -6,10 +6,17 @@ interface Props {
 }
 const { name, photo, size } = Astro.props;
 const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+
+// Roster photos are 350×400 upper-body shots with the head centered in the
+// top ~46% — the frame zooms to the head only (calibrated proportionally, so
+// it holds at every size and survives pipeline re-downloads). External MLB
+// headshots are framed tighter, so they get a gentler zoom.
+const local = photo?.startsWith('/') ?? false;
 ---
 {photo ? (
-  <img class="shot" src={photo} alt={name} width={size} height={size}
-    style={`width:${size}px;height:${size}px`} />
+  <span class="shot frame" style={`width:${size}px;height:${size}px`}>
+    <img class={`ph ${local ? 'gt' : 'ext'}`} src={photo} alt={name} />
+  </span>
 ) : (
   <span class="shot initials"
     style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.34)}px`}>
@@ -20,10 +27,30 @@ const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('');
 <style>
   .shot {
     border-radius: 50%;
-    object-fit: cover;
     flex-shrink: 0;
     border: 2px solid var(--gold-light);
     background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  }
+  .frame {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+  }
+  .ph {
+    position: absolute;
+    height: auto;
+  }
+  /* GT roster shots (350×400): head center ≈ (50%, 26%), head ≈ 54% of width */
+  .ph.gt {
+    width: 184%;
+    left: -42%;
+    top: -6%;
+  }
+  /* MLB draft silos: head center ≈ (50%, 34%), already tighter */
+  .ph.ext {
+    width: 148%;
+    left: -24%;
+    top: -12%;
   }
   .initials {
     display: inline-flex;
