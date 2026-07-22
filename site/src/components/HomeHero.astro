@@ -1,0 +1,31 @@
+---
+import LastNight from './LastNight.astro';
+import { getDisplayablePlayers, getGamelog } from '../lib/data';
+
+// The front page hero IS last night: a broadcast scores panel under the
+// lights. On an off night the hero disappears and the table leads.
+
+const players = getDisplayablePlayers();
+const latest = players
+  .flatMap((p) => getGamelog(p.slug).map((g) => g.date))
+  .sort()
+  .at(-1);
+const hasGames = latest
+  ? players.some((p) => getGamelog(p.slug).some((g) => g.date === latest))
+  : false;
+---
+{hasGames && (
+  <header class="hero">
+    <div class="wrap inner">
+      <LastNight />
+    </div>
+  </header>
+)}
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-bright) 100%);
+    border-bottom: 3px solid var(--gold);
+  }
+  .inner { padding: 24px 16px 26px; }
+</style>

@@ -7,3 +7,4 @@ dist/
 .DS_Store
 .claude/worktrees/
 .astro/
+.claude/settings.local.json

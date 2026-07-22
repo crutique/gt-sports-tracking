@@ -1,0 +1,355 @@
+---
+import Headshot from './Headshot.astro';
+import type { Player } from '../lib/data';
+
+// Mac Nease Baseball Park (at Russ Chandler Stadium), drawn from its real
+// dimensions (330-358-394-390-362-339-335), flat MLB-app style: asymmetric
+// fence with wall band and warning track, foul territory, true infield
+// proportions — plotted at 1.5px/ft with home plate at (480,660). Position
+// groups: C / IF / OF on the field, UTIL (multi-position players) between
+// IF and OF, pitchers off to the side. Returning wear the solid gold ring,
+// arrivals a dashed one. Hovering a face shows a next-season tooltip.
+
+interface Props {
+  returning: Player[];
+  arriving: Player[];
+}
+const { returning, arriving } = Astro.props;
+
+type Group = 'P' | 'C' | 'IF' | 'OF' | 'UT';
+
+function group(pos: string): Group {
+  const tokens = (pos || '').split('/').map((t) => t.trim().toUpperCase()).filter(Boolean);
+  const first = tokens[0] ?? '';
+  if (['RHP', 'LHP', 'P'].includes(first)) return 'P';
+  // Catching is scarce — anyone who can catch is charted at C.
+  if (tokens.includes('C')) return 'C';
+  if (tokens.some((t) => ['UTL', 'UT', 'UTIL'].includes(t))) return 'UT';
+  const mapped = new Set(
+    tokens.map((t) => (['OF', 'CF', 'LF', 'RF'].includes(t) ? 'OF' : 'IF')),
+  );
+  return mapped.size > 1 ? 'UT' : ([...mapped][0] as Group);
+}
+
+interface Member {
+  p: Player;
+  arriving: boolean;
+  meta: string;
+  status: string;
+}
+
+function member(p: Player, arr: boolean): Member {
+  const status = p.gtStatus === 'freshman' ? 'Incoming freshman'
+    : p.gtStatus === 'transfer' ? 'Incoming transfer'
+    : 'Returning';
+  return {
+    p,
+    arriving: arr,
+    meta: [p.position || '—', p.classYear].filter(Boolean).join(' · '),
+    status,
+  };
+}
+
+const members: Member[] = [
+  ...returning.map((p) => member(p, false)),
+  ...arriving.map((p) => member(p, true)),
+];
+
+const groups: Record<Group, Member[]> = { P: [], C: [], IF: [], OF: [], UT: [] };
+for (const m of members) groups[group(m.p.position)].push(m);
+for (const key of Object.keys(groups) as Group[]) {
+  groups[key].sort((a, b) => Number(a.arriving) - Number(b.arriving));
+}
+
+const FIELD_ZONES: { key: Group; x: number; y: number; label: string }[] = [
+  { key: 'OF', x: 50, y: 30, label: 'OF' },
+  { key: 'UT', x: 50, y: 44, label: 'UTIL' },
+  { key: 'IF', x: 50, y: 59.5, label: 'IF' },
+  { key: 'C', x: 50, y: 90, label: 'C' },
+];
+const summary = (['C', 'IF', 'UT', 'OF', 'P'] as Group[])
+  .map((k) => `${k === 'UT' ? 'UTIL' : k} ${groups[k].length}`)
+  .join(', ');
+
+// Fence vertices from the published distances, ~15° apart pole to pole.
+const FENCE = 'M130 310 L212 195 L327 89 L480 75 L621 136 L734 220 L835 305';
+const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
+---
+<div class="layout">
+  <div class="field-crop">
+  <div class="field" role="img" aria-label={`2027 roster by position group at Mac Nease Baseball Park: ${summary}`}>
+    <svg viewBox="0 0 960 780" aria-hidden="true">
+      <defs>
+        <clipPath id="park"><path d={SILHOUETTE} /></clipPath>
+      </defs>
+      <!-- grass: fair + foul territory in one silhouette -->
+      <path d={SILHOUETTE} class="grass" />
+      <!-- warning track hugging the fence contour -->
+      <path d={FENCE} class="track" clip-path="url(#park)" />
+      <!-- outfield wall -->
+      <path d={FENCE} class="wall" />
+      <!-- infield dirt (95ft radius from the mound, as built) -->
+      <circle cx="480" cy="569" r="143" class="dirt" clip-path="url(#park)" />
+      <!-- infield grass cut -->
+      <path d="M480 646 L566 566 L480 486 L394 566 Z" class="grass-cut" />
+      <!-- mound + rubber -->
+      <circle cx="480" cy="569" r="15" class="mound" />
+      <rect x="474" y="566" width="12" height="4" rx="1" class="rubber" />
+      <!-- foul lines -->
+      <path d="M478 656 L130 310 M482 656 L835 305" class="foul" />
+      <!-- bases + plate -->
+      <rect x="570" y="559" width="11" height="11" class="base" transform="rotate(45 575 565)" />
+      <rect x="475" y="464" width="11" height="11" class="base" transform="rotate(45 480 469)" />
+      <rect x="379" y="559" width="11" height="11" class="base" transform="rotate(45 384 565)" />
+      <rect x="475" y="650" width="10" height="10" class="base" transform="rotate(45 480 655)" />
+      <!-- distance markers on the wall -->
+      <circle cx="130" cy="310" r="4.5" class="marker" />
+      <circle cx="212" cy="195" r="4.5" class="marker" />
+      <circle cx="327" cy="89" r="4.5" class="marker" />
+      <circle cx="480" cy="75" r="4.5" class="marker" />
+      <circle cx="621" cy="136" r="4.5" class="marker" />
+      <circle cx="734" cy="220" r="4.5" class="marker" />
+      <circle cx="835" cy="305" r="4.5" class="marker" />
+      <!-- park name + real wall distances -->
+      <text x="480" y="178" class="wm">Mac Nease Baseball Park</text>
+      <text x="114" y="322" text-anchor="end" class="dist">330'</text>
+      <text x="196" y="186" text-anchor="end" class="dist">358'</text>
+      <text x="322" y="72" text-anchor="middle" class="dist">394'</text>
+      <text x="490" y="58" text-anchor="middle" class="dist">390'</text>
+      <text x="638" y="122" text-anchor="start" class="dist">362'</text>
+      <text x="750" y="208" text-anchor="start" class="dist">339'</text>
+      <text x="852" y="318" text-anchor="start" class="dist">335'</text>
+    </svg>
+    {FIELD_ZONES.filter((z) => groups[z.key].length > 0).map((z) => (
+      <div class="zone" style={`left:${z.x}%;top:${z.y}%`}>
+        <span class="chips">
+          {groups[z.key].map((m) => (
+            <a
+              class={m.arriving ? 'arr' : 'ret'}
+              href={`/players/${m.p.slug}`}
+              aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
+            >
+              <Headshot name={m.p.name} photo={m.p.photo} size={44} variant="bust" />
+              <span class="tip" role="tooltip">
+                <strong>{m.p.name}</strong>
+                <span class="meta">{m.meta}</span>
+                <span class="st">{m.status}</span>
+              </span>
+            </a>
+          ))}
+        </span>
+        <span class="tag">{z.label} · {groups[z.key].length}</span>
+      </div>
+    ))}
+  </div>
+  </div>
+  {groups.P.length > 0 && (
+    <div class="staff">
+      <span class="tag">P · {groups.P.length}</span>
+      <span class="chips">
+        {groups.P.map((m) => (
+          <a
+            class={m.arriving ? 'arr-l' : ''}
+            href={`/players/${m.p.slug}`}
+            aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
+          >
+            <Headshot name={m.p.name} photo={m.p.photo} size={40} variant="bust" />
+            <span class="sname">{m.p.name.split(' ').slice(-1)[0]}</span>
+            <span class="tip" role="tooltip">
+              <strong>{m.p.name}</strong>
+              <span class="meta">{m.meta}</span>
+              <span class="st">{m.status}</span>
+            </span>
+          </a>
+        ))}
+      </span>
+    </div>
+  )}
+</div>
+
+<style>
+  .layout { display: flex; gap: 22px; align-items: flex-start; }
+  .field-crop { flex: 1; min-width: 0; overflow: hidden; }
+  .field {
+    position: relative;
+    aspect-ratio: 960 / 780; /* must match the viewBox exactly — a forced
+                                min-height letterboxes the SVG and unglues
+                                the % anchors from the drawing */
+  }
+  svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .grass { fill: var(--grass); }
+  .grass-cut { fill: var(--grass); }
+  .track { fill: none; stroke: var(--dirt); stroke-width: 26; stroke-linejoin: round; }
+  .wall { fill: none; stroke: var(--grass-dark); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
+  .dirt { fill: var(--dirt); }
+  .mound { fill: var(--dirt); }
+  .rubber { fill: var(--field-white); }
+  .base { fill: var(--field-white); }
+  .foul { fill: none; stroke: var(--field-white); stroke-width: 3; stroke-linecap: round; opacity: 0.9; }
+  .wm {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-anchor: middle;
+    fill: rgba(255, 255, 255, 0.5);
+  }
+  .marker { fill: var(--gold); stroke: var(--card); stroke-width: 1.5; }
+  .dist {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    fill: var(--text-mut);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zone {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    max-width: 300px; /* six 46px bust cards per row — clusters stack instead of stretching */
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    align-items: center;
+  }
+  .chips a { display: inline-flex; border-radius: 50%; position: relative; }
+  .chips a:hover { transform: translateY(-2px); z-index: 6; }
+  .arr :global(.shot) { border-style: dashed; border-color: var(--card); }
+  .tag {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--navy);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 1px 10px;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  }
+
+  /* next-season tooltip */
+  .tip {
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    transform: translateX(-50%) translateY(3px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: max-content;
+    max-width: 200px;
+    background: var(--navy-dark);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    padding: 9px 11px;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 7;
+  }
+  .tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--navy-dark);
+  }
+  .tip strong {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--on-navy);
+    white-space: nowrap;
+  }
+  .tip .meta { font-size: 11px; color: var(--on-navy-mut); white-space: nowrap; }
+  .tip .st {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    white-space: nowrap;
+  }
+  .chips a:hover .tip,
+  .chips a:focus-visible .tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .staff {
+    flex: 0 0 236px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .staff .tag { box-shadow: none; border: 1px solid var(--line); }
+  .staff .chips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 6px;
+    width: 100%;
+  }
+  .staff .chips a { flex-direction: column; align-items: center; gap: 2px; }
+  .sname {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-mut);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .arr-l :global(.shot) { border-style: dashed; border-color: var(--navy-bright); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chips a { transition: transform var(--t-fast) var(--ease-out); }
+    .tip { transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out), visibility 0s linear var(--t-fast); }
+    .chips a:hover .tip, .chips a:focus-visible .tip { transition-delay: 0s; }
+  }
+  @media (max-width: 700px) {
+    .layout { flex-direction: column; }
+    .field-crop { flex: none; width: 100%; }
+    .staff { flex: none; width: 100%; }
+    .zone { max-width: 250px; }
+    .chips :global(.shot) { width: 34px !important; height: 42px !important; }
+    .tag { font-size: 12px; padding: 1px 8px; }
+  }
+  /* Phones, Gameday-style: the field bleeds to the card edge and crops foul
+     territory at the sides, keeping the playable area large enough that the
+     faces stay on the field. */
+  @media (max-width: 560px) {
+    .field-crop { margin: 0 -14px; }
+    .field { width: 150%; margin-left: -25%; }
+    /* taller bust cards need more vertical spread at phone scale */
+    .zone:nth-of-type(1) { top: 27% !important; }
+    .zone:nth-of-type(2) { top: 43% !important; }
+    .zone:nth-of-type(3) { top: 62% !important; }
+    .zone { max-width: 175px; }
+    .chips { gap: 2px; }
+    .chips :global(.shot) { width: 26px !important; height: 32px !important; }
+    .tag { font-size: 12px; }
+    .wm { font-size: 26px; }
+    .dist { font-size: 20px; }
+  }
+</style>

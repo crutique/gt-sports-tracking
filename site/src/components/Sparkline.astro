@@ -1,0 +1,72 @@
+---
+import type { TrendPoint } from '../lib/stats';
+
+interface Props {
+  points: TrendPoint[];
+  /** Dashed reference line (e.g. league-average OPS); drawn when inside range. */
+  baseline?: number | null;
+  /** Indices into `points` to mark with gold event dots (notable games). */
+  marks?: number[];
+  label: string;
+  width?: number;
+  height?: number;
+}
+const { points, baseline = null, marks = [], label, width = 240, height = 56 } = Astro.props;
+
+const vals = points.filter((p): p is { date: string; value: number } => p.value !== null);
+const PAD = 6;
+
+let path = '';
+let endX = 0;
+let endY = 0;
+let baseY: number | null = null;
+let markPts: { x: number; y: number }[] = [];
+if (vals.length >= 2) {
+  const nums = vals.map((v) => v.value);
+  const lo = Math.min(...nums, ...(baseline !== null ? [baseline] : []));
+  const hi = Math.max(...nums, ...(baseline !== null ? [baseline] : []));
+  const span = hi - lo || 1;
+  const x = (i: number) => PAD + (i / (vals.length - 1)) * (width - 2 * PAD);
+  const y = (v: number) => height - PAD - ((v - lo) / span) * (height - 2 * PAD);
+  path = vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)} ${y(v.value).toFixed(1)}`).join(' ');
+  endX = x(vals.length - 1);
+  endY = y(vals[vals.length - 1].value);
+  if (baseline !== null) baseY = y(baseline);
+
+  // points index → vals index (null-valued points can't carry a mark)
+  const valIndex = new Map<number, number>();
+  let vi = 0;
+  points.forEach((p, i) => {
+    if (p.value !== null) valIndex.set(i, vi++);
+  });
+  markPts = marks
+    .map((i) => valIndex.get(i))
+    .filter((v): v is number => v !== undefined)
+    .map((v) => ({ x: x(v), y: y(vals[v].value) }));
+}
+---
+{vals.length >= 2 && (
+  <svg
+    class="spark"
+    viewBox={`0 0 ${width} ${height}`}
+    width={width}
+    height={height}
+    role="img"
+    aria-label={label}
+  >
+    {baseY !== null && (
+      <line x1={PAD} y1={baseY} x2={width - PAD} y2={baseY} class="base" />
+    )}
+    <path d={path} class="line" />
+    {markPts.map((m) => <circle cx={m.x} cy={m.y} r="4.5" class="mark" />)}
+    <circle cx={endX} cy={endY} r="3.5" class="dot" />
+  </svg>
+)}
+
+<style>
+  .spark { display: block; width: 100%; max-width: 420px; height: auto; }
+  .line { fill: none; stroke: var(--navy); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .base { stroke: var(--text-mut); stroke-width: 1; stroke-dasharray: 3 4; }
+  .dot { fill: var(--gold); stroke: var(--navy); stroke-width: 1.5; }
+  .mark { fill: var(--gold); stroke: var(--navy-dark); stroke-width: 1.5; }
+</style>

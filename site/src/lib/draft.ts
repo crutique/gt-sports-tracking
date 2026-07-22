@@ -42,3 +42,47 @@ export function getDraft(): DraftData {
 export function fmtMoney(n: number | null): string {
   return n == null ? '—' : '$' + n.toLocaleString('en-US');
 }
+
+function compactMoney(n: number): string {
+  if (n >= 1_000_000) return `$${trimZero((n / 1_000_000).toFixed(1))}M`;
+  if (n >= 1_000) return `$${trimZero((n / 1_000).toFixed(1))}K`;
+  return `$${n}`;
+}
+
+function trimZero(s: string): string {
+  return s.endsWith('.0') ? s.slice(0, -2) : s;
+}
+
+/** Signed bonus vs. slot value, compact: '+$517.4K', '−$211.5K', 'slot', or '—'. */
+export function fmtMoneyDelta(bonus: number | null, slot: number | null): string {
+  if (bonus == null || slot == null) return '—';
+  const d = bonus - slot;
+  if (d === 0) return 'slot';
+  return (d > 0 ? '+' : '−') + compactMoney(Math.abs(d));
+}
+
+export interface PoolSummary {
+  slotPool: number;
+  signedKnown: number;
+  signedCount: number;
+  unreportedCount: number;
+  unsignedCount: number;
+}
+
+const SIGNED: DraftStatus[] = ['signed', 'signed_udfa'];
+
+/** Money picture of the drafted class (excludes the separate UDFA list). */
+export function poolSummary(players: DraftPlayer[]): PoolSummary {
+  const signed = players.filter((p) => SIGNED.includes(p.status));
+  return {
+    slotPool: players.reduce((s, p) => s + (p.slot ?? 0), 0),
+    signedKnown: signed.reduce((s, p) => s + (p.bonus ?? 0), 0),
+    signedCount: signed.length,
+    unreportedCount: signed.filter((p) => p.bonus == null).length,
+    unsignedCount: players.filter((p) => p.status === 'unsigned').length,
+  };
+}
+
+export function fmtMoneyCompact(n: number): string {
+  return compactMoney(n);
+}

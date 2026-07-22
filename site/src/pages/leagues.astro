@@ -1,9 +1,19 @@
 ---
 import Headshot from '../components/Headshot.astro';
+import PercentileChip from '../components/PercentileChip.astro';
 import Base from '../layouts/Base.astro';
 import { getLeagues, getPlayer } from '../lib/data';
+import type { Player } from '../lib/data';
 
 const leagues = getLeagues();
+
+function headlinePct(p: Player): number | null {
+  const side = p.hitting ? 'hitting' : p.pitching ? 'pitching' : null;
+  if (!side) return null;
+  const metric = side === 'hitting' ? 'ops' : 'era';
+  return p[side]?.sliders?.find((s) => s.metric === metric)?.percentile ?? null;
+}
+
 ---
 <Base title="Leagues — GT Summer Tracker">
   <h1>Leagues</h1>
@@ -13,21 +23,26 @@ const leagues = getLeagues();
       <section class="card league">
         <header>
           <h2>{league.name}</h2>
-          <span class="count">{league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}</span>
+          <span class="ab">{league.abbrev}</span>
         </header>
-        {league.platform === 'fixture' && <p class="sample">Sample data — live stats coming soon</p>}
+        <div class="meta">
+          <span class="count">{league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}</span>
+        </div>
+        {league.platform === 'fixture' && <p class="sample">Live stats feed coming soon — no numbers shown until they're real</p>}
         <ul>
           {league.gtPlayers.map((slug) => {
             const p = getPlayer(slug);
-            return p ? (
+            if (!p) return null;
+            const pct = league.platform === 'fixture' ? null : headlinePct(p);
+            return (
               <li>
                 <a href={`/players/${p.slug}`}>
-                  <Headshot name={p.name} photo={p.photo} size={26} />
-                  <span>{p.name}</span>
-                  <span class="team">{p.summer.team}</span>
+                  <Headshot name={p.name} photo={p.photo} size={28} />
+                  <span class="who">{p.name}<span class="team">{p.summer.team}</span></span>
+                  {pct !== null && <span class="tail"><PercentileChip percentile={pct} /></span>}
                 </a>
               </li>
-            ) : null;
+            );
           })}
         </ul>
         <a class="official" href={league.officialUrl} rel="noopener">Official {league.abbrev} site →</a>
@@ -37,28 +52,45 @@ const leagues = getLeagues();
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; font-size: 24px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
+  h1 { margin: 0 0 2px; }
+  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 14px;
+    align-items: start;
   }
   .league { padding: 16px; }
   .league header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 12px;
     border-bottom: 2px solid var(--gold);
     padding-bottom: 6px;
   }
   .league h2 { margin: 0; font-size: 16px; color: var(--navy); }
-  .count { font-size: 12px; color: var(--text-mut); }
+  .ab {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--text-mut);
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-mut);
+  }
   .sample {
     margin: 8px 0 0;
     font-size: 11px;
-    color: #92600a;
-    background: #fdf3dd;
+    color: var(--warn-ink);
+    background: var(--warn-bg);
     border-radius: 5px;
     padding: 4px 8px;
     display: inline-block;
@@ -70,8 +102,15 @@ const leagues = getLeagues();
     gap: 9px;
     padding: 5px 0;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13.5px;
+    color: var(--text);
+    border-bottom: 1px dotted var(--line);
   }
-  .team { color: var(--text-mut); font-weight: 400; font-size: 12px; }
-  .official { font-size: 12px; font-weight: 600; }
+  li:last-child a { border-bottom: none; }
+  li a:hover { text-decoration: none; }
+  li a:hover .who { color: var(--navy); text-decoration: underline; }
+  .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+  .team { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .tail { margin-left: auto; flex-shrink: 0; }
+  .official { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 600; }
 </style>

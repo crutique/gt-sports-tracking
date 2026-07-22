@@ -1,16 +1,59 @@
+/* Display layer only — page headings, hero name, scoreboard numerals.
+   Body, labels, and table text stay on the system stack. */
+@import '@fontsource/barlow-condensed/500.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+
 :root {
+  /* brand */
   --navy: #003057;
   --navy-dark: #00223f;
+  --navy-bright: #00406f;
   --gold: #b3a369;
   --gold-light: #d9c98f;
+  --gold-deep: #8f8250;
+
+  /* neutrals */
   --bg: #f6f7f9;
   --card: #ffffff;
   --line: #dde3ea;
+  --line-soft: #eef1f5;
+  --well: #e6eaef; /* recessed surfaces: inactive tabs, slider tracks */
   --text: #111827;
   --text-mut: #6b7280;
-  --pct-low: #4a7de0;
-  --pct-mid: #8e9bb0;
-  --pct-high: #d93025;
+  --on-navy: #ffffff;
+  --on-navy-mut: #cfd8e3;
+  --on-navy-faint: #a9bfd1;
+
+  /* semantic status */
+  --ok-bg: #e2efe4;
+  --ok-ink: #1e5b2a;
+  --warn-bg: #fdf3dd;
+  --warn-ink: #92600a;
+  --warn-line: #e8d5a4;
+  --bad-bg: #f3e9e9;
+  --bad-ink: #7a3535;
+  --up: #1e5b2a;   /* over slot / gain */
+  --down: #a33430; /* under slot / loss */
+
+  /* percentile ramp endpoints — mirror src/lib/colors.ts (AA-safe under white text) */
+  --pct-low: #3566cc;
+  --pct-mid: #5f6d83;
+  --pct-high: #c53022;
+
+  /* field illustration (flat, muted so navy/gold chrome keeps the page) */
+  --grass: #55805f;
+  --grass-line: #467050;
+  --grass-dark: #35593f; /* outfield wall hedge */
+  --dirt: #c8a678;
+  --field-white: #ffffff;
+
+  /* type */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', -apple-system, sans-serif;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 150ms;
 }
 
 * { box-sizing: border-box; }
@@ -25,6 +68,25 @@ body {
 
 a { color: var(--navy); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+::selection { background: var(--gold-light); color: var(--navy-dark); }
+
+:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* On navy surfaces the navy ring vanishes — switch to gold. */
+nav :focus-visible { outline-color: var(--gold); }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
 
 .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 
@@ -45,4 +107,21 @@ a:hover { text-decoration: underline; }
   margin: 0 0 10px;
 }
 
-table { border-collapse: collapse; width: 100%; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  button,
+  select {
+    transition:
+      background-color var(--t-fast) var(--ease-out),
+      color var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out),
+      box-shadow var(--t-fast) var(--ease-out),
+      opacity var(--t-fast) var(--ease-out);
+  }
+}

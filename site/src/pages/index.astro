@@ -1,81 +1,127 @@
 ---
 import Base from '../layouts/Base.astro';
+import Headshot from '../components/Headshot.astro';
+import HomeHero from '../components/HomeHero.astro';
 import RosterTable from '../components/RosterTable.astro';
-import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers } from '../lib/data';
+import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague } from '../lib/data';
+import type { Player } from '../lib/data';
 
 const unassigned = getUnassignedPlayers();
 const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
 const freshmen = unassigned.filter((p) => p.gtStatus === 'freshman');
 const notPlaying = unassigned.filter((p) => p.summer.status === 'not_playing');
-// Assigned but no stats yet (scraper pending) — must not silently disappear from the page.
-const awaiting = getAssignedPlayers().filter((p) => !p.hitting && !p.pitching);
+// Assigned but nothing displayable — no stats yet, or a fixture-only league
+// feed (fake stats never render). Must not silently disappear from the page.
+const awaiting = getAssignedPlayers().filter(
+  (p) => (!p.hitting && !p.pitching) || isSampleLeague(p.summer.leagueKey),
+);
+
+interface QuietGroup {
+  title: string;
+  note?: string;
+  players: { p: Player; sub: string }[];
+}
+const quietGroups: QuietGroup[] = [
+  {
+    title: 'Assigned · awaiting stats',
+    players: awaiting.map((p) => ({
+      p,
+      sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
+    })),
+  },
+  {
+    title: 'No summer assignment yet',
+    players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+  },
+  {
+    title: 'Incoming freshmen',
+    note: "High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.",
+    players: freshmen.map((p) => ({ p, sub: p.position || 'signee' })),
+  },
+  {
+    title: 'Not playing this summer',
+    players: notPlaying.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+  },
+].filter((g) => g.players.length > 0);
 ---
 <Base title="GT Summer Tracker — Georgia Tech baseball in the summer leagues">
-  <h1>2026 Summer League Tracker</h1>
-  <p class="sub">2027 Georgia Tech players tracked Summer League performances</p>
+  <HomeHero slot="bleed" />
   <RosterTable />
 
-  {awaiting.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Assigned — awaiting stats</h2>
-      <p>
-        {awaiting.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>
-            <span class="where"> ({p.summer.team}, {getLeagueByKey(p.summer.leagueKey)?.name})</span>
-            {i < awaiting.length - 1 ? ' · ' : ''}
-          </>
+  {quietGroups.length > 0 && (
+    <section class="card others">
+      <div class="others-head">
+        <span class="ttl">Not in the statistics</span>
+      </div>
+      <div class="cols">
+        {quietGroups.map((g) => (
+          <div class="col">
+            <header>
+              <span class="qcount">{g.players.length}</span>
+              <h2 class="section-title">{g.title}</h2>
+            </header>
+            {g.note && <p class="qnote">{g.note}</p>}
+            <ul>
+              {g.players.map(({ p, sub }) => (
+                <li>
+                  <a href={`/players/${p.slug}`}>
+                    <Headshot name={p.name} photo={p.photo} size={28} />
+                    <span class="who">{p.name}<span class="sub">{sub}</span></span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </p>
-    </section>
-  )}
-
-  {pending.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">No summer assignment yet</h2>
-      <p>
-        {pending.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < pending.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
-  )}
-
-  {freshmen.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Incoming Freshmen</h2>
-      <p class="note">High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.</p>
-      <p>
-        {freshmen.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < freshmen.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
-    </section>
-  )}
-
-  {notPlaying.length > 0 && (
-    <section class="quiet">
-      <h2 class="section-title">Not playing this summer</h2>
-      <p>
-        {notPlaying.map((p, i) => (
-          <>
-            <a href={`/players/${p.slug}`}>{p.name}</a>{i < notPlaying.length - 1 ? ' · ' : ''}
-          </>
-        ))}
-      </p>
+      </div>
     </section>
   )}
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; font-size: 24px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; }
-  .quiet { margin-top: 26px; }
-  .quiet p { font-size: 13px; line-height: 2; margin: 0; }
-  .where { color: var(--text-mut); }
-  .note { font-size: 12px; color: var(--text-mut); margin: 0 0 4px; }
+  .others { margin-top: 18px; }
+  .others-head {
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .ttl {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--navy);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 4px 22px;
+    padding: 14px;
+    align-items: start;
+  }
+  .col header { display: flex; align-items: baseline; gap: 9px; margin-bottom: 6px; }
+  .qcount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .col header .section-title { flex: 1; margin: 0; border-bottom: none; padding-bottom: 0; }
+  .qnote { margin: 0 0 8px; font-size: 12px; color: var(--text-mut); max-width: 40ch; }
+  .col ul { list-style: none; margin: 0 0 12px; padding: 0; }
+  .col li a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 0;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .col li a:hover { text-decoration: none; }
+  .col li a:hover .who { color: var(--navy); text-decoration: underline; }
+  .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+  .sub { color: var(--text-mut); font-weight: 400; font-size: 11px; }
 </style>

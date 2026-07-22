@@ -16,33 +16,48 @@ const { title, description = 'Tracking Georgia Tech baseball players across the 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#003057" />
+    <meta property="og:site_name" content="GT Summer Tracker" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, 'https://gt-sports-tracking.vercel.app')} />
+    <meta property="og:image" content="https://gt-sports-tracking.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <Nav />
+    <slot name="bleed" />
     <main class="wrap">
       <slot />
     </main>
     <footer class="wrap">
-      GT Summer Tracker — an unofficial fan project following Georgia Tech baseball's
-      2027 roster through the 2026 summer leagues. Stats update nightly from league sources.
-      {meta.generatedAt && (
-        <span class="stamp">
-          Data last updated {new Date(meta.generatedAt).toLocaleString('en-US', {
-            timeZone: 'America/New_York', month: 'short', day: 'numeric',
-            hour: 'numeric', minute: '2-digit' })} ET
-        </span>
-      )}
+      <p class="fine">
+        GT Summer Tracker — an unofficial fan project following Georgia Tech baseball's
+        2027 roster through the 2026 summer leagues. Stats update nightly from league sources.
+        {meta.generatedAt && (
+          <span class="stamp">
+            Data last updated {new Date(meta.generatedAt).toLocaleString('en-US', {
+              timeZone: 'America/New_York', month: 'short', day: 'numeric',
+              hour: 'numeric', minute: '2-digit' })} ET
+          </span>
+        )}
+      </p>
     </footer>
   </body>
 </html>
 
 <style>
-  main { padding: 22px 16px 40px; }
+  main { padding: 24px 16px 40px; }
   .stamp { display: block; margin-top: 4px; }
   footer {
-    padding: 18px 16px 30px;
+    padding: 16px 16px 32px;
     font-size: 12px;
     color: var(--text-mut);
     border-top: 1px solid var(--line);
   }
+  .fine { margin: 0; max-width: 65ch; text-wrap: pretty; }
 </style>

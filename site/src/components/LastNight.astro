@@ -1,0 +1,238 @@
+---
+import Headshot from './Headshot.astro';
+import { getDisplayablePlayers, getGamelog } from '../lib/data';
+import type { HitterGame, PitcherGame, Player } from '../lib/data';
+import { hitterGameScore, pitcherGameScore } from '../lib/stats';
+import { fmtDate, outsToIp } from '../lib/format';
+
+// The broadcast scores panel: every GT performance from a given night, one
+// score card per player, loudest first — nobody gets crowned. The date is
+// stated plainly (never claimed as "last night") and older nights are a
+// click away. Skips itself entirely when no games exist.
+
+interface Stat {
+  v: string;
+  l: string;
+  hot?: boolean;
+}
+
+interface Card {
+  slug: string;
+  short: string;
+  name: string;
+  photo: string | null;
+  team: string;
+  opp: string;
+  stats: Stat[];
+  score: number;
+  big: boolean;
+}
+
+const DAYS_SHOWN = 14;
+
+function hitterCard(p: Player, g: HitterGame): Card {
+  const stats: Stat[] = [{ v: `${g.h}-${g.ab}`, l: 'H-AB', hot: g.h >= 3 }];
+  if (g.hr) stats.push({ v: String(g.hr), l: 'HR', hot: true });
+  if (g.rbi) stats.push({ v: String(g.rbi), l: 'RBI' });
+  if (g.sb) stats.push({ v: String(g.sb), l: 'SB', hot: g.sb >= 2 });
+  if (g.bb >= 2) stats.push({ v: String(g.bb), l: 'BB' });
+  if (g.r >= 2) stats.push({ v: String(g.r), l: 'R' });
+  return {
+    slug: p.slug,
+    short: p.name.split(' ').slice(-1)[0].toUpperCase(),
+    name: p.name,
+    photo: p.photo,
+    team: p.summer.team ?? '',
+    opp: g.opponent,
+    stats: stats.slice(0, 4),
+    score: hitterGameScore(g),
+    big: g.hr >= 1 || g.h >= 3 || g.sb >= 3,
+  };
+}
+
+function pitcherCard(p: Player, g: PitcherGame): Card {
+  const stats: Stat[] = [
+    { v: outsToIp(g.ip_outs), l: 'IP' },
+    { v: String(g.er), l: 'ER', hot: g.er === 0 && g.ip_outs >= 9 },
+    { v: String(g.k), l: 'K', hot: g.k >= 7 },
+  ];
+  if (g.dec) stats.push({ v: g.dec, l: 'DEC' });
+  return {
+    slug: p.slug,
+    short: p.name.split(' ').slice(-1)[0].toUpperCase(),
+    name: p.name,
+    photo: p.photo,
+    team: p.summer.team ?? '',
+    opp: g.opponent,
+    stats,
+    score: pitcherGameScore(g),
+    big: g.k >= 7 || (g.er === 0 && g.ip_outs >= 12),
+  };
+}
+
+const players = getDisplayablePlayers();
+const byDate = new Map<string, Card[]>();
+for (const p of players) {
+  const side = p.pitching && !p.hitting ? 'pitching' : 'hitting';
+  for (const g of getGamelog(p.slug)) {
+    const card = side === 'hitting'
+      ? hitterCard(p, g as HitterGame)
+      : pitcherCard(p, g as PitcherGame);
+    byDate.set(g.date, [...(byDate.get(g.date) ?? []), card]);
+  }
+}
+const dates = [...byDate.keys()].sort().reverse().slice(0, DAYS_SHOWN);
+for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
+---
+{dates.length > 0 && (
+  <section class="panel" aria-label="Recent GT performances by date">
+    <div class="bar">
+      <p class="kick">Recent games</p>
+      <div class="nav">
+        <button type="button" id="rg-prev" aria-label="Earlier date">‹</button>
+        <span class="date" id="rg-date">{fmtDate(dates[0])}</span>
+        <button type="button" id="rg-next" aria-label="Later date" disabled>›</button>
+      </div>
+    </div>
+    {dates.map((d, i) => (
+      <div class="day grid" data-date={d} data-label={fmtDate(d)} hidden={i !== 0}>
+        {byDate.get(d)!.map((c) => (
+          <a class={`score-card ${c.big ? 'big' : ''}`} href={`/players/${c.slug}`}>
+            <Headshot name={c.name} photo={c.photo} size={46} variant="bust" />
+            <span class="who">
+              <span class="pname">{c.short}</span>
+              <span class="pteam">{c.team}</span>
+              <span class="popp">{c.opp}</span>
+            </span>
+            <span class="line">
+              {c.stats.map((s) => (
+                <span class={`stat ${s.hot ? 'hot' : ''}`}>
+                  <span class="sv">{s.v}</span>
+                  <span class="sl">{s.l}</span>
+                </span>
+              ))}
+            </span>
+          </a>
+        ))}
+      </div>
+    ))}
+  </section>
+)}
+
+<script>
+  const panels = [...document.querySelectorAll<HTMLElement>('.day[data-date]')];
+  const prev = document.getElementById('rg-prev') as HTMLButtonElement | null;
+  const next = document.getElementById('rg-next') as HTMLButtonElement | null;
+  const label = document.getElementById('rg-date');
+  let idx = 0; // 0 = newest
+
+  function show(i: number) {
+    idx = Math.max(0, Math.min(panels.length - 1, i));
+    panels.forEach((p, j) => p.toggleAttribute('hidden', j !== idx));
+    if (label) label.textContent = panels[idx].dataset.label ?? '';
+    if (next) next.disabled = idx === 0;
+    if (prev) prev.disabled = idx === panels.length - 1;
+  }
+
+  prev?.addEventListener('click', () => show(idx + 1));
+  next?.addEventListener('click', () => show(idx - 1));
+</script>
+
+<style>
+  .bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+  .kick {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+  }
+  .nav { display: flex; align-items: center; gap: 8px; }
+  .nav button {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--on-navy);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .nav button:hover:not(:disabled) { border-color: var(--gold); }
+  .nav button:disabled { opacity: 0.35; cursor: default; }
+  .nav button:focus-visible { outline-color: var(--gold); }
+  .date {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--on-navy);
+    min-width: 58px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  /* author display:grid beats the UA [hidden] rule — restate it */
+  .day[hidden] { display: none; }
+  .score-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .score-card:hover {
+    text-decoration: none;
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.11);
+  }
+  .score-card.big { border-color: rgba(179, 163, 105, 0.55); }
+  .who { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.2; }
+  .pname {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    color: var(--on-navy);
+  }
+  .pteam { font-size: 11px; color: var(--on-navy-mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .popp { font-size: 11px; color: var(--on-navy-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .line { display: flex; gap: 10px; margin-left: auto; flex-shrink: 0; }
+  .stat { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+  .sv {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.05;
+    color: var(--on-navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat.hot .sv { color: var(--gold-light); }
+  .sl {
+    margin-top: 1px;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--on-navy-faint);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .score-card { transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out); }
+    .nav button { transition: border-color var(--t-fast) var(--ease-out); }
+  }
+</style>
