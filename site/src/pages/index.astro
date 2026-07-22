@@ -23,14 +23,14 @@ interface QuietGroup {
 }
 const quietGroups: QuietGroup[] = [
   {
-    title: 'Assigned · awaiting stats',
+    title: 'On a summer team · stats coming',
     players: awaiting.map((p) => ({
       p,
       sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
     })),
   },
   {
-    title: 'No summer assignment yet',
+    title: 'No summer team yet',
     players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
   },
   {
@@ -51,7 +51,7 @@ const quietGroups: QuietGroup[] = [
   {quietGroups.length > 0 && (
     <section class="card others">
       <div class="others-head">
-        <span class="ttl">Not in the statistics</span>
+        <span class="ttl">Rest of the roster</span>
       </div>
       <div class="cols">
         {quietGroups.map((g) => (
@@ -65,7 +65,7 @@ const quietGroups: QuietGroup[] = [
               {g.players.map(({ p, sub }) => (
                 <li>
                   <a href={`/players/${p.slug}`}>
-                    <Headshot name={p.name} photo={p.photo} size={28} />
+                    <Headshot name={p.name} photo={p.photo} size={30} variant="bust" />
                     <span class="who">{p.name}<span class="sub">{sub}</span></span>
                   </a>
                 </li>

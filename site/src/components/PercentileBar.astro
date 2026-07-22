@@ -1,0 +1,59 @@
+---
+import { percentileColor } from '../lib/colors';
+
+// The comparison encoding for percentile columns: length first, ramp color
+// as reinforcement, numeral always present — a micro version of the player
+// page sliders. Pills (PercentileChip) remain the compact form for tight
+// contexts; this is for columns where players are compared down a list.
+
+interface Props {
+  percentile: number | null;
+  /** Stat the percentile describes (e.g. "OPS") — for screen readers/tooltip. */
+  metric?: string;
+  /** Lower-authority rendering for small-sample contexts. */
+  muted?: boolean;
+}
+const { percentile, metric, muted = false } = Astro.props;
+const label = percentile === null
+  ? 'no percentile yet'
+  : `${percentile}th percentile${metric ? ` ${metric}` : ''}${muted ? ', small sample' : ''}`;
+const color = percentile === null ? null : percentileColor(percentile);
+---
+<span class:list={['pbar', { muted }]} role="img" aria-label={label} title={label}>
+  <span class="track">
+    {color && <span class="fill" style={`width:${percentile}%;background:${color}`}></span>}
+  </span>
+  <span class="num" style={muted && color ? `color:${color}` : undefined}>{percentile ?? '—'}</span>
+</span>
+
+<style>
+  .pbar {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    vertical-align: middle;
+  }
+  .track {
+    width: 48px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--well);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .fill {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+  }
+  .muted .fill { opacity: 0.45; }
+  .num {
+    min-width: 20px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+  .muted .num { font-weight: 700; }
+</style>

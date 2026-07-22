@@ -6,18 +6,22 @@ interface Props {
   /** Stat the percentile describes (e.g. "OPS") — spoken to screen readers
       and shown as a hover tooltip so the bare number always has context. */
   metric?: string;
+  /** Outlined, lower-authority rendering for small-sample contexts. */
+  muted?: boolean;
 }
-const { percentile, metric } = Astro.props;
+const { percentile, metric, muted = false } = Astro.props;
 const label = percentile === null
   ? 'no percentile yet'
-  : `${percentile}th percentile${metric ? ` ${metric}` : ''}`;
+  : `${percentile}th percentile${metric ? ` ${metric}` : ''}${muted ? ', small sample' : ''}`;
 ---
 {percentile === null ? (
   <span class="chip none" role="img" aria-label={label} title={label}>—</span>
 ) : (
   <span
-    class="chip"
-    style={`background:${percentileColor(percentile)}`}
+    class:list={['chip', { muted }]}
+    style={muted
+      ? `color:${percentileColor(percentile)};border-color:${percentileColor(percentile)}`
+      : `background:${percentileColor(percentile)}`}
     role="img"
     aria-label={label}
     title={label}
@@ -36,4 +40,9 @@ const label = percentile === null
     font-weight: 800;
   }
   .none { background: transparent; color: var(--text-mut); }
+  .muted {
+    background: transparent;
+    border: 1.5px solid;
+    padding: 0 6.5px; /* border compensates the 1px sizing difference */
+  }
 </style>

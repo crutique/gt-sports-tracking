@@ -1,8 +1,9 @@
 ---
-import { fmtEra, fmtRate3 } from '../lib/format';
+import { fmtDate, fmtEra, fmtRate3 } from '../lib/format';
 import { getDisplayablePlayers, getLeagueByKey } from '../lib/data';
 import type { Player, Slider } from '../lib/data';
 import Headshot from './Headshot.astro';
+import PercentileBar from './PercentileBar.astro';
 import PercentileChip from './PercentileChip.astro';
 
 const assigned = getDisplayablePlayers();
@@ -48,6 +49,8 @@ function searchKey(p: Player): string {
   return `${p.name} ${p.summer.team ?? ''}`.toLowerCase();
 }
 
+const statsThrough = assigned.map((p) => p.asOf).filter(Boolean).sort().at(-1) ?? null;
+
 const HIT_COLS = [
   { key: 'name', label: 'Player' },
   { key: 'pos', label: 'Pos', opt: true },
@@ -62,7 +65,7 @@ const HIT_COLS = [
   { key: 'hr', label: 'HR', num: true, gsep: true },
   { key: 'rbi', label: 'RBI', num: true },
   { key: 'sb', label: 'SB', num: true },
-  { key: 'pct', label: 'OPS %ile', num: true, gsep: true, defaultSort: true },
+  { key: 'pct', label: 'OPS Percentile', num: true, gsep: true, defaultSort: true },
 ];
 const PIT_COLS = [
   { key: 'name', label: 'Player' },
@@ -77,30 +80,31 @@ const PIT_COLS = [
   { key: 'k', label: 'K', num: true, gsep: true },
   { key: 'bb', label: 'BB', num: true },
   { key: 'sv', label: 'SV', num: true },
-  { key: 'pct', label: 'ERA %ile', num: true, gsep: true, defaultSort: true },
+  { key: 'pct', label: 'ERA Percentile', num: true, gsep: true, defaultSort: true },
 ];
 ---
 <div class="card shell">
   <div class="toolbar">
     <span class="ttl">Player statistics</span>
     <div class="tabs seg" role="tablist" aria-label="Player type">
-      <button class="tab active" data-target="hitters" type="button" role="tab"
+      <button class="tab active" data-target="hitters" type="button" role="tab" id="tab-hitters"
         aria-selected="true" aria-controls="hitters" tabindex="0">Hitters</button>
-      <button class="tab" data-target="pitchers" type="button" role="tab"
+      <button class="tab" data-target="pitchers" type="button" role="tab" id="tab-pitchers"
         aria-selected="false" aria-controls="pitchers" tabindex="-1">Pitchers</button>
     </div>
     <div class="filters">
-      <input type="search" id="player-search" placeholder="Find a player…"
+      <input type="search" id="player-search" placeholder="Find a player or team…"
         aria-label="Filter players by name or team" autocomplete="off" />
       <select id="league-filter" aria-label="Filter by league">
         <option value="">All Leagues</option>
         {leagues.map((l) => <option value={l.key}>{l.name}</option>)}
       </select>
       <span class="count" id="result-count" aria-live="polite"></span>
+      {statsThrough && <span class="stamp">Stats through {fmtDate(statsThrough)}</span>}
     </div>
   </div>
 
-  <div class="panel" id="hitters" role="tabpanel">
+  <div class="panel" id="hitters" role="tabpanel" aria-labelledby="tab-hitters" tabindex="0">
   {hittersAll.length === 0 ? (
     <p class="none">No GT hitters with summer stats yet.</p>
   ) : (
@@ -128,7 +132,7 @@ const PIT_COLS = [
           const pct = sliderPct(p, 'hitting', 'ops');
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -141,7 +145,7 @@ const PIT_COLS = [
               <td data-v={c.hr} class="gsep">{c.hr}</td>
               <td data-v={c.rbi}>{c.rbi}</td>
               <td data-v={c.sb}>{c.sb}</td>
-              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="OPS" /></td>
+              <td data-v={pct ?? '—'} class="gsep"><PercentileBar percentile={pct} metric="OPS" /></td>
             </tr>
           );
         })}
@@ -162,7 +166,7 @@ const PIT_COLS = [
             const pct = sliderPct(p, 'hitting', 'ops');
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -175,7 +179,7 @@ const PIT_COLS = [
                 <td data-v={c.hr} class="gsep">{c.hr}</td>
                 <td data-v={c.rbi}>{c.rbi}</td>
                 <td data-v={c.sb}>{c.sb}</td>
-                <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="OPS" /></td>
+                <td data-v={pct ?? '—'} class="gsep"><PercentileBar percentile={pct} metric="OPS" muted /></td>
               </tr>
             );
           })}
@@ -185,7 +189,7 @@ const PIT_COLS = [
   )}
   </div>
 
-  <div class="panel" id="pitchers" role="tabpanel" hidden>
+  <div class="panel" id="pitchers" role="tabpanel" aria-labelledby="tab-pitchers" tabindex="0" hidden>
   {pitchersAll.length === 0 ? (
     <p class="none">No GT pitchers with summer stats yet.</p>
   ) : (
@@ -213,7 +217,7 @@ const PIT_COLS = [
           const pct = sliderPct(p, 'pitching', 'era');
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -225,7 +229,7 @@ const PIT_COLS = [
               <td data-v={c.k} class="gsep">{c.k}</td>
               <td data-v={c.bb}>{c.bb}</td>
               <td data-v={c.sv}>{c.sv}</td>
-              <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="ERA" /></td>
+              <td data-v={pct ?? '—'} class="gsep"><PercentileBar percentile={pct} metric="ERA" /></td>
             </tr>
           );
         })}
@@ -246,7 +250,7 @@ const PIT_COLS = [
             const pct = sliderPct(p, 'pitching', 'era');
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={36} /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}</span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -258,7 +262,7 @@ const PIT_COLS = [
                 <td data-v={c.k} class="gsep">{c.k}</td>
                 <td data-v={c.bb}>{c.bb}</td>
                 <td data-v={c.sv}>{c.sv}</td>
-                <td data-v={pct ?? '—'} class="gsep"><PercentileChip percentile={pct} metric="ERA" /></td>
+                <td data-v={pct ?? '—'} class="gsep"><PercentileBar percentile={pct} metric="ERA" muted /></td>
               </tr>
             );
           })}
@@ -271,6 +275,11 @@ const PIT_COLS = [
   <p class="tfoot">
     Percentiles rank each player against all hitters or pitchers in his league, 2026 season.
     Qualified: {QUALIFY_AB}+ AB (hitters) or 8.0+ IP (pitchers) — others sit below the threshold line.
+  </p>
+  <p class="tfoot legend">
+    {leagues.map((l, i) => (
+      <span class="lg"><strong>{l.abbrev}</strong> {l.name}{i < leagues.length - 1 ? '' : ''}</span>
+    ))}
   </p>
 </div>
 
@@ -389,10 +398,12 @@ const PIT_COLS = [
   function currentState(): ViewState {
     const tab = activeTab();
     const sorted = document.querySelector<HTMLTableCellElement>(`#${tab} th[data-dir]`);
+    // the server default (percentile desc) is not state worth carrying in URLs
+    const isDefault = sorted?.dataset.key === 'pct' && sorted.dataset.dir === 'desc';
     return {
       tab,
       league: filter.value,
-      sort: sorted
+      sort: sorted && !isDefault
         ? { key: sorted.dataset.key!, dir: sorted.dataset.dir === 'desc' ? 'desc' : 'asc' }
         : null,
       q: search.value.trim(),
@@ -555,6 +566,7 @@ const PIT_COLS = [
   select:hover,
   input[type='search']:hover { border-color: var(--text-mut); }
   .count { font-size: 12px; color: var(--text-mut); min-width: 58px; }
+  .stamp { font-size: 12px; color: var(--text-mut); white-space: nowrap; }
 
   .panel { overflow-x: auto; }
   table { font-size: 12.5px; }
@@ -583,9 +595,9 @@ const PIT_COLS = [
     outline-offset: -2px;
     border-radius: 2px;
   }
-  th > button::after { content: ' ↕'; opacity: 0; }
+  th > button::after { content: ' ↕'; opacity: 0.3; }
   th:hover > button::after,
-  th > button:focus-visible::after { opacity: 0.55; }
+  th > button:focus-visible::after { opacity: 0.7; }
   th[data-dir='asc'] > button::after { content: ' ↑'; opacity: 1; }
   th[data-dir='desc'] > button::after { content: ' ↓'; opacity: 1; }
   td {
@@ -613,6 +625,7 @@ const PIT_COLS = [
     font-weight: 400;
     font-size: 11px;
   }
+  .denom { display: none; }
   .key {
     font-family: var(--font-display);
     font-weight: 600;
@@ -656,10 +669,14 @@ const PIT_COLS = [
     margin: 0;
     padding: 9px 14px;
     border-top: 1px solid var(--line-soft);
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--text-mut);
-    max-width: none;
+    max-width: 78ch;
+    text-wrap: pretty;
   }
+  .legend { padding-top: 0; border-top: none; max-width: none; display: flex; flex-wrap: wrap; gap: 2px 16px; }
+  .legend .lg { white-space: nowrap; }
+  .legend strong { color: var(--text); font-weight: 700; }
 
   @media (max-width: 700px) {
     th:first-child, td:first-child {
@@ -681,6 +698,7 @@ const PIT_COLS = [
     th[data-key='pct'], td:last-child { display: none; }
     .empty-band td:last-child, .subhead td:last-child { display: table-cell; }
     .ttl { width: 100%; }
+    .denom { display: inline; }
   }
   @media (prefers-reduced-motion: no-preference) {
     td { transition: background-color var(--t-fast) var(--ease-out); }
