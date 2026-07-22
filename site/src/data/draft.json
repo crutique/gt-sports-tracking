@@ -1,5 +1,5 @@
 {
- "asOf": "2026-07-21",
+ "asOf": "2026-07-22",
  "players": [
   {
    "name": "Vahn Lackey",
@@ -29,8 +29,8 @@
    "team": "Athletics",
    "slot": 6982600,
    "bonus": 7500000,
-   "bonusSource": "reported",
-   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
+   "bonusSource": "official",
+   "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
    "signedDate": null,
@@ -65,8 +65,8 @@
    "team": "Arizona Diamondbacks",
    "slot": 1848200,
    "bonus": 1900000,
-   "bonusSource": "reported",
-   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
+   "bonusSource": "official",
+   "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
    "signedDate": "2026-07-20",
