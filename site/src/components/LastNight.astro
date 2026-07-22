@@ -98,7 +98,7 @@ for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
       <div class="day grid" data-date={d} data-label={fmtDate(d)} hidden={i !== 0}>
         {byDate.get(d)!.map((c) => (
           <a class={`score-card ${c.big ? 'big' : ''}`} href={`/players/${c.slug}`}>
-            <Headshot name={c.name} photo={c.photo} size={40} />
+            <Headshot name={c.name} photo={c.photo} size={46} variant="bust" />
             <span class="who">
               <span class="pname">{c.short}</span>
               <span class="pteam">{c.team}</span>
