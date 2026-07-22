@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   gameOpsParts,
+  hitterGameScore,
   lastDaysLine,
+  pitcherGameScore,
   rollingEra,
   rollingOps,
 } from '../src/lib/stats';
@@ -69,6 +71,17 @@ describe('rollingEra', () => {
     const pts = rollingEra(games, 5);
     expect(pts.map((p) => p.date)).toEqual(['2026-07-01', '2026-07-08']);
     expect(pts[1].value).toBeCloseTo(4.5, 2);
+  });
+});
+
+describe('game scores (star-of-the-night ordering)', () => {
+  it('a homer-and-steals night outranks a two-hit night', () => {
+    expect(hitterGameScore(hg({ hr: 1, sb: 3, h: 2, rbi: 2, bb: 2 })))
+      .toBeGreaterThan(hitterGameScore(hg({ h: 2 })));
+  });
+  it('a long scoreless outing outranks a mediocre one', () => {
+    expect(pitcherGameScore(pg({ er: 0, ip_outs: 18, k: 6 })))
+      .toBeGreaterThan(pitcherGameScore(pg({ er: 3, ip_outs: 15, k: 7 })));
   });
 });
 

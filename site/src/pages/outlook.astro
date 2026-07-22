@@ -1,0 +1,228 @@
+---
+import Base from '../layouts/Base.astro';
+import FieldDiagram from '../components/FieldDiagram.astro';
+import Headshot from '../components/Headshot.astro';
+import PercentileChip from '../components/PercentileChip.astro';
+import { getDraft } from '../lib/draft';
+import type { DraftPlayer } from '../lib/draft';
+import { getLeagueByKey, getPlayers, isSampleLeague } from '../lib/data';
+import type { Player } from '../lib/data';
+
+// The second core question — "what does next spring look like?" — answered in
+// counts and chips: who's back, who's arriving, who's in limbo until the
+// signing deadline, who's gone pro. Numbers talk; words are labels.
+
+const players = getPlayers();
+const draft = getDraft();
+
+const SIGNED: DraftPlayer['status'][] = ['signed', 'signed_udfa'];
+
+const signeeSignedSlugs = new Set(
+  draft.players
+    .filter((p) => p.gtRole === 'signee' && SIGNED.includes(p.status) && p.slug)
+    .map((p) => p.slug as string),
+);
+const signeeDraftedBySlug = new Map(
+  draft.players
+    .filter((p) => p.gtRole === 'signee' && p.slug)
+    .map((p) => [p.slug as string, p]),
+);
+
+const returning = players.filter((p) => p.gtStatus === 'returning');
+const transfers = players.filter((p) => p.gtStatus === 'transfer');
+const freshmen = players.filter((p) => p.gtStatus === 'freshman');
+
+const arriving = [
+  ...transfers,
+  ...freshmen.filter((p) => !signeeSignedSlugs.has(p.slug)),
+];
+const back = returning;
+const draftReturners = draft.players.filter((p) => p.status === 'returning');
+
+const limbo = draft.players.filter((p) => p.gtRole === 'departing' && p.status === 'unsigned');
+const gone = [
+  ...draft.players.filter((p) => p.gtRole === 'departing' && SIGNED.includes(p.status)),
+  ...draft.udfa,
+  ...draft.players.filter((p) => p.gtRole === 'signee' && SIGNED.includes(p.status)),
+];
+
+function summerPct(p: Player): number | null {
+  if (isSampleLeague(p.summer.leagueKey)) return null;
+  const side = p.hitting ? 'hitting' : p.pitching ? 'pitching' : null;
+  if (!side) return null;
+  const metric = side === 'hitting' ? 'ops' : 'era';
+  return p[side]?.sliders?.find((s) => s.metric === metric)?.percentile ?? null;
+}
+
+const sortedBack = [...back].sort((a, b) => (summerPct(b) ?? -1) - (summerPct(a) ?? -1));
+const anyLimbo = limbo.length > 0;
+---
+<Base title="2027 Roster Outlook — GT Summer Tracker"
+  description="Who's back, who's arriving, and who's gone pro — Georgia Tech baseball's 2027 roster as the draft resolves.">
+  <h1>2027 Roster Outlook</h1>
+
+  <section class="card field-card">
+    <div class="field-head">
+      <h2 class="section-title">2027 roster by position</h2>
+      <span class="legend" aria-hidden="true">
+        <span class="lg-ret">●</span> returning · <span class="lg-arr">◌</span> arriving
+      </span>
+    </div>
+    <FieldDiagram returning={back} arriving={arriving} />
+  </section>
+
+  <div class="grid">
+    <section class="card col">
+      <header>
+        <span class="count">{back.length + draftReturners.length}</span>
+        <h2 class="section-title">Returning</h2>
+      </header>
+      <ul>
+        {sortedBack.map((p) => {
+          const pct = summerPct(p);
+          return (
+            <li>
+              <a href={`/players/${p.slug}`}>
+                <Headshot name={p.name} photo={p.photo} size={28} />
+                <span class="who">{p.name}<span class="sub">{p.position || '—'}{p.classYear ? ` · ${p.classYear}` : ''}</span></span>
+                {pct !== null && <span class="tail"><PercentileChip percentile={pct} /></span>}
+              </a>
+            </li>
+          );
+        })}
+        {draftReturners.map((p) => (
+          <li>
+            <span class="row">
+              <Headshot name={p.name} photo={p.headshot} size={28} />
+              <span class="who">{p.name}<span class="sub">withdrew from draft</span></span>
+              <span class="tail tag">2026 team</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="card col">
+      <header>
+        <span class="count">{arriving.length}</span>
+        <h2 class="section-title">Arriving</h2>
+      </header>
+      <ul>
+        {arriving.map((p) => {
+          const d = signeeDraftedBySlug.get(p.slug);
+          return (
+            <li>
+              <a href={`/players/${p.slug}`}>
+                <Headshot name={p.name} photo={p.photo} size={28} />
+                <span class="who">{p.name}<span class="sub">{p.gtStatus === 'transfer' ? 'transfer' : 'freshman'}{p.position ? ` · ${p.position}` : ''}</span></span>
+                {d && d.status === 'unsigned' && <span class="tail tag warn">drafted · undecided</span>}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+
+    {anyLimbo && (
+      <section class="card col limbo">
+        <header>
+          <span class="count">{limbo.length}</span>
+          <h2 class="section-title">Unsigned draftees · deadline Jul 27</h2>
+        </header>
+        <ul>
+          {limbo.map((p) => (
+            <li>
+              <span class="row">
+                <Headshot name={p.name} photo={p.headshot} size={28} />
+                <span class="who">{p.name}<span class="sub">{p.pick != null ? `R${p.round} · #${p.pick}` : 'drafted'}{p.team ? ` · ${p.team}` : ''}</span></span>
+                <span class="tail tag warn">unsigned</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="card col">
+      <header>
+        <span class="count">{gone.length}</span>
+        <h2 class="section-title">Signed pro</h2>
+      </header>
+      <ul>
+        {gone.map((p) => (
+          <li>
+            <span class="row">
+              <Headshot name={p.name} photo={p.headshot} size={28} />
+              <span class="who">{p.name}<span class="sub">{p.team ?? '—'}{p.gtRole === 'signee' ? ' · signee' : ''}</span></span>
+              <span class="tail tag">{p.status === 'signed_udfa' || !p.pick ? 'UDFA' : `R${p.round}`}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  h1 { margin: 0 0 16px; }
+  .field-card { padding: 16px 20px 20px; margin-bottom: 14px; }
+  .field-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .field-head .section-title { flex: 1; }
+  .legend { font-size: 11px; color: var(--text-mut); white-space: nowrap; }
+  .lg-ret { color: var(--gold); }
+  .lg-arr { color: var(--navy-bright); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 14px;
+    align-items: start;
+  }
+  .col { padding: 16px; }
+  .col header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .count {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .col header .section-title { flex: 1; margin: 0; }
+  .limbo .count { color: var(--warn-ink); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li a, .row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 5px 0;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text);
+  }
+  li a:hover { text-decoration: none; }
+  li a:hover .who { color: var(--navy); text-decoration: underline; }
+  .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+  .sub { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .tail { margin-left: auto; flex-shrink: 0; }
+  .tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-mut);
+    background: var(--line-soft);
+    border-radius: 8px;
+    padding: 2px 7px;
+  }
+  .tag.warn { color: var(--warn-ink); background: var(--warn-bg); }
+</style>

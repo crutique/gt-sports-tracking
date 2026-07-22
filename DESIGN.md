@@ -17,7 +17,7 @@ Savant credibility wearing GT colors under stadium light. Navy heroes and illust
 ## What we transpose
 
 **Keep (quality DNA):** Savant's ramp-as-language and percentile idiom; Gameday's field-as-canvas; GT's condensed-caps navy/gold register; broadcast-fast state motion.
-**Deliberately change:** typeface family (Barlow Condensed, not GT's licensed faces or Savant's system voice); the ramp's anchor colors (ours are AA-safe under white text, enforced by test); the field motif abstracted to geometry (arcs, diamonds as data axes — never skeuomorphic turf/dirt illustration); gold restricted to identity + emphasis (never a text-bearing background at body sizes).
+**Deliberately change:** typeface family (Barlow Condensed, not GT's licensed faces or Savant's system voice); the ramp's anchor colors (ours are AA-safe under white text, enforced by test); the field rendered as a flat illustration (muted grass/dirt tones, clean white lines — MLB-app style; no textures, no photorealism) used only where position is the encoding; gold restricted to identity + emphasis (never a text-bearing background at body sizes).
 
 ## Typography system
 
@@ -51,10 +51,14 @@ Tokens live in `site/src/styles/global.css`; the ramp's anchors mirror `site/src
 
 ## Information design
 
-- **Encodings:** position/length for comparison (percentile arcs, sliders, pool bar); lines for trends (sparklines, narrative chart); the ramp as reinforcement, never the sole channel (numbers always present); maps for geography (later tier); **the field's geometry as axis** — the approved recurring canvas: home's infield-arc glance strip, player-page trend context, draft pool bar, and (v1.5) the Roster Outlook depth diamond. Each recurrence must encode real data; motif-as-decoration is banned.
+- **Encodings:** position/length for comparison (sliders, pool bar); lines for trends (sparklines, narrative chart); the ramp as reinforcement, never the sole channel (numbers always present); maps for geography (later tier); **the field's geometry used literally** — players placed at their positions on a diagrammatic ballpark (the Roster Outlook field). The field is a *positional* canvas, not an abstract axis: the percentile-arc experiment was rejected (dots off the ring read as noise; bending a 1D axis into an arc served the motif, not the data). Each field use must encode real data; motif-as-decoration is banned.
 - **Disclosure:** 5s (glance strip + sorted table) → 1min (movers, filters, league context) → 5min (player deep-dives, draft money). Overview first, filter, details on demand.
-- **Annotation layer:** signature displays state their takeaway in a generated sentence ("Lewis leads GT — 96th percentile in the NWL"); the nightly refresh is visible (movers, debuts, "stats through" stamps).
+- **Annotation layer (numeric, not verbal):** signature displays state their takeaway through marks, chips, and labeled numerals — a leader dot labeled "LEWIS · 96", a stat pill, a highlighted tile — never through generated prose. Labels, not sentences; the longest permitted annotation is a terse label + figure. The nightly refresh is visible (ticker, movers, "stats through" stamps).
 - **Integrity (non-negotiable):** no fake data, ever — fixture stats never render; every reported figure links its source; "unverified" stays labeled; empty states say why they're empty.
+
+## Titles & labels
+
+Section titles are plain descriptive nouns: "Player statistics", "Game log", "2027 roster by position", "Last night". Never wordplay, slogans, or broadcast-catchy phrasing ("Every Jacket, Every League" was rejected as corny — confirmed 2026-07-21). The voice of a serious data site: the displays are expressive, the labels are not.
 
 ## Component voice
 
@@ -72,9 +76,10 @@ Tokens live in `site/src/styles/global.css`; the ramp's anchors mirror `site/src
 - Add a third type family, hero-metric gradient cards, side-stripe borders, or gradient text.
 - Animate entrances/scroll reveals; exceed 400ms on any motion.
 - Lead with text where a display can carry it (the site is "NOT text-heavy") — but every display keeps its numbers visible.
+- Generate prose from data (verbal headlines, adjective performance lines). The site never *writes about* the numbers; it stages them. Confirmed correction 2026-07-21: even the hero speaks in headshot + numerals + labels.
 - Introduce hexes outside the token file (the detector + tests are the enforcement).
 
 ## Taste log
 
 - **Likes (confirmed 2026-07-21):** Savant idiom; MLB Gameday's field-as-visual; condensed athletic caps; navy-dominant heroes with white data surfaces; recurring field canvas; illustrative density; screenshot-worthy displays as the brand.
-- **Dislikes (confirmed 2026-07-21):** FanGraphs' look ("presenting similar things" but disliked); corporate/minimalist/text-heavy registers; fake data in any form; the dossier's serif voice and the scoreboard's gold-drenched surfaces (specimen losers — B "too quiet/print," C "too costume").
+- **Dislikes (confirmed 2026-07-21):** FanGraphs' look ("presenting similar things" but disliked); corporate/minimalist/text-heavy registers; fake data in any form; the dossier's serif voice and the scoreboard's gold-drenched surfaces (specimen losers — B "too quiet/print," C "too costume"); **generated verbal headlines/adjective lines — the user vetoed prose-led displays mid-build: visuals and stats talk, words are labels**; **"star of the night" editorial crowning — show everyone's night as a scores panel, order by loudness, never crown**; **the percentile arc/"half wheel" — rejected; the ballpark visual means positions (roster on a field), not a bent axis.**

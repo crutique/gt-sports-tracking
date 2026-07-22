@@ -71,6 +71,18 @@ function daysBetween(a: string, b: string): number {
   return Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
 }
 
+/**
+ * Relative loudness of a single game, used to pick the night's star for the
+ * front-page score bug. Weights are editorial, tested for ordering only.
+ */
+export function hitterGameScore(g: HitterGame): number {
+  return g.hr * 4 + g.h * 1.5 + g.sb + g.rbi * 0.75 + g.bb * 0.25;
+}
+
+export function pitcherGameScore(g: PitcherGame): number {
+  return g.k * 0.9 + (g.er === 0 ? g.ip_outs / 3 : 0) - g.er * 1.5;
+}
+
 /** Pooled hitting line over the last `days` days ending at `refDate` (inclusive). */
 export function lastDaysLine(games: HitterGame[], days: number, refDate: string): RecentLine {
   const recent = games.filter((g) => {

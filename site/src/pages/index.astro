@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import GlanceStrip from '../components/GlanceStrip.astro';
-import LastNight from '../components/LastNight.astro';
+import HomeHero from '../components/HomeHero.astro';
 import RosterTable from '../components/RosterTable.astro';
 import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague } from '../lib/data';
 
@@ -16,10 +15,8 @@ const awaiting = getAssignedPlayers().filter(
 );
 ---
 <Base title="GT Summer Tracker — Georgia Tech baseball in the summer leagues">
-  <h1>2026 Summer League Tracker</h1>
-  <p class="sub">Tracking Georgia Tech's 2027 roster through the 2026 summer leagues.</p>
-  <GlanceStrip />
-  <LastNight />
+  <HomeHero slot="bleed" />
+  <h2 class="section-title roster-head">Player statistics</h2>
   <RosterTable />
 
   {awaiting.length > 0 && (
@@ -79,8 +76,7 @@ const awaiting = getAssignedPlayers().filter(
 </Base>
 
 <style>
-  h1 { margin: 0 0 2px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
+  .roster-head { margin-bottom: 12px; }
   .quiet { margin-top: 26px; }
   .quiet p { font-size: 13px; line-height: 2; margin: 0; max-width: 72ch; }
   .where { color: var(--text-mut); }

@@ -41,6 +41,13 @@
   --pct-mid: #5f6d83;
   --pct-high: #c53022;
 
+  /* field illustration (flat, muted so navy/gold chrome keeps the page) */
+  --grass: #55805f;
+  --grass-line: #467050;
+  --grass-dark: #35593f; /* outfield wall hedge */
+  --dirt: #c8a678;
+  --field-white: #ffffff;
+
   /* type */
   --font-display: 'Barlow Condensed', 'Arial Narrow', -apple-system, sans-serif;
 

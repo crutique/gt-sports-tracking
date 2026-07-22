@@ -1,6 +1,8 @@
 ---
 import type { League, Player } from '../lib/data';
+import { isSampleLeague } from '../lib/data';
 import Headshot from './Headshot.astro';
+import PercentileChip from './PercentileChip.astro';
 
 interface Props {
   player: Player;
@@ -16,6 +18,13 @@ if (player.hitting) {
 } else if (player.pitching) {
   context = `${player.pitching.counting.g} G · ${player.pitching.counting.ip} IP`;
 }
+
+// The hero states the player's level visually: headline percentile as a chip.
+const side = player.hitting ? 'hitting' : player.pitching ? 'pitching' : null;
+const heroPct = side && !isSampleLeague(player.summer.leagueKey)
+  ? player[side]?.sliders?.find((s) => s.metric === (side === 'hitting' ? 'ops' : 'era'))?.percentile ?? null
+  : null;
+const pctLabel = side === 'hitting' ? 'OPS %ile' : 'ERA %ile';
 ---
 <header class="hero">
   <Headshot name={player.name} photo={player.photo} size={72} />
@@ -33,6 +42,12 @@ if (player.hitting) {
   <div class="context">
     <div class="season">2026 Summer</div>
     {context && <div class="line">{context}</div>}
+    {heroPct !== null && (
+      <div class="pct-row">
+        <PercentileChip percentile={heroPct} />
+        <span class="pct-label">{pctLabel}</span>
+      </div>
+    )}
   </div>
 </header>
 
@@ -81,6 +96,22 @@ if (player.hitting) {
     letter-spacing: 0.06em;
   }
   .line { color: var(--on-navy-mut); font-size: 13px; margin-top: 2px; }
+  .pct-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .pct-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--on-navy-faint);
+  }
+  @media (max-width: 560px) {
+    .pct-row { justify-content: flex-start; }
+  }
   @media (max-width: 560px) {
     .hero { flex-wrap: wrap; }
     .context { text-align: left; }

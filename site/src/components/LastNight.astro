@@ -1,15 +1,29 @@
 ---
+import Headshot from './Headshot.astro';
 import { getDisplayablePlayers, getGamelog } from '../lib/data';
-import type { HitterGame, PitcherGame } from '../lib/data';
+import type { HitterGame, PitcherGame, Player } from '../lib/data';
+import { hitterGameScore, pitcherGameScore } from '../lib/stats';
 import { fmtDate, outsToIp } from '../lib/format';
 
-// Live-ness made visible: the most recent night of games across every league,
-// one terse line per player. Skips itself entirely on an off night.
+// The broadcast scores panel: every GT performance from the most recent
+// night, one score card per player, loudest first — nobody gets crowned.
+// Skips itself entirely on an off night.
 
-interface Entry {
+interface Stat {
+  v: string;
+  l: string;
+  hot?: boolean;
+}
+
+interface Card {
   slug: string;
   name: string;
-  line: string;
+  short: string;
+  photo: string | null;
+  team: string;
+  opp: string;
+  stats: Stat[];
+  score: number;
   big: boolean;
 }
 
@@ -19,74 +33,149 @@ const latest = players
   .sort()
   .at(-1);
 
-function hitterLine(g: HitterGame): { line: string; big: boolean } {
-  const extras: string[] = [];
-  if (g.hr) extras.push(g.hr > 1 ? `${g.hr} HR` : 'HR');
-  if (g.rbi > 1) extras.push(`${g.rbi} RBI`);
-  if (g.sb) extras.push(g.sb > 1 ? `${g.sb} SB` : 'SB');
-  if (g.bb > 1) extras.push(`${g.bb} BB`);
+function opp(raw: string): string {
+  return raw.replace(/^vs /, 'vs ').replace(/^at /, 'at ');
+}
+
+function hitterCard(p: Player, g: HitterGame): Card {
+  const stats: Stat[] = [{ v: `${g.h}-${g.ab}`, l: 'H-AB', hot: g.h >= 3 }];
+  if (g.hr) stats.push({ v: String(g.hr), l: 'HR', hot: true });
+  if (g.rbi) stats.push({ v: String(g.rbi), l: 'RBI' });
+  if (g.sb) stats.push({ v: String(g.sb), l: 'SB', hot: g.sb >= 2 });
+  if (g.bb >= 2) stats.push({ v: String(g.bb), l: 'BB' });
+  if (g.r >= 2) stats.push({ v: String(g.r), l: 'R' });
+  const score = hitterGameScore(g);
   return {
-    line: `${g.h}-${g.ab}${extras.length ? ', ' + extras.join(', ') : ''}`,
-    big: g.hr >= 1 || g.h >= 3,
+    slug: p.slug,
+    name: p.name,
+    short: p.name.split(' ').slice(-1)[0].toUpperCase(),
+    photo: p.photo,
+    team: p.summer.team ?? '',
+    opp: opp(g.opponent),
+    stats: stats.slice(0, 4),
+    score,
+    big: g.hr >= 1 || g.h >= 3 || g.sb >= 3,
   };
 }
 
-function pitcherLine(g: PitcherGame): { line: string; big: boolean } {
-  const dec = g.dec ? ` (${g.dec})` : '';
+function pitcherCard(p: Player, g: PitcherGame): Card {
+  const stats: Stat[] = [
+    { v: outsToIp(g.ip_outs), l: 'IP' },
+    { v: String(g.er), l: 'ER', hot: g.er === 0 && g.ip_outs >= 9 },
+    { v: String(g.k), l: 'K', hot: g.k >= 7 },
+  ];
+  if (g.dec) stats.push({ v: g.dec, l: 'DEC' });
   return {
-    line: `${outsToIp(g.ip_outs)} IP, ${g.er} ER, ${g.k} K${dec}`,
+    slug: p.slug,
+    name: p.name,
+    short: p.name.split(' ').slice(-1)[0].toUpperCase(),
+    photo: p.photo,
+    team: p.summer.team ?? '',
+    opp: opp(g.opponent),
+    stats,
+    score: pitcherGameScore(g),
     big: g.k >= 7 || (g.er === 0 && g.ip_outs >= 12),
   };
 }
 
-const entries: Entry[] = latest
-  ? players.flatMap((p) => {
-      const games = getGamelog(p.slug).filter((g) => g.date === latest);
-      const side = p.pitching && !p.hitting ? 'pitching' : 'hitting';
-      return games.map((g) => {
-        const { line, big } = side === 'hitting'
-          ? hitterLine(g as HitterGame)
-          : pitcherLine(g as PitcherGame);
-        const last = p.name.split(' ').slice(-1)[0];
-        return { slug: p.slug, name: last, line, big };
-      });
-    })
+const cards: Card[] = latest
+  ? players
+      .flatMap((p) => {
+        const side = p.pitching && !p.hitting ? 'pitching' : 'hitting';
+        return getGamelog(p.slug)
+          .filter((g) => g.date === latest)
+          .map((g) => (side === 'hitting'
+            ? hitterCard(p, g as HitterGame)
+            : pitcherCard(p, g as PitcherGame)));
+      })
+      .sort((a, b) => b.score - a.score)
   : [];
-entries.sort((a, b) => Number(b.big) - Number(a.big) || a.name.localeCompare(b.name));
 ---
-{latest && entries.length > 0 && (
-  <p class="night">
-    <span class="when">Last night · {fmtDate(latest)}</span>
-    {entries.map((e, i) => (
-      <span class={`e ${e.big ? 'big' : ''}`}>
-        <a href={`/players/${e.slug}`}>{e.name}</a> {e.line}{i < entries.length - 1 ? '' : ''}
-      </span>
-    ))}
-  </p>
+{latest && cards.length > 0 && (
+  <section class="panel" aria-label={`GT performances on ${fmtDate(latest)}`}>
+    <p class="kick">Last night · {fmtDate(latest)}</p>
+    <div class="grid">
+      {cards.map((c) => (
+        <a class={`score-card ${c.big ? 'big' : ''}`} href={`/players/${c.slug}`}>
+          <Headshot name={c.name} photo={c.photo} size={40} />
+          <span class="who">
+            <span class="pname">{c.short}</span>
+            <span class="pteam">{c.team}</span>
+            <span class="popp">{c.opp}</span>
+          </span>
+          <span class="line">
+            {c.stats.map((s) => (
+              <span class={`stat ${s.hot ? 'hot' : ''}`}>
+                <span class="sv">{s.v}</span>
+                <span class="sl">{s.l}</span>
+              </span>
+            ))}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
 )}
 
 <style>
-  .night {
-    margin: 0 0 16px;
-    font-size: 12.5px;
-    color: var(--text-mut);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    align-items: baseline;
-    font-variant-numeric: tabular-nums;
-  }
-  .when {
+  .kick {
+    margin: 0 0 12px;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .score-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .score-card:hover {
+    text-decoration: none;
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.11);
+  }
+  .score-card.big { border-color: rgba(179, 163, 105, 0.55); }
+  .who { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.2; }
+  .pname {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    color: var(--on-navy);
+  }
+  .pteam { font-size: 11px; color: var(--on-navy-mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .popp { font-size: 11px; color: var(--on-navy-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .line { display: flex; gap: 10px; margin-left: auto; flex-shrink: 0; }
+  .stat { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+  .sv {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.05;
+    color: var(--on-navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat.hot .sv { color: var(--gold-light); }
+  .sl {
+    margin-top: 1px;
+    font-size: 9.5px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--navy);
-    border-bottom: 2px solid var(--gold);
-    padding-bottom: 1px;
+    color: var(--on-navy-faint);
   }
-  .e a { font-weight: 700; margin-right: 4px; }
-  .e.big { color: var(--text); }
-  .e.big a { color: var(--pct-high); }
+  @media (prefers-reduced-motion: no-preference) {
+    .score-card { transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out); }
+  }
 </style>
