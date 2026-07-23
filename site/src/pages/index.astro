@@ -9,9 +9,14 @@ import type { Player } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 
 const unassigned = getUnassignedPlayers();
-const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
+// "No summer ball" covers everyone not on a summer roster — whether a club is
+// still possible (unassigned) or none is expected (not_playing). We don't
+// presume finality: a graduated post-grad returner can still pick up summer
+// ball, so both states read the same here.
+const noBall = unassigned.filter(
+  (p) => p.gtStatus !== 'freshman' && (p.summer.status === 'unassigned' || p.summer.status === 'not_playing'),
+);
 const freshmen = unassigned.filter((p) => p.gtStatus === 'freshman');
-const notPlaying = unassigned.filter((p) => p.summer.status === 'not_playing');
 // Assigned but nothing displayable — no stats yet, or a fixture-only league
 // feed (fake stats never render). Must not silently disappear from the page.
 const awaiting = getAssignedPlayers().filter(
@@ -40,7 +45,7 @@ interface QuietGroup {
 }
 const quietGroups: QuietGroup[] = [
   {
-    title: 'On a summer team · stats coming',
+    title: 'On summer roster · no stats',
     players: awaiting.map((p) => ({
       p,
       sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
@@ -48,21 +53,29 @@ const quietGroups: QuietGroup[] = [
     })),
   },
   {
-    title: 'No summer team yet',
-    players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
+    title: 'No summer ball',
+    players: noBall.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
   },
   {
     title: 'Incoming freshmen',
     note: "High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.",
     players: freshmen.map((p) => ({ p, sub: p.position || 'signee', tag: prov(p) })),
   },
-  {
-    title: 'Not playing this summer',
-    players: notPlaying.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
-  },
 ].filter((g) => g.players.length > 0);
+
+// Within each group, split by player type (returnees / transfers / recruits);
+// a subheader shows only when a group actually mixes types.
+const TYPE_LABEL: Record<string, string> = { returning: 'Returnees', transfer: 'Transfers', freshman: 'Recruits' };
+const TYPE_ORDER = ['returning', 'transfer', 'freshman'];
+type QuietItem = { p: Player; sub: string; tag: Prov };
+function splitByType(items: QuietItem[]) {
+  return TYPE_ORDER
+    .map((t) => ({ label: TYPE_LABEL[t], items: items.filter((x) => x.p.gtStatus === t) }))
+    .filter((g) => g.items.length > 0);
+}
 ---
-<Base title="GT Summer Tracker — Georgia Tech baseball in the summer leagues">
+<Base title="Baseball Tracking GT — Georgia Tech baseball across the summer leagues"
+  description="Live stats for every Georgia Tech player across the 2026 summer leagues, updated nightly.">
   <HomeHero slot="bleed" />
   <RosterTable />
 
@@ -79,17 +92,22 @@ const quietGroups: QuietGroup[] = [
               <h2 class="section-title">{g.title}</h2>
             </header>
             {g.note && <p class="qnote">{g.note}</p>}
-            <ul>
-              {g.players.map(({ p, sub, tag }) => (
-                <li>
-                  <a href={`/players/${p.slug}`}>
-                    <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} />
-                    <span class="who">{p.name}<span class="sub">{sub}</span></span>
-                    {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {splitByType(g.players).map((sg, _i, arr) => (
+              <>
+                {arr.length > 1 && <p class="subhead">{sg.label}</p>}
+                <ul>
+                  {sg.items.map(({ p, sub, tag }) => (
+                    <li>
+                      <a href={`/players/${p.slug}`}>
+                        <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} />
+                        <span class="who">{p.name}<span class="sub">{sub}</span></span>
+                        {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ))}
           </div>
         ))}
       </div>
@@ -129,6 +147,16 @@ const quietGroups: QuietGroup[] = [
   }
   .col header .section-title { flex: 1; margin: 0; border-bottom: none; padding-bottom: 0; }
   .qnote { margin: 0 0 8px; font-size: 12px; color: var(--text-mut); max-width: 40ch; }
+  .subhead {
+    margin: 8px 0 1px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-mut);
+  }
+  .col ul + .subhead { margin-top: 9px; }
   .col ul { list-style: none; margin: 0 0 12px; padding: 0; }
   .col li a {
     display: flex;

@@ -40,6 +40,15 @@ function stampFor(p: DraftPlayer): string {
   return 'Withdrew — returning';
 }
 
+// MLB drafting-team logos (local SVGs in public/team-logos, named by MLB team id).
+const TEAM_LOGO: Record<string, number> = {
+  'Arizona Diamondbacks': 109, 'Athletics': 133, 'Atlanta Braves': 144,
+  'Los Angeles Angels': 108, 'Miami Marlins': 146, 'Minnesota Twins': 142,
+  'Tampa Bay Rays': 139, 'Washington Nationals': 120,
+};
+const teamLogo = (name: string | null | undefined) =>
+  (name && TEAM_LOGO[name] ? `/team-logos/${TEAM_LOGO[name]}.svg` : null);
+
 // The one live storyline (while the deadline pends) / its resolution (after).
 const signee = draft.players.find((p) => p.gtRole === 'signee') ?? null;
 const signeeReg = signee?.slug ? getPlayer(signee.slug) : undefined;
@@ -57,7 +66,7 @@ const scaleMax = Math.max(
   1,
 );
 ---
-<Base title="2026 MLB Draft — GT Summer Tracker"
+<Base title="2026 MLB Draft — Baseball Tracking GT"
   description="Georgia Tech's 2026 draft class — who signed, for how much, every figure sourced.">
   <h1>2026 MLB Draft — Georgia Tech</h1>
   <p class="sub">
@@ -70,20 +79,23 @@ const scaleMax = Math.max(
   {draft.players.length > 0 && <DraftPool players={draft.players} pending={pending} />}
 
   {signee && pending && signee.status === 'unsigned' && (
-    <section class="card limbo" aria-label="Signing decision pending">
-      <Headshot name={signee.name} photo={photoFor(signee)} size={56} variant="bust" />
-      <div class="l-info">
-        <span class="l-name">
-          {signee.slug ? <a href={`/players/${signee.slug}`}>{signee.name}</a> : signee.name}
-          <ProvenanceTag kind="signee" />
-        </span>
-        <span class="l-sub">R{signee.round} · #{signee.pick} · {signee.team}</span>
-        <span class="l-paths">Signs by Jul 27, 5 p.m. ET → pro · No deal → Georgia Tech</span>
-      </div>
-      <div class="l-clock">
-        <span class="l-count" id="pool-deadline" data-deadline={DEADLINE_ISO}>
-          Deadline July 27, 5 p.m. ET
-        </span>
+    <section class="pending-sec">
+      <h2 class="section-title">Signing decision pending</h2>
+      <div class="card limbo" aria-label="Signing decision pending">
+        <Headshot name={signee.name} photo={photoFor(signee)} size={56} variant="bust" />
+        <div class="l-info">
+          <span class="l-name">
+            {signee.slug ? <a href={`/players/${signee.slug}`}>{signee.name}</a> : signee.name}
+            <ProvenanceTag kind="signee" />
+          </span>
+          <span class="l-sub">R{signee.round} · #{signee.pick} · {signee.team}</span>
+          <span class="l-paths">Signs by Jul 27, 5 p.m. ET → pro · No deal → Georgia Tech</span>
+        </div>
+        <div class="l-clock">
+          <span class="l-count" id="pool-deadline" data-deadline={DEADLINE_ISO}>
+            Deadline July 27, 5 p.m. ET
+          </span>
+        </div>
       </div>
     </section>
   )}
@@ -125,7 +137,10 @@ const scaleMax = Math.max(
               <span class="dname">
                 {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : p.name}
               </span>
-              <span class="dteam">{p.team ?? '—'}</span>
+              <span class="dteam">
+                {teamLogo(p.team) && <img class="tlogo" src={teamLogo(p.team)} alt="" width="18" height="18" loading="lazy" />}
+                {p.team ?? '—'}
+              </span>
               <span class="dmoney">
                 {p.bonus == null && (p.status === 'signed' || p.status === 'signed_udfa') && p.reportedSourceUrl ? (
                   <a class="pending" href={p.reportedSourceUrl} rel="noopener">terms pending</a>
@@ -179,7 +194,11 @@ const scaleMax = Math.max(
           </div>
         ))}
       </div>
-      <p class="lkey">Gold bar = signing bonus · navy tick = MLB slot value, assigned for rounds 1–10 — later picks carry none.</p>
+      <div class="lkey">
+        <span class="lki"><span class="sw sw-bar"></span> Signing bonus</span>
+        <span class="lki"><span class="sw sw-tick"><i></i></span> MLB slot value</span>
+        <span class="lknote">Slot value is set only for rounds 1–10; later picks carry none.</span>
+      </div>
     </section>
   )}
 
@@ -220,6 +239,10 @@ const scaleMax = Math.max(
   }
   .limbo.done { border-color: var(--line); background: var(--card); }
   .limbo.done.home { border-color: var(--navy); }
+  /* the pending section (unsigned draftees awaiting the deadline) carries a header */
+  .pending-sec { margin-bottom: 16px; }
+  .pending-sec .section-title { margin-bottom: 8px; }
+  .pending-sec .limbo { margin-bottom: 0; }
   .l-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .l-name { font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
   .l-sub { font-size: 12px; color: var(--text); }
@@ -289,7 +312,15 @@ const scaleMax = Math.max(
   .dname { font-weight: 700; font-size: 13px; text-align: center; line-height: 1.2; margin-top: 4px; }
   .dname a { color: var(--text); }
   .dname a:hover { color: var(--navy); }
-  .dteam { font-size: 11px; color: var(--text-mut); text-align: center; }
+  .dteam {
+    font-size: 11px;
+    color: var(--text-mut);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .tlogo { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; }
   .dmoney {
     font-family: var(--font-display);
     font-weight: 600;
@@ -335,13 +366,21 @@ const scaleMax = Math.max(
     font-variant-numeric: tabular-nums;
   }
   .lstate .lnote { font-size: 12px; color: var(--text); font-weight: 600; }
+  /* visual legend: the swatches mirror the bar and tick used in the rows */
   .lkey {
-    margin: 12px 0 0;
+    margin: 14px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
     font-size: 12px;
-    color: var(--text-mut);
-    max-width: 78ch;
-    text-wrap: pretty;
   }
+  .lki { display: inline-flex; align-items: center; gap: 7px; color: var(--text); font-weight: 600; }
+  .sw { display: inline-block; border-radius: 4px; flex-shrink: 0; }
+  .sw-bar { width: 26px; height: 12px; background: var(--gold); }
+  .sw-tick { position: relative; width: 22px; height: 12px; background: var(--well); }
+  .sw-tick i { position: absolute; left: 58%; top: -3px; width: 2.5px; height: 18px; background: var(--navy); border-radius: 1px; transform: translateX(-50%); }
+  .lknote { color: var(--text-mut); font-weight: 400; }
 
   .valuelink { text-decoration: underline dotted; color: inherit; }
   .pending { font-size: 11px; font-style: italic; color: var(--text); text-decoration: underline dotted; }

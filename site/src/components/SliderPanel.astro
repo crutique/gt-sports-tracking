@@ -16,10 +16,18 @@ const title = dual
 <section>
   <h2 class="section-title">{title}</h2>
   {block.sliders ? (
-    block.sliders.map((s) => <PercentileSlider slider={s} />)
+    <>
+      {block.sliders.map((s) => <PercentileSlider slider={s} qualified={block.qualified !== false} />)}
+      {block.qualified === false && (
+        <p class="unqual-note">
+          <span class="swatch" aria-hidden="true"></span>
+          Unqualified sample size
+        </p>
+      )}
+    </>
   ) : (
     <p class="no-pct">
-      {leagueName} does not publish full league statistics, so percentiles aren't available.
+      Full {leagueName} statistics aren't in our feed, so percentiles aren't available for this line.
     </p>
   )}
 </section>
@@ -27,4 +35,20 @@ const title = dual
 <style>
   .no-pct { color: var(--text-mut); font-size: 13px; }
   section { margin-bottom: 8px; }
+  .unqual-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--text-mut);
+  }
+  .swatch {
+    width: 26px;
+    height: 11px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    background-color: var(--pct-mid);
+    background-image: repeating-linear-gradient(-45deg, hsla(0, 0%, 100%, 0.6) 0 4px, hsla(0, 0%, 100%, 0) 4px 9px);
+  }
 </style>

@@ -1,0 +1,334 @@
+---
+// The summer map: GT's roster scattered across the country, organized by
+// league. Every node is a real summer-team city (projected through the same
+// Albers projection as the state outlines, so dots and land align); the seven
+// Cape Cod towns cluster too tightly to read, so the Cape Cod League gets a
+// zoomed inset. Nodes carry no performance color — this surface answers
+// "who's in which league, and where," not "who's hottest." Location is the
+// encoding; league is the organizing dimension.
+import usmap from '../data/usmap.json';
+
+export interface MapTeam {
+  name: string;
+  slug: string;
+  city: string | null;
+  x: number | null;
+  y: number | null;
+  capeX: number | null;
+  capeY: number | null;
+  count: number;
+}
+export interface MapLeague {
+  key: string;
+  abbrev: string;
+  name: string;
+  count: number;
+  color: string;
+  teams: MapTeam[];
+}
+interface Props {
+  board: MapLeague[];
+  /** Per-league label anchors on the main map (viewBox coords). Cape omitted — it lives in the inset. */
+}
+const { board } = Astro.props;
+const [VW, VH] = usmap.viewBox as [number, number];
+const inset = usmap.inset;
+
+// League label anchors on the national map (hand-placed against the projection,
+// verified visually). Cape Cod is labeled in its inset, not here.
+// Desktop labels spell out the full league name (long ones wrap to two lines);
+// mobile falls back to the acronym at the same anchor. Positions hand-placed in
+// open space so no label crosses a dot.
+interface LabelCfg { x: number; y: number; anchor: string; lines: string[] }
+const LABELS: Record<string, LabelCfg> = {
+  northwoods: { x: 505, y: 104, anchor: 'middle', lines: ['Northwoods League'] },
+  appalachian: { x: 806, y: 300, anchor: 'middle', lines: ['Appalachian League'] },
+  sunbelt: { x: 690, y: 393, anchor: 'end', lines: ['Sunbelt Baseball League'] },
+  cpl: { x: 700, y: 462, anchor: 'middle', lines: ['Coastal Plain League'] },
+  necbl: { x: 861, y: 132, anchor: 'end', lines: ['New England Collegiate', 'Baseball League'] },
+  sfcbl: { x: 792, y: 534, anchor: 'end', lines: ['South Florida Collegiate', 'Baseball League'] },
+};
+const capeShort = (name: string) => (name.startsWith('Yarmouth') ? 'Yar-Dennis' : name.split(' ')[0]);
+// The seven towns cluster on the arm; each label points outward from the cluster
+// into open water so none crosses a neighbouring dot.
+const capeDir: Record<string, 'up' | 'down' | 'left' | 'right'> = {
+  'Orleans Firebirds': 'up',
+  'Brewster Whitecaps': 'left',
+  'Yarmouth-Dennis Red Sox': 'right',
+  'Wareham Gatemen': 'left',
+  'Hyannis Harbor Hawks': 'down',
+  'Cotuit Kettleers': 'down',
+  'Falmouth Commodores': 'down',
+};
+
+// main-map nodes (exclude Cape teams — they render in the inset)
+const mainNodes = board.flatMap((l) =>
+  l.teams
+    .filter((t) => l.key !== 'cape_cod' && t.x != null && t.y != null)
+    .map((t) => ({ league: l.key, abbrev: l.abbrev, color: l.color, ...t })),
+);
+const capeLeague = board.find((l) => l.key === 'cape_cod');
+const capeColor = capeLeague?.color ?? 'var(--lg-ccbl)';
+const capeNodes = capeLeague
+  ? capeLeague.teams
+      .filter((t) => t.capeX != null && t.capeY != null)
+      .map((t) => {
+        const dir = capeDir[t.name] ?? 'down';
+        const r = radius(t.count);
+        return {
+          ...t,
+          lx: dir === 'right' ? r + 4 : dir === 'left' ? -(r + 4) : 0,
+          ly: dir === 'up' ? -(r + 5) : dir === 'down' ? r + 11 : 3,
+          lanc: dir === 'right' ? 'start' : dir === 'left' ? 'end' : 'middle',
+        };
+      })
+  : [];
+
+function radius(count: number): number {
+  return 6.5 + Math.min(count - 1, 3) * 2.3;
+}
+// inset anchor on the main map = mean of the Cape towns' real positions
+const capeAnchor = (() => {
+  const pts = (capeLeague?.teams ?? []).filter((t) => t.x != null);
+  if (!pts.length) return { x: VW - 40, y: 150 };
+  return {
+    x: pts.reduce((s, t) => s + (t.x as number), 0) / pts.length,
+    y: pts.reduce((s, t) => s + (t.y as number), 0) / pts.length,
+  };
+})();
+// inset box placement: lower-left ocean, out of the land
+const INSET_X = 20;
+const INSET_Y = VH - inset.h - 16;
+---
+<figure class="summap" data-active="">
+  <svg viewBox={`0 0 ${VW} ${VH}`} role="img"
+    aria-label={`Map of the United States showing where Georgia Tech players are spending the summer, grouped by league across ${board.length} leagues.`}>
+    <!-- land -->
+    <g class="land">
+      {usmap.states.map((s) => <path d={s.d} />)}
+    </g>
+
+    <!-- Cape Cod detail callout: a magnifier lens at the true location, a thin
+         connector to the zoom inset that follows below -->
+    <line class="tie" x1={capeAnchor.x - 13} y1={capeAnchor.y + 10} x2={INSET_X + inset.w} y2={INSET_Y + 6} />
+    <g class="lens" transform={`translate(${capeAnchor.x} ${capeAnchor.y})`}>
+      <rect x="-15" y="-11" width="30" height="22" rx="4"></rect>
+      <text y="-16" text-anchor="middle">CAPE COD</text>
+    </g>
+
+    <!-- league labels (national) -->
+    {board.filter((l) => LABELS[l.key]).map((l) => (
+      <>
+        <text class="llabel ll-full" data-league={l.key} style={`fill:${l.color}`}
+          x={LABELS[l.key].x} y={LABELS[l.key].y} text-anchor={LABELS[l.key].anchor}>
+          {LABELS[l.key].lines.map((ln, idx) => (
+            <tspan x={LABELS[l.key].x} dy={idx === 0 ? 0 : 15}>
+              {ln}{idx === LABELS[l.key].lines.length - 1 ? ` · ${l.count}` : ''}
+            </tspan>
+          ))}
+        </text>
+        <text class="llabel ll-abbr" data-league={l.key} style={`fill:${l.color}`}
+          x={LABELS[l.key].x} y={LABELS[l.key].y} text-anchor={LABELS[l.key].anchor}>
+          {l.abbrev} · {l.count}
+        </text>
+      </>
+    ))}
+
+    <!-- national team nodes -->
+    {mainNodes.map((t) => (
+      <g class="node" data-league={t.league} data-team={t.slug}
+        tabindex="0" role="button"
+        aria-label={`${t.name} — ${t.city}, ${t.abbrev}, ${t.count} GT player${t.count === 1 ? '' : 's'}`}
+        transform={`translate(${t.x} ${t.y})`}>
+        <circle class="hit" r="16"></circle>
+        <circle class="dot" r={radius(t.count)} style={`fill:${t.color}`}></circle>
+        {t.count > 1 && <text class="cnt" y="3.5">{t.count}</text>}
+        <g class="tip" aria-hidden="true">
+          <rect class="tipbox" x="-72" y={`${-(radius(t.count)) - 44}`} width="144" height="34" rx="6"></rect>
+          <text class="tipt" x="0" y={`${-(radius(t.count)) - 28}`} text-anchor="middle">{t.name}</text>
+          <text class="tips" x="0" y={`${-(radius(t.count)) - 16}`} text-anchor="middle">{t.city} · {t.count} GT</text>
+        </g>
+      </g>
+    ))}
+
+    <!-- mobile fallback: the Cape inset can't shrink legibly, so on phones the
+         seven towns collapse to one aggregate node (the section below lists them) -->
+    {capeLeague && (
+      <g class="node capeagg" data-league="cape_cod" transform={`translate(${capeAnchor.x} ${capeAnchor.y})`} aria-hidden="true">
+        <circle class="dot" r="11" style={`fill:${capeColor}`}></circle>
+        <text class="cnt" y="4">{capeLeague.count}</text>
+        <text class="agglabel" y="32" text-anchor="middle" style={`fill:${capeColor}`}>CCBL</text>
+      </g>
+    )}
+
+    <!-- Cape Cod inset -->
+    <g class="inset" transform={`translate(${INSET_X} ${INSET_Y})`} data-league="cape_cod">
+      <defs>
+        <clipPath id="capeclip"><rect x="0" y="0" width={inset.w} height={inset.h} rx="9"></rect></clipPath>
+      </defs>
+      <rect class="iboxbg" x="0" y="0" width={inset.w} height={inset.h} rx="9"></rect>
+      <path class="iland" d={inset.land} clip-path="url(#capeclip)"></path>
+      <rect class="iframe" x="0" y="0" width={inset.w} height={inset.h} rx="9" fill="none"></rect>
+      <text class="ititle" x="14" y="20">CAPE COD BASEBALL LEAGUE</text>
+      <text class="isub" x="14" y="34">{capeLeague?.count ?? 0} Jackets · 7 towns</text>
+      {capeNodes.map((t) => (
+        <g class="node cape" data-league="cape_cod" data-team={t.slug}
+          tabindex="0" role="button"
+          aria-label={`${t.name}, Cape Cod League, ${t.count} GT player${t.count === 1 ? '' : 's'}`}
+          transform={`translate(${t.capeX} ${t.capeY})`}>
+          <circle class="hit" r="13"></circle>
+          <circle class="dot" r={radius(t.count) - 0.5}></circle>
+          {t.count > 1 && <text class="cnt" y="3.5">{t.count}</text>}
+          <text class="itown" x={t.lx} y={t.ly} text-anchor={t.lanc}>{capeShort(t.name)}</text>
+        </g>
+      ))}
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .summap {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 1px 2px rgba(0, 34, 63, 0.06);
+  }
+  svg { display: block; width: 100%; height: auto; }
+
+  .land path {
+    fill: var(--line-soft);
+    stroke: var(--card);
+    stroke-width: 1;
+    stroke-linejoin: round;
+  }
+
+  .tie { stroke: var(--gold); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
+  .lens rect { fill: none; stroke: var(--gold); stroke-width: 1.5; }
+  .lens text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    fill: var(--gold-deep);
+  }
+
+  .llabel {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    fill: var(--navy); /* league is the organizing dimension — name it boldly, and clears AA on the land tint */
+  }
+  .ll-abbr { display: none; }
+
+  .node { cursor: pointer; }
+  .hit { fill: transparent; }
+  .dot { fill: var(--navy); stroke: var(--card); stroke-width: 1.5; }
+  .cnt {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    fill: var(--on-navy);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .node:focus-visible { outline: none; }
+  .node:focus-visible .dot { stroke: var(--gold); stroke-width: 2.5; }
+  .capeagg { display: none; }
+  .agglabel {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    fill: var(--gold-deep);
+    pointer-events: none;
+  }
+
+  /* inset */
+  .iboxbg { fill: var(--card); }
+  .iland { fill: var(--well); stroke: var(--line); stroke-width: 0.75; stroke-linejoin: round; }
+  .iframe { stroke: var(--gold); stroke-width: 1.5; }
+  .ititle {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    fill: var(--navy);
+  }
+  .isub { font-size: 10px; fill: var(--text-mut); }
+  .itown {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 9.5px;
+    fill: var(--text-mut);
+    pointer-events: none;
+  }
+
+  /* tooltip (national nodes) */
+  .tip { opacity: 0; pointer-events: none; }
+  .tipbox { fill: var(--navy-dark); stroke: rgba(255, 255, 255, 0.16); stroke-width: 1; }
+  .tipt {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    fill: var(--on-navy);
+  }
+  .tips { font-size: 10px; fill: var(--on-navy-mut); }
+  .node:hover .tip, .node:focus-visible .tip { opacity: 1; }
+  .node:hover .dot { stroke: var(--gold); stroke-width: 2.5; }
+
+  /* league highlight: driven by data-active on the figure (from section hover) */
+  .summap[data-active] .node,
+  .summap[data-active] .llabel { opacity: 0.28; }
+  .summap[data-active=''] .node,
+  .summap[data-active=''] .llabel { opacity: 1; }
+  .summap[data-active] .node[data-league],
+  .summap[data-active] .llabel[data-league] { }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tip { transition: opacity var(--t-fast) var(--ease-out); }
+    .node .dot, .llabel { transition: opacity var(--t-fast) var(--ease-out), fill var(--t-fast) var(--ease-out); }
+  }
+
+  @media (max-width: 560px) {
+    /* the inset can't shrink legibly — collapse the Cape to one node, enlarge
+       everything else so the whole-country overview stays readable. Labels stay
+       small enough to clear the dots on the compressed map. */
+    .inset, .tie, .lens { display: none; }
+    .capeagg { display: inline; }
+    .llabel { font-size: 18px; }
+    .dot { r: 11px; }
+    .capeagg .dot { r: 15px; }
+    .cnt { font-size: 13px; }
+    .agglabel { font-size: 16px; }
+    .ll-full { display: none; }
+    .ll-abbr { display: inline; }
+  }
+</style>
+
+<script>
+  // Section ↔ map linkage: hovering/focusing a league (its section or its map
+  // node) spotlights that league's nodes and dims the rest. Pure state, no
+  // choreography; clears on leave.
+  const fig = document.querySelector<HTMLElement>('.summap');
+  if (fig) {
+    const set = (key: string | null) => {
+      fig.dataset.active = key ?? '';
+      fig.querySelectorAll<SVGElement>('.node, .llabel').forEach((el) => {
+        const match = !key || el.dataset.league === key;
+        el.style.opacity = key ? (match ? '1' : '0.24') : '';
+      });
+    };
+    // map node hover highlights its own league
+    fig.querySelectorAll<SVGElement>('.node').forEach((n) => {
+      n.addEventListener('mouseenter', () => set(n.dataset.league ?? null));
+      n.addEventListener('mouseleave', () => set(null));
+      n.addEventListener('focus', () => set(n.dataset.league ?? null));
+      n.addEventListener('blur', () => set(null));
+    });
+    // external hook: league sections call window.__leagueHi(key|null)
+    (window as any).__leagueHi = set;
+  }
+</script>

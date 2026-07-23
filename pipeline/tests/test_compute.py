@@ -28,8 +28,10 @@ def test_bundle_shapes_and_percentiles():
     assert a["rates"]["avg"] == pytest.approx(0.400, abs=1e-3)
     sliders = {s["metric"]: s for s in a["sliders"]}
     assert set(sliders) == {"ops", "avg", "obp", "slg", "kPct", "bbPct"}
-    # A has the best OPS of 3 -> midrank 2.5/3 -> 83
-    assert sliders["ops"]["percentile"] == 83
+    # all three qualify (PA >= 2.0 x team games); A is the unique best OPS of the
+    # qualified pool -> ranked among peers -> 100 (Savant convention)
+    assert a["qualified"] is True
+    assert sliders["ops"]["percentile"] == 100
     # league avg OPS computed from AGGREGATE totals, not mean of rates
     agg = {k: sum(r[k] for r in BATTING) for k in
            ("ab", "h", "d", "t", "hr", "bb", "hbp", "sf", "sh", "k")}
@@ -44,6 +46,19 @@ def test_bundle_shapes_and_percentiles():
     # P1 has the better ERA of 2 -> inverted -> high percentile
     assert psliders["era"]["percentile"] > 50
     assert bundle["p1"]["gamelog"] == []
+
+
+def test_low_sample_player_flagged_not_qualified():
+    # D has 2 PA on a team that has played 10 games -> below the 2.0 PA/game bar
+    batting = BATTING + [{"stats_id": "d", "name": "D", "team": "T1", "g": 1, "ab": 2, "r": 0,
+                          "h": 2, "d": 0, "t": 0, "hr": 0, "rbi": 0, "bb": 0, "k": 0, "hbp": 0,
+                          "sb": 0, "cs": 0, "sf": 0, "sh": 0}]
+    bundle = compute.league_bundle(CFG, {"batting": batting, "pitching": PITCHING}, {}, wanted={"d"})
+    d = bundle["d"]["hitting"]
+    assert d["qualified"] is False
+    # still ranked (vs. the qualified pool), just flagged for hatching
+    assert d["sliders"] is not None
+    assert 0 <= {s["metric"]: s for s in d["sliders"]}["avg"]["percentile"] <= 100
 
 
 def test_tier2_league_gets_no_sliders():
@@ -85,7 +100,7 @@ def test_slider_includes_league_avg_percentile():
     sliders = {s["metric"]: s for s in bundle["a"]["hitting"]["sliders"]}
     ops = sliders["ops"]
     assert isinstance(ops["leagueAvgPercentile"], int)
-    assert 0 <= ops["leagueAvgPercentile"] <= 99
+    assert 0 <= ops["leagueAvgPercentile"] <= 100
     # league avg is below the best hitter's percentile
     assert ops["leagueAvgPercentile"] < ops["percentile"]
 

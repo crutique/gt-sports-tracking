@@ -161,7 +161,8 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     <circle cx="621" cy="136" r="4.5" class="marker" />
     <circle cx="734" cy="220" r="4.5" class="marker" />
     <circle cx="835" cy="305" r="4.5" class="marker" />
-    <text x="480" y="150" class="wm">Mac Nease Baseball Park</text>
+    <!-- park name sits in the open grass between the outfield and infield stacks -->
+    <text x="480" y="352" class="wm">Mac Nease Baseball Park</text>
     <text x="114" y="322" text-anchor="end" class="dist">330'</text>
     <text x="196" y="186" text-anchor="end" class="dist">358'</text>
     <text x="322" y="72" text-anchor="middle" class="dist">394'</text>
@@ -187,6 +188,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
         ))}
       </span>
       <span class="scount" aria-hidden="true">{groups[z.key].length}</span>
+      <span class="plabel" aria-hidden="true"><span class="pl-full">{z.full}</span><span class="pl-abbr">{z.label}</span></span>
     </button>
   ))}
 
@@ -328,6 +330,8 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
 </script>
 
 <style>
+  /* desktop: the whole park + its section header fit one screen */
+  .crop { max-width: 780px; margin: 0 auto; }
   .field {
     position: relative;
     aspect-ratio: 960 / 780; /* must match the viewBox exactly — a forced
@@ -417,6 +421,30 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     z-index: 4;
   }
+  /* group name under each resting hand — the fan says "cards", this says which
+     group; it steps aside the moment a hand is opened (the panel is titled) */
+  .plabel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: var(--navy);
+    color: var(--on-navy);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 7px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 4;
+  }
+  .pl-abbr { display: none; }
+  [data-open] .plabel { opacity: 0; }
+
   /* the fan spreads when courted — hover, focus, or open */
   .plate:hover .scard:nth-child(1), .plate:focus-visible .scard:nth-child(1) { transform: rotate(-16deg) translate(-19px, 0); }
   .plate:hover .scard:nth-child(3), .plate:focus-visible .scard:nth-child(3) { transform: rotate(16deg) translate(19px, 0); }
@@ -445,7 +473,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
   .panel.open { visibility: visible; }
   .pn-OF { top: 33%; }
   .pn-UT { top: 34%; }
-  .pn-P  { top: 10%; }
+  .pn-P  { top: 2%; }
   .pn-IF { top: 26%; }
   .pn-C  { bottom: 22%; }
   .phead {
@@ -569,6 +597,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
 
   @media (prefers-reduced-motion: no-preference) {
     .plate { transition: opacity var(--t-fast) var(--ease-out); }
+    .plabel { transition: opacity var(--t-fast) var(--ease-out); }
     .scard { transition: transform var(--t-fast) var(--ease-out); }
     .stack { transition: translate var(--t-fast) var(--ease-out); }
     .field::after { transition: opacity 200ms var(--ease-out); }
@@ -594,6 +623,13 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     .panel.open .fcard:focus-visible { transition-delay: 0s, 0s, 0s; }
   }
 
+  /* the twenty-man hand deals compact so it stays inside the capped park */
+  @media (min-width: 561px) {
+    .pn-P .prow { height: 186px; }
+    .pn-P .fcard { width: 100px; height: 158px; margin-left: -50px; }
+    .pn-P .fcard :global(.shot) { width: 56px !important; height: 70px !important; }
+    .pn-P .cname { font-size: 11.5px; }
+  }
   @media (max-width: 700px) {
     .stack { width: 52px; height: 34px; }
     .scard :global(.shot) { width: 22px !important; height: 28px !important; }
@@ -606,8 +642,13 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
   @media (max-width: 560px) {
     .crop { margin: 0 -14px; overflow: hidden; }
     .field { width: 150%; margin-left: -25%; }
-    .wm { display: none; }
+    /* the 150% zoom already shrinks the mark on screen; keep it legible, small */
+    .wm { font-size: 17px; }
     .dist { font-size: 20px; }
+    /* abbreviations on the cramped, zoomed mobile park (P / IF / OF / C / UTIL) */
+    .plabel { font-size: 9px; padding: 1px 5px; letter-spacing: 0.04em; }
+    .pl-full { display: none; }
+    .pl-abbr { display: inline; }
     .panel {
       width: 65%;
       max-height: 86%;

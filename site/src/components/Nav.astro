@@ -1,18 +1,20 @@
 ---
 const links = [
-  { href: '/', label: 'Players' },
-  { href: '/outlook', label: '2027 Outlook' },
+  { href: '/', label: 'Stats' },
+  { href: '/outlook', label: 'Roster Outlook' },
   { href: '/draft', label: 'Draft' },
-  { href: '/leagues', label: 'Leagues' },
+  { href: '/leagues', label: 'By League' },
 ];
 const current = Astro.url.pathname;
 function isCurrent(href: string): boolean {
-  return href === '/' ? current === '/' : current.startsWith(href);
+  // Stats is home and owns the player deep-dives it links out to.
+  if (href === '/') return current === '/' || current.startsWith('/players');
+  return current.startsWith(href);
 }
 ---
 <nav>
   <div class="wrap bar">
-    <a class="brand" href="/">GT SUMMER <span>TRACKER</span></a>
+    <a class="brand" href="/">BASEBALL TRACKING <span>GT</span></a>
     <div class="links">
       {links.map((l) => (
         <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>

@@ -1,11 +1,13 @@
 ---
 import Headshot from '../components/Headshot.astro';
-import PercentileChip from '../components/PercentileChip.astro';
+import LeagueMap from '../components/LeagueMap.astro';
+import PercentileBar from '../components/PercentileBar.astro';
 import ProvenanceTag from '../components/ProvenanceTag.astro';
 import Base from '../layouts/Base.astro';
 import { getLeagues, getPlayer, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
+import usmap from '../data/usmap.json';
 
 const leagues = getLeagues();
 
@@ -21,111 +23,360 @@ const draftLimbo = new Set(
     .filter((d) => d.gtRole === 'signee' && d.status === 'unsigned' && d.slug)
     .map((d) => d.slug as string),
 );
+const deadline = isDeadlinePending() ? DEADLINE_LABEL : null;
 
+// Categorical league colors (tokens in global.css) — the visual key shared by
+// the map nodes/labels and each league's accordion chip.
+const LEAGUE_COLOR: Record<string, string> = {
+  cape_cod: 'var(--lg-ccbl)',
+  northwoods: 'var(--lg-nwl)',
+  appalachian: 'var(--lg-appy)',
+  necbl: 'var(--lg-necbl)',
+  sfcbl: 'var(--lg-sfcbl)',
+  cpl: 'var(--lg-cpl)',
+  sunbelt: 'var(--lg-sbl)',
+};
+const leagueColor = (key: string) => LEAGUE_COLOR[key] ?? 'var(--navy)';
+const teamSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const teamGeo = (usmap.teams ?? {}) as Record<string, { x: number; y: number; city: string }>;
+const capeGeo = (usmap.inset.teams ?? {}) as Record<string, { x: number; y: number }>;
+
+// Build the board: league → its teams (with map coordinates) → its players.
+const board = leagues
+  .map((l) => {
+    const players = l.gtPlayers.map(getPlayer).filter(Boolean) as Player[];
+    const byTeam = new Map<string, Player[]>();
+    for (const p of players) {
+      const t = p.summer.team ?? '—';
+      byTeam.set(t, [...(byTeam.get(t) ?? []), p]);
+    }
+    const teams = [...byTeam.entries()]
+      .map(([name, ps]) => {
+        const g = teamGeo[name];
+        const c = capeGeo[name];
+        return {
+          name,
+          city: g?.city ?? null,
+          x: g?.x ?? null,
+          y: g?.y ?? null,
+          capeX: c?.x ?? null,
+          capeY: c?.y ?? null,
+          count: ps.length,
+          players: ps
+            .slice()
+            .sort((a, b) => (headlinePct(b) ?? -1) - (headlinePct(a) ?? -1) || a.name.localeCompare(b.name)),
+        };
+      })
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    return {
+      key: l.key,
+      name: l.name,
+      abbrev: l.abbrev,
+      officialUrl: l.officialUrl,
+      platform: l.platform,
+      tier: l.tier,
+      count: players.length,
+      teams,
+    };
+  })
+  .sort((a, b) => b.count - a.count);
+
+// Map wants only geometry + color, not the player objects.
+const mapBoard = board.map((l) => ({
+  key: l.key,
+  abbrev: l.abbrev,
+  name: l.name,
+  count: l.count,
+  color: leagueColor(l.key),
+  teams: l.teams.map(({ name, city, x, y, capeX, capeY, count }) => ({ name, slug: teamSlug(name), city, x, y, capeX, capeY, count })),
+}));
+
+const totalPlayers = board.reduce((s, l) => s + l.count, 0);
+const totalTeams = board.reduce((s, l) => s + l.teams.length, 0);
 ---
-<Base title="Leagues — GT Summer Tracker">
-  <h1>Leagues</h1>
-  <p class="sub">Where GT players are spending the 2026 summer.</p>
-  <div class="grid">
-    {leagues.map((league) => (
-      <section class="card league">
-        <header>
-          <h2>{league.name}</h2>
-          <span class="ab">{league.abbrev}</span>
-        </header>
-        <div class="meta">
-          <span class="count">{league.gtPlayers.length} GT player{league.gtPlayers.length === 1 ? '' : 's'}</span>
+<Base title="By league — Baseball Tracking GT"
+  description="Where every Georgia Tech player is spending the 2026 summer, mapped and grouped by league.">
+  <div class="head">
+    <h1>By league</h1>
+    <p class="lede">{totalPlayers} Jackets across {board.length} summer leagues and {totalTeams} teams. Pick a league on the map, or open one below.</p>
+  </div>
+
+  <LeagueMap board={mapBoard} />
+
+  <p class="key">Rating is percentile within each player's summer league — OPS for hitters and ERA for pitchers.</p>
+
+  <div class="leagues">
+    {board.map((l) => (
+      <section class="lg" data-league={l.key} id={`lg-${l.key}`}>
+        <h2 class="lghead">
+          <button type="button" aria-expanded="false" aria-controls={`body-${l.key}`}>
+            <span class="labbr" style={`background:${leagueColor(l.key)}`}>{l.abbrev}</span>
+            <span class="lname">{l.name}</span>
+            <span class="lsub"><span class="lcount">{l.count}</span> · {l.teams.length} team{l.teams.length === 1 ? '' : 's'}</span>
+            <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6L8 10.5 12.5 6" /></svg>
+          </button>
+        </h2>
+        <div class="lgwrap" id={`body-${l.key}`} role="region" aria-label={l.name}>
+          <div class="lgbody">
+            <a class="official" href={l.officialUrl} rel="noopener">Official {l.abbrev} site&nbsp;→</a>
+            {l.platform === 'fixture' && (
+              <p class="sample">Live stats feed coming soon — no numbers shown until they're real.</p>
+            )}
+            <div class="teams">
+              {l.teams.map((t) => (
+                <div class="team" data-team={teamSlug(t.name)}>
+                  <p class="tname">{t.name}{t.city && <span class="tcity">{t.city}</span>}</p>
+                  <ul>
+                    {t.players.map((p) => {
+                      const limbo = draftLimbo.has(p.slug);
+                      const pct = l.platform === 'fixture' || limbo ? null : headlinePct(p);
+                      return (
+                        <li>
+                          <a href={`/players/${p.slug}`}>
+                            <Headshot name={p.name} photo={p.photo} size={30} variant="bust"
+                              incoming={p.gtStatus !== 'returning' && !limbo}
+                              incomingTitle={provenanceLabel(p)} />
+                            <span class="who">
+                              <span class="nm">{p.name}</span>
+                              <span class="pos">{[p.position, p.classYear].filter(Boolean).join(' · ') || '—'}</span>
+                              {limbo && <span class="limbotag"><ProvenanceTag kind="drafted" deadline={deadline} /></span>}
+                            </span>
+                            {!limbo && pct !== null && (
+                              <span class="tail"><PercentileBar percentile={pct} metric={`summer ${p.hitting ? 'OPS' : 'ERA'}`} /></span>
+                            )}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        {league.platform === 'fixture' && <p class="sample">Live stats feed coming soon — no numbers shown until they're real</p>}
-        <ul>
-          {league.gtPlayers.map((slug) => {
-            const p = getPlayer(slug);
-            if (!p) return null;
-            const pct = league.platform === 'fixture' ? null : headlinePct(p);
-            return (
-              <li>
-                <a href={`/players/${p.slug}`}>
-                  <Headshot name={p.name} photo={p.photo} size={26} variant="bust"
-                    incoming={p.gtStatus !== 'returning' && !draftLimbo.has(p.slug)}
-                    incomingTitle={provenanceLabel(p)} />
-                  <span class="who">
-                    <span class="nm">{p.name} {draftLimbo.has(p.slug) && (
-                      <ProvenanceTag kind="drafted" deadline={isDeadlinePending() ? DEADLINE_LABEL : null} />
-                    )}</span>
-                    <span class="team">{p.summer.team}</span>
-                  </span>
-                  {pct !== null && <span class="tail"><PercentileChip percentile={pct} /></span>}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-        <a class="official" href={league.officialUrl} rel="noopener">Official {league.abbrev} site →</a>
       </section>
     ))}
   </div>
 </Base>
 
 <style>
+  .head { margin-bottom: 12px; }
   h1 { margin: 0 0 2px; }
-  .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 14px;
-    align-items: start;
+  .lede { margin: 0; color: var(--text-mut); font-size: 14px; }
+
+  .key {
+    margin: 12px 0 16px;
+    font-size: 12.5px;
+    color: var(--text-mut);
+    max-width: 78ch;
   }
-  .league { padding: 16px; }
-  .league header {
+  .key strong { color: var(--text); font-weight: 700; }
+
+  /* Accordion: the map is the star; each league is a collapsed row that opens
+     on click (its header or a tap on the map), one at a time. */
+  .leagues { display: flex; flex-direction: column; gap: 10px; }
+  .lg {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .lghead { margin: 0; font-size: inherit; font-weight: inherit; }
+  .lghead button {
+    width: 100%;
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    border-bottom: 2px solid var(--gold);
-    padding-bottom: 6px;
+    gap: 10px;
+    padding: 12px 15px;
+    min-height: 48px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-align: left;
+    box-sizing: border-box;
+    color: var(--text);
   }
-  .league h2 { margin: 0; font-size: 16px; color: var(--navy); }
-  .ab {
+  .lg[data-open] .lghead button { border-bottom-color: var(--gold); }
+  .lghead button:hover { background: var(--line-soft); }
+  .lghead button:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
+  .labbr {
+    /* filled with the league's categorical color (inline) — the key that ties
+       this row to its nodes/label on the map; all seven clear AA under white */
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    color: var(--text-mut);
-  }
-  .meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 8px;
     font-size: 12px;
-    color: var(--text-mut);
+    letter-spacing: 0.06em;
+    color: var(--on-navy);
+    border-radius: 4px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+    align-self: center;
   }
+  .lname {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--navy);
+    flex: 1;
+    min-width: 0;
+    line-height: 1.15;
+  }
+  .lghead .lsub { color: var(--text-mut); font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+  .lcount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .chev { width: 15px; height: 15px; flex-shrink: 0; align-self: center; fill: none; stroke: var(--text-mut); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .lg[data-open] .chev { stroke: var(--navy); }
+
+  /* height animation via grid-rows 0fr↔1fr — no fixed max-height guesswork */
+  .lgwrap { display: grid; grid-template-rows: 0fr; }
+  .lg[data-open] .lgwrap { grid-template-rows: 1fr; }
+  .lgbody { overflow: hidden; min-height: 0; padding: 0 15px; }
+  .lg[data-open] .lgbody { padding: 8px 15px 15px; }
+
+  .official {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    padding: 6px 2px;
+  }
+  .official:hover { color: var(--navy-bright); }
   .sample {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     font-size: 11px;
     color: var(--warn-ink);
     background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
     border-radius: 5px;
-    padding: 4px 8px;
-    display: inline-block;
+    padding: 5px 9px;
   }
-  ul { list-style: none; margin: 10px 0; padding: 0; }
+
+  .teams {
+    margin-top: 8px;
+    display: grid;
+    /* auto-fit so a 1-2 team league fills the width instead of leaving a stub */
+    grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+    gap: 6px 22px;
+    align-items: start;
+  }
+  /* compact the percentile bar so the name never has to wrap in a column */
+  .tail :global(.track) { width: 34px; }
+  .team { scroll-margin-top: 16px; }
+  /* map click spotlights the clicked team's block */
+  .team.hl { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .team { transition: outline-color 200ms var(--ease-out); }
+  }
+  .tname {
+    margin: 0 0 2px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-transform: uppercase;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 3px;
+  }
+  .tcity { font-family: inherit; font-weight: 400; font-size: 10.5px; letter-spacing: 0; color: var(--text-mut); text-transform: none; }
+
+  ul { list-style: none; margin: 0 0 6px; padding: 0; }
   li a {
     display: flex;
     align-items: center;
     gap: 9px;
-    padding: 5px 0;
+    padding: 6px 0;
+    min-height: 44px;
     font-weight: 600;
     font-size: 13.5px;
     color: var(--text);
-    border-bottom: 1px dotted var(--line);
+    box-sizing: border-box;
   }
-  li:last-child a { border-bottom: none; }
   li a:hover { text-decoration: none; }
-  li a:hover .who { color: var(--navy); text-decoration: underline; }
+  li a:hover .nm { color: var(--navy); text-decoration: underline; }
   .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
-  .team { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .pos { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .limbotag { margin-top: 4px; }
+  li:has(.limbotag) a { align-items: flex-start; padding-top: 5px; }
   .tail { margin-left: auto; flex-shrink: 0; }
-  .official { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 600; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lgwrap { transition: grid-template-rows 300ms var(--ease-out); }
+    .chev { transition: stroke var(--t-fast) var(--ease-out), transform 200ms var(--ease-out); }
+    .lghead button { transition: background-color var(--t-fast) var(--ease-out); }
+  }
+  .lg[data-open] .chev { transform: rotate(180deg); }
+
+  @media (max-width: 560px) {
+    .teams { grid-template-columns: 1fr; gap: 2px 0; }
+    .lname { font-size: 15px; }
+  }
 </style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const secs = [...document.querySelectorAll<HTMLElement>('.lg[data-league]')];
+  const hi = (k: string | null) => (window as any).__leagueHi?.(k);
+
+  const expandBtn = (s: HTMLElement, on: boolean) =>
+    s.querySelector('.lghead button')?.setAttribute('aria-expanded', String(on));
+
+  const clearHl = () => document.querySelectorAll('.team.hl').forEach((t) => t.classList.remove('hl'));
+
+  function setOpen(key: string) {
+    clearHl();
+    secs.forEach((s) => {
+      const on = s.dataset.league === key;
+      s.toggleAttribute('data-open', on);
+      expandBtn(s, on);
+    });
+  }
+
+  secs.forEach((s) => {
+    s.querySelector('.lghead button')?.addEventListener('click', () => {
+      if (s.hasAttribute('data-open')) {
+        s.removeAttribute('data-open');
+        expandBtn(s, false);
+        clearHl();
+      } else {
+        setOpen(s.dataset.league!);
+      }
+    });
+    // hovering/focusing a league spotlights its nodes on the map
+    s.addEventListener('mouseenter', () => hi(s.dataset.league!));
+    s.addEventListener('mouseleave', () => hi(null));
+    s.addEventListener('focusin', () => hi(s.dataset.league!));
+    s.addEventListener('focusout', () => hi(null));
+  });
+
+  // Interacting with the map opens the league, scrolls its content fully into
+  // view (not just the header), and — for a team node — spotlights that team.
+  function openFromMap(key: string, team?: string | null) {
+    setOpen(key); // also clears any prior team highlight
+    const sec = secs.find((x) => x.dataset.league === key);
+    const teamEl = team ? sec?.querySelector<HTMLElement>(`.team[data-team="${team}"]`) : null;
+    if (teamEl) teamEl.classList.add('hl');
+    const scroll = () =>
+      (teamEl ?? sec)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: teamEl ? 'center' : 'start' });
+    // let the expand animation settle so the target's final position is correct
+    if (reduce) scroll();
+    else setTimeout(scroll, 300);
+  }
+
+  document.querySelectorAll<SVGElement>('.summap .node, .summap .llabel, .summap .inset').forEach((el) => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const k = el.dataset.league;
+      if (k) openFromMap(k, el.dataset.team ?? null);
+    });
+  });
+</script>

@@ -5,10 +5,13 @@ import type { HitterGame, PitcherGame, Player } from '../lib/data';
 import { hitterGameScore, pitcherGameScore } from '../lib/stats';
 import { fmtDate, outsToIp } from '../lib/format';
 
-// The broadcast scores panel: every GT performance from a given night, one
-// score card per player, loudest first — nobody gets crowned. The date is
-// stated plainly (never claimed as "last night") and older nights are a
-// click away. Skips itself entirely when no games exist.
+// The broadcast bottom-line: every GT performance from a given night streams
+// across one row like an ESPN score ticker, loudest first — nobody gets
+// crowned. The date is stated plainly (never claimed as "last night") and
+// older nights are a click away. Skips itself entirely when no games exist.
+// The continuous scroll is the site's one sanctioned ambient motion: it IS
+// the score-bug identity. It pauses on hover/focus so its cards stay clickable,
+// and collapses to a static, hand-scrollable strip under reduced motion.
 
 interface Stat {
   v: string;
@@ -94,48 +97,107 @@ for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
         <button type="button" id="rg-next" aria-label="Later date" disabled>›</button>
       </div>
     </div>
-    {dates.map((d, i) => (
-      <div class="day grid" data-date={d} data-label={fmtDate(d)} hidden={i !== 0}>
-        {byDate.get(d)!.map((c) => (
-          <a class={`score-card ${c.big ? 'big' : ''}`} href={`/players/${c.slug}`}>
-            <Headshot name={c.name} photo={c.photo} size={46} variant="bust" />
-            <span class="who">
-              <span class="pname">{c.short}</span>
-              <span class="pteam">{c.team}</span>
-              <span class="popp">{c.opp}</span>
-            </span>
-            <span class="line">
-              {c.stats.map((s) => (
-                <span class={`stat ${s.hot ? 'hot' : ''}`}>
-                  <span class="sv">{s.v}</span>
-                  <span class="sl">{s.l}</span>
-                </span>
+    <div class="ticker">
+      {dates.map((d, i) => (
+        <div class="lane" data-date={d} data-label={fmtDate(d)} hidden={i !== 0}>
+          <div class="track">
+            <div class="seq">
+              {byDate.get(d)!.map((c) => (
+                <a class="score-card" href={`/players/${c.slug}`}>
+                  <span class="head">
+                    <Headshot name={c.name} photo={c.photo} size={42} variant="bust" />
+                    <span class="pname">{c.short}</span>
+                    <span class="who">
+                      <span class="pteam">{c.team}</span>
+                      <span class="popp">{c.opp}</span>
+                    </span>
+                  </span>
+                  <span class="line">
+                    {c.stats.map((s) => (
+                      <span class={`stat ${s.hot ? 'hot' : ''}`}>
+                        <span class="sv">{s.v}</span>
+                        <span class="sl">{s.l}</span>
+                      </span>
+                    ))}
+                  </span>
+                </a>
               ))}
-            </span>
-          </a>
-        ))}
-      </div>
-    ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   </section>
 )}
 
 <script>
-  const panels = [...document.querySelectorAll<HTMLElement>('.day[data-date]')];
+  const SPEED = 55; // px/sec — a comfortable broadcast reading pace
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const lanes = [...document.querySelectorAll<HTMLElement>('.lane[data-date]')];
   const prev = document.getElementById('rg-prev') as HTMLButtonElement | null;
   const next = document.getElementById('rg-next') as HTMLButtonElement | null;
   const label = document.getElementById('rg-date');
   let idx = 0; // 0 = newest
 
+  // Deal enough duplicate sequences to cover the viewport plus one full set,
+  // then scroll by exactly one set's width — the content repeats seamlessly.
+  function initLane(lane: HTMLElement) {
+    if (lane.dataset.ready) return;
+    const track = lane.querySelector('.track') as HTMLElement;
+    const seq = track.querySelector('.seq') as HTMLElement;
+    const seqW = seq.getBoundingClientRect().width;
+    const laneW = lane.getBoundingClientRect().width;
+    // A single set already fits: show a short night (or one lone game) static
+    // and centered instead of cloning it to crawl in place. Scroll only when the
+    // cards genuinely overflow the row.
+    const overflows = seqW > laneW + 8;
+    lane.classList.toggle('fits', !reduce.matches && !overflows);
+    if (!reduce.matches && overflows) {
+      const copies = Math.max(2, Math.ceil((laneW + seqW) / seqW));
+      for (let k = 1; k < copies; k++) {
+        const clone = seq.cloneNode(true) as HTMLElement;
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelectorAll('a').forEach((a) => { (a as HTMLElement).tabIndex = -1; });
+        track.appendChild(clone);
+      }
+      track.style.setProperty('--shift', `${seqW}px`);
+      track.style.animationDuration = `${seqW / SPEED}s`;
+      track.classList.add('run');
+    }
+    lane.dataset.ready = '1';
+  }
+
+  function resetLane(lane: HTMLElement) {
+    const track = lane.querySelector('.track') as HTMLElement;
+    track.querySelectorAll('.seq[aria-hidden]').forEach((n) => n.remove());
+    track.classList.remove('run');
+    track.style.removeProperty('--shift');
+    track.style.animationDuration = '';
+    lane.classList.remove('fits');
+    delete lane.dataset.ready;
+  }
+
   function show(i: number) {
-    idx = Math.max(0, Math.min(panels.length - 1, i));
-    panels.forEach((p, j) => p.toggleAttribute('hidden', j !== idx));
-    if (label) label.textContent = panels[idx].dataset.label ?? '';
+    idx = Math.max(0, Math.min(lanes.length - 1, i));
+    lanes.forEach((lane, j) => lane.toggleAttribute('hidden', j !== idx));
+    if (label) label.textContent = lanes[idx].dataset.label ?? '';
     if (next) next.disabled = idx === 0;
-    if (prev) prev.disabled = idx === panels.length - 1;
+    if (prev) prev.disabled = idx === lanes.length - 1;
+    initLane(lanes[idx]);
   }
 
   prev?.addEventListener('click', () => show(idx + 1));
   next?.addEventListener('click', () => show(idx - 1));
+
+  // Re-deal the visible lane on resize so the loop stays gap-free at any width.
+  let rid = 0;
+  addEventListener('resize', () => {
+    clearTimeout(rid);
+    rid = window.setTimeout(() => { resetLane(lanes[idx]); initLane(lanes[idx]); }, 160);
+  });
+  reduce.addEventListener?.('change', () => { resetLane(lanes[idx]); initLane(lanes[idx]); });
+
+  show(0);
 </script>
 
 <style>
@@ -181,40 +243,68 @@ for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
     text-align: center;
     font-variant-numeric: tabular-nums;
   }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
+
+  /* The ticker window: one row, edges faded like a broadcast lower-third. */
+  .ticker {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
   }
-  /* author display:grid beats the UA [hidden] rule — restate it */
-  .day[hidden] { display: none; }
+  .lane { overflow: hidden; }
+  .lane[hidden] { display: none; }
+  /* Short night that fits without scrolling: center it, no crawl. */
+  .lane:not([hidden]).fits { display: flex; justify-content: center; }
+  .track { display: inline-flex; flex-wrap: nowrap; will-change: transform; }
+  .track.run {
+    animation-name: ticker;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    /* duration set inline from measured width, so speed is constant */
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-1 * var(--shift))); }
+  }
+  /* pause so a hovered/focused card can be read and clicked */
+  .ticker:hover .track.run,
+  .track.run:focus-within { animation-play-state: paused; }
+  .seq { display: inline-flex; flex-wrap: nowrap; flex: 0 0 auto; }
+
   .score-card {
     display: flex;
-    align-items: center;
-    gap: 11px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    padding: 10px 12px;
+    flex-direction: column;
+    gap: 9px;
+    flex: 0 0 auto;
+    width: 278px;
+    padding: 11px 15px;
+    border-right: 1px solid rgba(179, 163, 105, 0.22);
   }
-  .score-card:hover {
-    text-decoration: none;
-    border-color: var(--gold);
-    background: rgba(255, 255, 255, 0.11);
-  }
-  .score-card.big { border-color: rgba(179, 163, 105, 0.55); }
-  .who { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.2; }
+  /* Header row: portrait, last name, then team/opponent stacked at the right. */
+  .head { display: flex; align-items: center; gap: 10px; }
+  .score-card:hover { text-decoration: none; }
+  .score-card:hover .pname { color: var(--gold-light); }
+  /* Standouts aren't stripe-marked — loudest-first ordering and the gold "hot"
+     stat numbers already surface them, the way a real ticker stays uniform. */
+  .who { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.2; text-align: right; }
   .pname {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 19px;
     letter-spacing: 0.02em;
     color: var(--on-navy);
+    white-space: nowrap;
+    flex: 0 0 auto;
   }
   .pteam { font-size: 11px; color: var(--on-navy-mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .popp { font-size: 11px; color: var(--on-navy-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .line { display: flex; gap: 10px; margin-left: auto; flex-shrink: 0; }
-  .stat { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+  /* Stats span the full card width beneath the header, split into equal cells. */
+  .line {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    padding-top: 9px;
+    border-top: 1px solid rgba(179, 163, 105, 0.22);
+  }
+  .stat { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
   .sv {
     font-family: var(--font-display);
     font-weight: 700;
@@ -231,8 +321,18 @@ for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
     letter-spacing: 0.06em;
     color: var(--on-navy-faint);
   }
+
+  @media (max-width: 560px) {
+    /* phones read ~one card at a time */
+    .score-card { width: 80vw; max-width: 300px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* no auto-scroll: the row becomes a hand-scrollable strip */
+    .lane { overflow-x: auto; scrollbar-width: thin; }
+    .track { animation: none !important; }
+  }
   @media (prefers-reduced-motion: no-preference) {
-    .score-card { transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out); }
+    .pname { transition: color var(--t-fast) var(--ease-out); }
     .nav button { transition: border-color var(--t-fast) var(--ease-out); }
   }
 </style>

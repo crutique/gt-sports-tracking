@@ -1,0 +1,22 @@
+{
+  "_note": "Real home cities for the 16 GT summer teams. Public stable facts. lat/lon for albersUsa projection. Cape Cod is a 7-town cluster in SE Massachusetts (needs an inset or dodge).",
+  "teams": {
+    "Brewster Whitecaps":        { "city": "Brewster, MA",        "lat": 41.76, "lon": -70.08, "league": "cape_cod" },
+    "Cotuit Kettleers":          { "city": "Cotuit, MA",          "lat": 41.62, "lon": -70.44, "league": "cape_cod" },
+    "Falmouth Commodores":       { "city": "Falmouth, MA",        "lat": 41.55, "lon": -70.61, "league": "cape_cod" },
+    "Hyannis Harbor Hawks":      { "city": "Hyannis, MA",         "lat": 41.65, "lon": -70.28, "league": "cape_cod" },
+    "Orleans Firebirds":         { "city": "Orleans, MA",         "lat": 41.79, "lon": -69.99, "league": "cape_cod" },
+    "Wareham Gatemen":           { "city": "Wareham, MA",         "lat": 41.76, "lon": -70.72, "league": "cape_cod" },
+    "Yarmouth-Dennis Red Sox":   { "city": "S. Yarmouth, MA",     "lat": 41.67, "lon": -70.20, "league": "cape_cod" },
+    "Danville Otterbots":        { "city": "Danville, VA",        "lat": 36.59, "lon": -79.40, "league": "appalachian" },
+    "Johnson City Doughboys":    { "city": "Johnson City, TN",    "lat": 36.31, "lon": -82.35, "league": "appalachian" },
+    "Bismarck Larks":            { "city": "Bismarck, ND",        "lat": 46.81, "lon": -100.78, "league": "northwoods" },
+    "Green Bay Rockers":         { "city": "Green Bay, WI",       "lat": 44.51, "lon": -88.02, "league": "northwoods" },
+    "Willmar Stingers":          { "city": "Willmar, MN",         "lat": 45.12, "lon": -95.04, "league": "northwoods" },
+    "Macon Bacon":               { "city": "Macon, GA",           "lat": 32.84, "lon": -83.63, "league": "cpl" },
+    "Keene Swamp Bats":          { "city": "Keene, NH",           "lat": 42.93, "lon": -72.28, "league": "necbl" },
+    "Boca Raton Blazers":        { "city": "Boca Raton, FL",      "lat": 26.35, "lon": -80.08, "league": "sfcbl" },
+    "Brookhaven Bucks":          { "city": "Brookhaven (Atlanta), GA", "lat": 33.86, "lon": -84.34, "league": "sunbelt" }
+  },
+  "gt_home": { "city": "Atlanta, GA", "lat": 33.776, "lon": -84.399, "note": "Georgia Tech — Russ Chandler Stadium; the anchor the diaspora radiates from" }
+}

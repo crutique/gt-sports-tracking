@@ -8,7 +8,6 @@ import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 import type { DraftPlayer } from '../lib/draft';
 import { getLeagueByKey, getPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
-import { fmtDate } from '../lib/format';
 
 // The second core question — "what does next spring look like?" — answered in
 // counts and chips: who's back, who's arriving, who's in limbo until the
@@ -38,6 +37,11 @@ const arriving = [
   ...transfers,
   ...freshmen.filter((p) => !signeeSignedSlugs.has(p.slug)),
 ];
+// Arriving splits by how they get here: transfers vs. incoming recruits.
+const arrivingByType = [
+  { label: 'Transfers', players: arriving.filter((p) => p.gtStatus === 'transfer') },
+  { label: 'Recruits', players: arriving.filter((p) => p.gtStatus === 'freshman') },
+].filter((g) => g.players.length > 0);
 const back = returning;
 const draftReturners = draft.players.filter((p) => p.status === 'returning');
 
@@ -70,9 +74,8 @@ const deadline = isDeadlinePending() ? DEADLINE_LABEL : null;
 const unsignedArriving = arriving.filter((p) => signeeDraftedBySlug.get(p.slug)?.status === 'unsigned').length;
 const projected = back.length + arriving.length;
 const over = projected - ROSTER_LIMIT;
-const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ?? null;
 ---
-<Base title="2027 Roster Outlook — GT Summer Tracker"
+<Base title="Baseball Tracking GT — Georgia Tech baseball's 2027 roster"
   description="Who's back, who's arriving, and who's gone pro — Georgia Tech baseball's 2027 roster as the draft resolves.">
   <h1>2027 Roster Outlook</h1>
 
@@ -101,9 +104,6 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
   <section class="card field-card">
     <div class="field-head">
       <h2 class="section-title">2027 roster by position</h2>
-      <span class="legend" aria-hidden="true">
-        <span class="cue-h">hover a group</span><span class="cue-t">tap a group</span>
-      </span>
     </div>
     <FieldDiagram returning={back} arriving={arriving}
       undecided={arriving.filter((p) => signeeDraftedBySlug.get(p.slug)?.status === 'unsigned').map((p) => p.slug)} />
@@ -115,9 +115,7 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
         <span class="count">{back.length + draftReturners.length}</span>
         <h2 class="section-title">Returning</h2>
       </header>
-      {statsThrough && (
-        <p class="rcpt">Summer percentile · OPS (hitters) / ERA (pitchers) · through {fmtDate(statsThrough)}</p>
-      )}
+      <p class="rcpt">Rating is percentile within each player's summer league — OPS for hitters and ERA for pitchers.</p>
       <ul>
         {sortedBack.map((p) => {
           const pct = summerPct(p);
@@ -126,7 +124,7 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
               <a href={`/players/${p.slug}`}>
                 <Headshot name={p.name} photo={p.photo} size={26} variant="bust" />
                 <span class="who">{p.name}<span class="sub">{p.position || '—'}{p.classYear ? ` · ${p.classYear}` : ''}</span></span>
-                {pct !== null && <span class="tail"><PercentileChip percentile={pct} metric={p.hitting ? 'OPS' : 'ERA'} /></span>}
+                {pct !== null && <span class="tail"><PercentileChip percentile={pct} metric={`summer ${p.hitting ? 'OPS' : 'ERA'}`} muted /></span>}
               </a>
             </li>
           );
@@ -150,26 +148,31 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
           <span class="qual head-qual">{unsignedArriving} unsigned · {deadline}</span>
         )}
       </header>
-      <ul>
-        {arriving.map((p) => {
-          const d = signeeDraftedBySlug.get(p.slug);
-          const limbo = d && d.status === 'unsigned';
-          return (
-            <li>
-              <a href={`/players/${p.slug}`}>
-                <Headshot name={p.name} photo={p.photo} size={26} variant="bust" incoming={!limbo}
-                  incomingTitle={provenanceLabel(p)} />
-                <span class="who">{p.name}<span class="sub">{[p.position, p.classYear].filter(Boolean).join(' · ') || '—'}</span></span>
-                {limbo && (
-                  <span class="tail">
-                    <ProvenanceTag kind="drafted" draft={d.pick != null ? `R${d.round} by ${d.team}` : null} deadline={deadline} />
-                  </span>
-                )}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      {arrivingByType.map((grp) => (
+        <>
+          <p class="subhead">{grp.label}</p>
+          <ul>
+            {grp.players.map((p) => {
+              const d = signeeDraftedBySlug.get(p.slug);
+              const limbo = d && d.status === 'unsigned';
+              return (
+                <li>
+                  <a href={`/players/${p.slug}`}>
+                    <Headshot name={p.name} photo={p.photo} size={26} variant="bust" incoming={!limbo}
+                      incomingTitle={provenanceLabel(p)} />
+                    <span class="who">{p.name}<span class="sub">{[p.position, p.classYear].filter(Boolean).join(' · ') || '—'}</span></span>
+                    {limbo && (
+                      <span class="tail">
+                        <ProvenanceTag kind="drafted" draft={d.pick != null ? `R${d.round} by ${d.team}` : null} deadline={deadline} />
+                      </span>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      ))}
     </section>
 
     {anyLimbo && (
@@ -213,10 +216,11 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
 </Base>
 
 <style>
-  h1 { margin: 0 0 16px; }
+  /* tight vertical budget: park + section header + math strip share one screen */
+  h1 { margin: -8px 0 10px; }
 
   /* Roster math: length does the talking — 19 + 21 = 40 against the 34 cap. */
-  .math { padding: 24px 20px 12px; margin-bottom: 14px; }
+  .math { padding: 18px 20px 10px; margin-bottom: 12px; }
   .bar {
     position: relative;
     display: flex;
@@ -275,7 +279,7 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
   .over a { color: var(--text-mut); text-decoration: underline; }
   .over a:hover { color: var(--navy); }
 
-  .field-card { padding: 16px 20px 20px; margin-bottom: 14px; }
+  .field-card { padding: 12px 20px 14px; margin-bottom: 14px; }
   .field-head {
     display: flex;
     align-items: baseline;
@@ -283,12 +287,6 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
     gap: 12px;
   }
   .field-head .section-title { flex: 1; }
-  .legend { font-size: 11px; color: var(--text-mut); white-space: nowrap; }
-  .cue-t { display: none; }
-  @media (hover: none) {
-    .cue-h { display: none; }
-    .cue-t { display: inline; }
-  }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -312,7 +310,18 @@ const statsThrough = players.map((p) => p.asOf).filter(Boolean).sort().at(-1) ??
   }
   .col header .section-title { flex: 1; margin: 0; }
   .head-qual { font-size: 11px; white-space: nowrap; }
-  .rcpt { margin: -4px 0 8px; font-size: 12px; color: var(--text-mut); }
+  .subhead {
+    margin: 9px 0 1px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-mut);
+  }
+  ul + .subhead { margin-top: 10px; }
+  .rcpt { margin: -4px 0 8px; font-size: 12px; color: var(--text-mut); max-width: 46ch; }
+  .rcpt strong { color: var(--text); font-weight: 700; }
   .limbo .count { color: var(--warn-ink); }
   ul { list-style: none; margin: 0; padding: 0; }
   li a, .row {

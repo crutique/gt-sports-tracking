@@ -15,8 +15,10 @@ def test_load_all_seed_files():
             "patrick-walsh", "logan-keilen", "kolby-martin", "cooper-underwood",
             "isaiah-galason"} <= slugs
     assert "caden-spivey" not in {p["slug"] for p in players}  # out of eligibility, removed 7/15
+    # Gaudette was recategorized unassigned (a post-grad returner may still pick
+    # up summer ball) — no one is hard-coded "not_playing" now.
     not_playing = {p["slug"] for p in players if p["summer"]["status"] == "not_playing"}
-    assert not_playing == {"caden-gaudette"}
+    assert not_playing == set()
     assert "northwoods" in leagues and leagues["northwoods"]["tier"] == 1
 
 

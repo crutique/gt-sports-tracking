@@ -41,6 +41,18 @@
   --pct-mid: #5f6d83;
   --pct-high: #c53022;
 
+  /* Categorical league palette — By league map (added 2026-07-23 per owner to
+     visually distinguish the summer leagues). Muted heritage tones inside the
+     GT register; CATEGORICAL ONLY — never the performance ramp. Each is dark
+     enough for white text (≥4.5:1) and reads on the map's light land. */
+  --lg-ccbl: #003057; /* the flagship — GT navy */
+  --lg-nwl: #7a5e28;  /* bronze */
+  --lg-appy: #2c5f46; /* pine */
+  --lg-necbl: #3a5a7d; /* steel blue */
+  --lg-sfcbl: #1c6470; /* deep teal */
+  --lg-cpl: #7a3450;  /* wine */
+  --lg-sbl: #9c4a2a;  /* rust */
+
   /* field illustration (flat, muted so navy/gold chrome keeps the page) */
   --grass: #55805f;
   --grass-line: #467050;

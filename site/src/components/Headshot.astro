@@ -109,9 +109,10 @@ const BUST: Record<string, string> = {
   'tyler-guerin': 'width:109.0%;left:-2.2%;top:-0.0%',
   'will-baker': 'width:109.4%;left:-3.9%;top:-0.0%',
 };
-// Full-body action shots — no crop produces a recognizable face; the gold
-// monogram reads better than a blur.
-const NO_PHOTO = new Set(['kolby-martin', 'luke-nitkowski']);
+// Players who render as a monogram instead of their photo (empty by owner
+// direction 2026-07-23 — Kolby Martin and Luke Nitkowski now show their PG
+// action shots rather than initials).
+const NO_PHOTO = new Set<string>([]);
 const DEFAULTS = { circle: 'width:210.0%;left:-55.0%;top:0%', bust: 'width:125.0%;left:-12.5%;top:0%' };
 const EXT = { circle: 'width:126%;left:-13%;top:-2%', bust: 'width:112%;left:-6%;top:0%' };
 

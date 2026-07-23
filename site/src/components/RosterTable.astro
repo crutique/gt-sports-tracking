@@ -37,19 +37,17 @@ const byPct = (side: 'hitting' | 'pitching', metric: string) => (a: Player, b: P
 
 // Rankings only mean something with a real sample behind them — sub-threshold
 // players keep their rows but sit in a separate band below the line.
-const QUALIFY_AB = 25;
-const QUALIFY_IP_OUTS = 24; // 8.0 IP
-function ipOuts(ip: number | string | undefined): number {
-  const [w, f = '0'] = String(ip ?? 0).split('.');
-  return Number(w) * 3 + Number(f);
-}
+// One qualifying definition site-wide: the pipeline's per-team-game bar
+// (2.0 PA / 0.5 IP), carried on each block as `qualified` (undefined = old data
+// -> treat as qualified).
+const isQual = (b: { qualified?: boolean } | null | undefined) => b?.qualified !== false;
 
 const hittersAll = assigned.filter((p) => p.hitting).sort(byPct('hitting', 'ops'));
-const hitters = hittersAll.filter((p) => Number(p.hitting!.counting.ab) >= QUALIFY_AB);
-const hittersSub = hittersAll.filter((p) => Number(p.hitting!.counting.ab) < QUALIFY_AB);
+const hitters = hittersAll.filter((p) => isQual(p.hitting));
+const hittersSub = hittersAll.filter((p) => !isQual(p.hitting));
 const pitchersAll = assigned.filter((p) => p.pitching).sort(byPct('pitching', 'era'));
-const pitchers = pitchersAll.filter((p) => ipOuts(p.pitching!.counting.ip) >= QUALIFY_IP_OUTS);
-const pitchersSub = pitchersAll.filter((p) => ipOuts(p.pitching!.counting.ip) < QUALIFY_IP_OUTS);
+const pitchers = pitchersAll.filter((p) => isQual(p.pitching));
+const pitchersSub = pitchersAll.filter((p) => !isQual(p.pitching));
 
 const statted = [...hittersAll, ...pitchersAll];
 const leagues = [...new Set(statted.map((p) => p.summer.leagueKey!))]
@@ -63,7 +61,8 @@ function leagueName(p: Player): string {
   return getLeagueByKey(p.summer.leagueKey)?.name ?? '';
 }
 function searchKey(p: Player): string {
-  return `${p.name} ${p.summer.team ?? ''} ${p.fromSchool ?? ''} ${p.fromShort ?? ''}`.toLowerCase();
+  const lg = getLeagueByKey(p.summer.leagueKey);
+  return `${p.name} ${p.summer.team ?? ''} ${lg?.name ?? ''} ${lg?.abbrev ?? ''} ${p.fromSchool ?? ''} ${p.fromShort ?? ''}`.toLowerCase();
 }
 
 const statsThrough = assigned.map((p) => p.asOf).filter(Boolean).sort().at(-1) ?? null;
@@ -72,7 +71,6 @@ const HIT_COLS = [
   { key: 'name', label: 'Player' },
   { key: 'pos', label: 'Pos', opt: true },
   { key: 'cls', label: 'Class', opt: true },
-  { key: 'lg', label: 'League', opt: true },
   { key: 'g', label: 'G', num: true, opt: true, gsep: true },
   { key: 'ab', label: 'AB', num: true, opt: true },
   { key: 'avg', label: 'AVG', num: true, gsep: true },
@@ -88,7 +86,6 @@ const PIT_COLS = [
   { key: 'name', label: 'Player' },
   { key: 'pos', label: 'Pos', opt: true },
   { key: 'cls', label: 'Class', opt: true },
-  { key: 'lg', label: 'League', opt: true },
   { key: 'g', label: 'G', num: true, opt: true, gsep: true },
   { key: 'gs', label: 'GS', num: true, opt: true },
   { key: 'ip', label: 'IP', num: true, gsep: true },
@@ -150,10 +147,9 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
               <td data-v={c.ab} class="opt">{c.ab}</td>
               <td data-v={r.avg ?? '—'} class="gsep">{fmtRate3(r.avg)}</td>
@@ -169,7 +165,7 @@ const PIT_COLS = [
         })}
       </tbody>
       <tbody class="empty-band" hidden>
-        <tr><td colspan="14">
+        <tr><td colspan="13">
           <span class="empty-msg"></span>
           <button type="button" class="switch-tab" hidden></button>
           <button type="button" class="clear-filters">Clear filters</button>
@@ -177,7 +173,7 @@ const PIT_COLS = [
       </tbody>
       {hittersSub.length > 0 && (
         <tbody class="subq">
-          <tr class="subhead"><td colspan="14">Below qualifying threshold · under {QUALIFY_AB} AB</td></tr>
+          <tr class="subhead"><td colspan="13">Below qualifying threshold</td></tr>
           {hittersSub.map((p) => {
             const c = p.hitting!.counting;
             const r = p.hitting!.rates;
@@ -185,10 +181,9 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-                <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>
                 <td data-v={c.ab} class="opt">{c.ab}</td>
                 <td data-v={r.avg ?? '—'} class="gsep">{fmtRate3(r.avg)}</td>
@@ -237,10 +232,9 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-              <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
               <td data-v={c.gs} class="opt">{c.gs}</td>
               <td data-v={c.ip} class="gsep">{c.ip}</td>
@@ -255,7 +249,7 @@ const PIT_COLS = [
         })}
       </tbody>
       <tbody class="empty-band" hidden>
-        <tr><td colspan="13">
+        <tr><td colspan="12">
           <span class="empty-msg"></span>
           <button type="button" class="switch-tab" hidden></button>
           <button type="button" class="clear-filters">Clear filters</button>
@@ -263,7 +257,7 @@ const PIT_COLS = [
       </tbody>
       {pitchersSub.length > 0 && (
         <tbody class="subq">
-          <tr class="subhead"><td colspan="13">Below qualifying threshold · under 8.0 IP</td></tr>
+          <tr class="subhead"><td colspan="12">Below qualifying threshold</td></tr>
           {pitchersSub.map((p) => {
             const c = p.pitching!.counting;
             const r = p.pitching!.rates;
@@ -271,10 +265,9 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
-                <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>
                 <td data-v={c.gs} class="opt">{c.gs}</td>
                 <td data-v={c.ip} class="gsep">{c.ip}</td>
@@ -295,7 +288,7 @@ const PIT_COLS = [
 
   <p class="tfoot">
     Percentiles rank each player against all hitters or pitchers in his league, 2026 season.
-    Qualified: {QUALIFY_AB}+ AB (hitters) or 8.0+ IP (pitchers) — others sit below the threshold line.
+    Qualified: 2.0 PA (hitters) or 0.5 IP (pitchers) per team game — others sit below the threshold line.
     A + on the portrait marks players new to GT for 2027 — hover or focus it for where they're from · unmarked players were on GT's 2026 roster.
   </p>
   <p class="tfoot legend">
@@ -591,7 +584,9 @@ const PIT_COLS = [
   .stamp { font-size: 12px; color: var(--text-mut); white-space: nowrap; }
 
   .panel { overflow-x: auto; }
-  table { font-size: 12.5px; }
+  /* collapse removes the default 2px inter-row border-spacing so rows sit flush
+     — the 1px cell divider is the only separation */
+  table { font-size: 12.5px; border-collapse: collapse; }
   th {
     text-align: left;
     border-bottom: 1px solid var(--line);
@@ -633,19 +628,26 @@ const PIT_COLS = [
   th:last-child, td:last-child { padding-right: 14px; }
   .gsep { border-left: 1px solid var(--line-soft); }
   th.gsep { border-left-color: var(--line); }
-  td:first-child { background: var(--card); }
+  /* the portrait fills its cell top-to-bottom, so consecutive busts sit flush
+     (no whitespace band between images) — only the row divider separates them */
+  td:first-child { background: var(--card); padding-top: 0; padding-bottom: 0; }
   tbody tr:hover td { background: var(--line-soft); }
-  td a { display: inline-flex; align-items: center; gap: 9px; font-weight: 700; }
+  td a { display: flex; align-items: center; gap: 9px; font-weight: 700; }
   .who {
     display: flex;
     flex-direction: column;
     line-height: 1.25;
+    /* Cap the player cell so a long name or provenance badge wraps instead of
+       widening the column — keeps the OPS-percentile column in frame, no scroll. */
+    white-space: normal;
+    max-width: 180px;
   }
   .pname { font-size: 13.5px; }
   .pteam {
     color: var(--text-mut);
     font-weight: 400;
     font-size: 11px;
+    white-space: nowrap;
   }
   .denom { display: none; }
   .key {

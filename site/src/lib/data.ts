@@ -13,6 +13,9 @@ export interface Slider {
 export interface StatBlock {
   counting: Record<string, number | string>;
   rates: Record<string, number | null>;
+  /** Meets the summer qualifying bar (2.0 PA / 0.5 IP per team game); false =
+      small sample, shown with hatched percentile bars. Absent on older data. */
+  qualified?: boolean;
   sliders: Slider[] | null;
 }
 
