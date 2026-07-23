@@ -1,0 +1,175 @@
+---
+import Base from '../layouts/Base.astro';
+import Headshot from '../components/Headshot.astro';
+import HomeHero from '../components/HomeHero.astro';
+import ProvenanceTag from '../components/ProvenanceTag.astro';
+import RosterTable from '../components/RosterTable.astro';
+import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
+import type { Player } from '../lib/data';
+import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
+
+const unassigned = getUnassignedPlayers();
+// "No summer ball" covers everyone not on a summer roster — whether a club is
+// still possible (unassigned) or none is expected (not_playing). We don't
+// presume finality: a graduated post-grad returner can still pick up summer
+// ball, so both states read the same here.
+const noBall = unassigned.filter(
+  (p) => p.gtStatus !== 'freshman' && (p.summer.status === 'unassigned' || p.summer.status === 'not_playing'),
+);
+const freshmen = unassigned.filter((p) => p.gtStatus === 'freshman');
+// Assigned but nothing displayable — no stats yet, or a fixture-only league
+// feed (fake stats never render). Must not silently disappear from the page.
+const awaiting = getAssignedPlayers().filter(
+  (p) => (!p.hitting && !p.pitching) || isSampleLeague(p.summer.leagueKey),
+);
+
+// Provenance lives on the portrait's + badge (tooltip says where from);
+// only the drafted-but-unsigned limbo keeps a visible tag.
+const draftLimbo = new Set(
+  getDraft().players
+    .filter((d) => d.gtRole === 'signee' && d.status === 'unsigned' && d.slug)
+    .map((d) => d.slug as string),
+);
+type Prov = { kind: 'drafted'; deadline: string | null } | null;
+const isIncoming = (p: Player) => p.gtStatus !== 'returning' && !draftLimbo.has(p.slug);
+function prov(p: Player): Prov {
+  if (draftLimbo.has(p.slug))
+    return { kind: 'drafted', deadline: isDeadlinePending() ? DEADLINE_LABEL : null };
+  return null;
+}
+
+interface QuietGroup {
+  title: string;
+  note?: string;
+  players: { p: Player; sub: string; tag: Prov }[];
+}
+const quietGroups: QuietGroup[] = [
+  {
+    title: 'On summer roster · no stats',
+    players: awaiting.map((p) => ({
+      p,
+      sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
+      tag: prov(p),
+    })),
+  },
+  {
+    title: 'No summer ball',
+    players: noBall.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
+  },
+  {
+    title: 'Incoming freshmen',
+    note: "High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.",
+    players: freshmen.map((p) => ({ p, sub: p.position || 'signee', tag: prov(p) })),
+  },
+].filter((g) => g.players.length > 0);
+
+// Within each group, split by player type (returnees / transfers / recruits);
+// a subheader shows only when a group actually mixes types.
+const TYPE_LABEL: Record<string, string> = { returning: 'Returnees', transfer: 'Transfers', freshman: 'Recruits' };
+const TYPE_ORDER = ['returning', 'transfer', 'freshman'];
+type QuietItem = { p: Player; sub: string; tag: Prov };
+function splitByType(items: QuietItem[]) {
+  return TYPE_ORDER
+    .map((t) => ({ label: TYPE_LABEL[t], items: items.filter((x) => x.p.gtStatus === t) }))
+    .filter((g) => g.items.length > 0);
+}
+---
+<Base title="Baseball Tracking GT — Georgia Tech baseball across the summer leagues"
+  description="Live stats for every Georgia Tech player across the 2026 summer leagues, updated nightly.">
+  <HomeHero slot="bleed" />
+  <RosterTable />
+
+  {quietGroups.length > 0 && (
+    <section class="card others">
+      <div class="others-head">
+        <span class="ttl">Rest of the roster</span>
+      </div>
+      <div class="cols">
+        {quietGroups.map((g) => (
+          <div class="col">
+            <header>
+              <span class="qcount">{g.players.length}</span>
+              <h2 class="section-title">{g.title}</h2>
+            </header>
+            {g.note && <p class="qnote">{g.note}</p>}
+            {splitByType(g.players).map((sg, _i, arr) => (
+              <>
+                {arr.length > 1 && <p class="subhead">{sg.label}</p>}
+                <ul>
+                  {sg.items.map(({ p, sub, tag }) => (
+                    <li>
+                      <a href={`/players/${p.slug}`}>
+                        <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} />
+                        <span class="who">{p.name}<span class="sub">{sub}</span></span>
+                        {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .others { margin-top: 18px; }
+  .others-head {
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .ttl {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--navy);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 4px 22px;
+    padding: 14px;
+    align-items: start;
+  }
+  .col header { display: flex; align-items: baseline; gap: 9px; margin-bottom: 6px; }
+  .qcount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .col header .section-title { flex: 1; margin: 0; border-bottom: none; padding-bottom: 0; }
+  .qnote { margin: 0 0 8px; font-size: 12px; color: var(--text-mut); max-width: 40ch; }
+  .subhead {
+    margin: 8px 0 1px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-mut);
+  }
+  .col ul + .subhead { margin-top: 9px; }
+  .col ul { list-style: none; margin: 0 0 12px; padding: 0; }
+  .col li a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 0;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .col li a:hover { text-decoration: none; }
+  .col li a:hover .who { color: var(--navy); text-decoration: underline; }
+  .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+  .sub { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .tail { margin-left: auto; flex-shrink: 0; }
+</style>

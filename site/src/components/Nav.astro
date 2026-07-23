@@ -1,14 +1,28 @@
 ---
-const links = [
-  { href: '/', label: 'Stats' },
-  { href: '/outlook', label: 'Roster Outlook' },
-  { href: '/draft', label: 'Draft' },
-  { href: '/leagues', label: 'By League' },
+// Tabs serve two distinct jobs, so they're grouped by purpose: the spring
+// roster (how the 2027 team is taking shape) and the summer-league following
+// (how the guys are doing right now). Roster leads — it's the core audience tie.
+const groups = [
+  {
+    label: 'Roster',
+    links: [
+      { href: '/', label: 'Outlook' },
+      { href: '/draft', label: 'Draft' },
+    ],
+  },
+  {
+    label: 'Summer 2026',
+    links: [
+      { href: '/stats', label: 'Stats' },
+      { href: '/leagues', label: 'By League' },
+    ],
+  },
 ];
 const current = Astro.url.pathname;
 function isCurrent(href: string): boolean {
-  // Stats is home and owns the player deep-dives it links out to.
-  if (href === '/') return current === '/' || current.startsWith('/players');
+  // Outlook is home; Stats owns the player deep-dives it links out to.
+  if (href === '/') return current === '/';
+  if (href === '/stats') return current.startsWith('/stats') || current.startsWith('/players');
   return current.startsWith(href);
 }
 ---
@@ -16,8 +30,18 @@ function isCurrent(href: string): boolean {
   <div class="wrap bar">
     <a class="brand" href="/">BASEBALL TRACKING <span>GT</span></a>
     <div class="links">
-      {links.map((l) => (
-        <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+      {groups.map((g, i) => (
+        <>
+          {i > 0 && <span class="vr" aria-hidden="true"></span>}
+          <div class="grp" role="group" aria-label={g.label}>
+            <span class="glabel" aria-hidden="true">{g.label}</span>
+            <div class="gtabs">
+              {g.links.map((l) => (
+                <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+              ))}
+            </div>
+          </div>
+        </>
       ))}
     </div>
   </div>
@@ -36,7 +60,7 @@ function isCurrent(href: string): boolean {
     min-height: 52px;
     padding-top: 6px;
     padding-bottom: 6px;
-    row-gap: 2px;
+    row-gap: 4px;
   }
   .brand {
     color: var(--on-navy);
@@ -47,24 +71,38 @@ function isCurrent(href: string): boolean {
   }
   .brand span { color: var(--gold); }
   .brand:hover { text-decoration: none; color: var(--gold-light); }
-  .links { display: flex; flex-wrap: wrap; }
-  .links a {
+
+  /* Two purpose groups, each under a quiet eyebrow, split by a hairline. */
+  .links { display: flex; align-items: stretch; flex-wrap: wrap; row-gap: 4px; }
+  .grp { display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+  .glabel {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    color: var(--on-navy-faint);
+  }
+  .gtabs { display: flex; gap: 16px; }
+  .gtabs a {
     color: var(--on-navy-mut);
     font-size: 13px;
     font-weight: 600;
-    margin-left: 18px;
-    padding: 4px 2px;
+    padding: 2px 1px;
     border-bottom: 2px solid transparent;
-    white-space: nowrap; /* labels never break mid-phrase ("2027 / Outlook") */
+    white-space: nowrap; /* labels never break mid-phrase */
   }
-  .links a:first-child { margin-left: 0; }
-  @media (max-width: 420px) {
-    .brand { font-size: 18px; }
-    .links a { margin-left: 12px; }
-  }
-  .links a:hover { color: var(--on-navy); text-decoration: none; }
-  .links a[aria-current='page'] {
+  .gtabs a:hover { color: var(--on-navy); text-decoration: none; }
+  .gtabs a[aria-current='page'] {
     color: var(--on-navy);
     border-bottom-color: var(--gold);
+  }
+  .vr { width: 1px; align-self: stretch; background: rgba(255, 255, 255, 0.16); margin: 0 16px; }
+
+  @media (max-width: 420px) {
+    .brand { font-size: 18px; }
+    .gtabs { gap: 12px; }
+    .vr { margin: 0 11px; }
   }
 </style>

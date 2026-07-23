@@ -95,7 +95,7 @@ const shareDesc = [
 ---
 <Base title={`${player.name} — Baseball Tracking GT`}
   description={`${player.name} — ${shareDesc} · 2026 summer tracking.`}>
-  <a class="back" id="back-link" href="/">← All players</a>
+  <a class="back" id="back-link" href="/stats">← All players</a>
   <article class="card profile">
     <PlayerHero player={player} league={league} />
 
@@ -218,7 +218,7 @@ const shareDesc = [
     let fromDashboard = false;
     try {
       const ref = new URL(document.referrer);
-      fromDashboard = ref.origin === location.origin && ref.pathname === '/';
+      fromDashboard = ref.origin === location.origin && ref.pathname === '/stats';
     } catch {
       /* unparseable referrer: use the href fallback */
     }
