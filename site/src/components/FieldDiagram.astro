@@ -1,20 +1,33 @@
 ---
+// DIRECTION CONTRACT
+// THESIS: the park render is the page's signature; the roster reveals itself
+//   through the field, not on top of it. Refuses the faces-pasted-on-grass
+//   collage this category defaults to.
+// OWN-WORLD: Under the Lights tokens — flat Mac Nease illustration with
+//   white count plates at true positions as the only marks and controls,
+//   card-white detail panels; provenance speaks from the + badge tooltip.
+// STORY: a fan sees the whole 2027 team standing at real positions in one
+//   glance, touches a group, and the group steps forward as faces + facts;
+//   any face links deeper.
+// FIRST VIEWPORT: full-width park, five plates at true spots (P on the
+//   rubber, IF at 2B, UTIL at the on-deck circle). No face grids at rest.
+// FORM: user-pinned direction (dots-on-render + expand-on-demand), chosen
+//   from two rendered specimens; hover/tap/keyboard all first-class.
 import Headshot from './Headshot.astro';
-import type { Player } from '../lib/data';
-
-// Mac Nease Baseball Park (at Russ Chandler Stadium), drawn from its real
-// dimensions (330-358-394-390-362-339-335), flat MLB-app style: asymmetric
-// fence with wall band and warning track, foul territory, true infield
-// proportions — plotted at 1.5px/ft with home plate at (480,660). Position
-// groups: C / IF / OF on the field, UTIL (multi-position players) between
-// IF and OF, pitchers off to the side. Returning wear the solid gold ring,
-// arrivals a dashed one. Hovering a face shows a next-season tooltip.
+import PercentileChip from './PercentileChip.astro';
+import ProvenanceTag from './ProvenanceTag.astro';
+import { isSampleLeague, provenanceLabel } from '../lib/data';
+import type { Player, Slider } from '../lib/data';
 
 interface Props {
   returning: Player[];
   arriving: Player[];
+  /** Slugs whose arrival is undecided (drafted, unsigned) — amber ring,
+      never the + badge. */
+  undecided?: string[];
 }
-const { returning, arriving } = Astro.props;
+const { returning, arriving, undecided = [] } = Astro.props;
+const undecidedSet = new Set(undecided);
 
 type Group = 'P' | 'C' | 'IF' | 'OF' | 'UT';
 
@@ -31,145 +44,290 @@ function group(pos: string): Group {
   return mapped.size > 1 ? 'UT' : ([...mapped][0] as Group);
 }
 
-interface Member {
-  p: Player;
-  arriving: boolean;
-  meta: string;
-  status: string;
-}
-
-function member(p: Player, arr: boolean): Member {
-  const status = p.gtStatus === 'freshman' ? 'Incoming freshman'
-    : p.gtStatus === 'transfer' ? 'Incoming transfer'
-    : 'Returning';
-  return {
-    p,
-    arriving: arr,
-    meta: [p.position || '—', p.classYear].filter(Boolean).join(' · '),
-    status,
-  };
-}
-
+interface Member { p: Player; arriving: boolean; }
 const members: Member[] = [
-  ...returning.map((p) => member(p, false)),
-  ...arriving.map((p) => member(p, true)),
+  ...returning.map((p) => ({ p, arriving: false })),
+  ...arriving.map((p) => ({ p, arriving: true })),
 ];
-
 const groups: Record<Group, Member[]> = { P: [], C: [], IF: [], OF: [], UT: [] };
 for (const m of members) groups[group(m.p.position)].push(m);
 for (const key of Object.keys(groups) as Group[]) {
   groups[key].sort((a, b) => Number(a.arriving) - Number(b.arriving));
 }
 
-const FIELD_ZONES: { key: Group; x: number; y: number; label: string }[] = [
-  { key: 'OF', x: 50, y: 30, label: 'OF' },
-  { key: 'UT', x: 50, y: 44, label: 'UTIL' },
-  { key: 'IF', x: 50, y: 59.5, label: 'IF' },
-  { key: 'C', x: 50, y: 90, label: 'C' },
-];
-const summary = (['C', 'IF', 'UT', 'OF', 'P'] as Group[])
-  .map((k) => `${k === 'UT' ? 'UTIL' : k} ${groups[k].length}`)
-  .join(', ');
+// Headline percentile for the detail cards (real leagues only — the no-fake-
+// data rule keeps fixture feeds out).
+function summerPct(p: Player): number | null {
+  if (isSampleLeague(p.summer.leagueKey)) return null;
+  const side = p.hitting ? 'hitting' : p.pitching ? 'pitching' : null;
+  if (!side) return null;
+  const metric = side === 'hitting' ? 'ops' : 'era';
+  const s: Slider | undefined = p[side]?.sliders?.find((x) => x.metric === metric);
+  return s ? s.percentile : null;
+}
+
+// Plates stand at true spots: OF in the outfield, IF at second base,
+// P on the rubber, C behind the plate, UTIL at the first-base on-deck
+// circle (adjacent to the field, still on the render).
+interface Zone {
+  key: Group;
+  label: string;
+  full: string;
+  plate: { x: number; y: number };
+}
+const ZONES: Zone[] = [
+  { key: 'OF', label: 'OF', full: 'Outfield', plate: { x: 480, y: 252 } },
+  { key: 'UT', label: 'UTIL', full: 'Utility', plate: { x: 560, y: 607 } },
+  { key: 'P', label: 'P', full: 'Pitchers', plate: { x: 480, y: 572 } },
+  { key: 'IF', label: 'IF', full: 'Infield', plate: { x: 480, y: 448 } },
+  { key: 'C', label: 'C', full: 'Catchers', plate: { x: 480, y: 668 } },
+].filter((z) => groups[z.key].length > 0);
+
+const summary = ZONES.map((z) => `${z.label} ${groups[z.key].length}`).join(', ');
+
+// The open state is a hand of trading cards: per-card fan transforms are
+// precomputed here (rotation, x-spread, arc dip) so the CSS stays dumb.
+// A hand row holds at most nine cards at a near-full-visibility pitch —
+// bigger groups deal into stacked rows so every card stays readable.
+const CARD_W = 112;
+const ROW_MAX = 7;
+function fanPitch(n: number): number {
+  return n > 1 ? Math.min(96, (920 - CARD_W) / (n - 1)) : 0;
+}
+function fan(n: number) {
+  const pitch = fanPitch(n);
+  const step = n > 1 ? Math.min(8, 36 / (n - 1)) : 0;
+  return Array.from({ length: n }, (_, i) => {
+    const off = i - (n - 1) / 2;
+    return { tx: off * pitch, ty: Math.abs(off) ** 1.7 * 5.5, rot: off * step };
+  });
+}
+function chunkRows(arr: Member[]): Member[][] {
+  const nrows = Math.max(1, Math.ceil(arr.length / ROW_MAX));
+  const base = Math.floor(arr.length / nrows);
+  let extra = arr.length % nrows;
+  const rows: Member[][] = [];
+  let idx = 0;
+  for (let r = 0; r < nrows; r++) {
+    const size = base + (extra-- > 0 ? 1 : 0);
+    rows.push(arr.slice(idx, idx + size));
+    idx += size;
+  }
+  return rows;
+}
+interface Hand { label: string | null; rows: Member[][]; }
+// Pitchers deal into handedness sub-hands — the split a fan actually thinks in.
+function hands(key: Group): Hand[] {
+  const ms = groups[key];
+  if (key === 'P') {
+    const lhp = ms.filter((m) => (m.p.position || '').toUpperCase().includes('LHP'));
+    const rhp = ms.filter((m) => !(m.p.position || '').toUpperCase().includes('LHP'));
+    const out: Hand[] = [];
+    if (lhp.length) out.push({ label: `Left-handed · ${lhp.length}`, rows: chunkRows(lhp) });
+    if (rhp.length) out.push({ label: `Right-handed · ${rhp.length}`, rows: chunkRows(rhp) });
+    return out;
+  }
+  return [{ label: null, rows: chunkRows(ms) }];
+}
 
 // Fence vertices from the published distances, ~15° apart pole to pole.
 const FENCE = 'M130 310 L212 195 L327 89 L480 75 L621 136 L734 220 L835 305';
 const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
 ---
-<div class="layout">
-  <div class="field-crop">
-  <div class="field" role="img" aria-label={`2027 roster by position group at Mac Nease Baseball Park: ${summary}`}>
-    <svg viewBox="0 0 960 780" aria-hidden="true">
-      <defs>
-        <clipPath id="park"><path d={SILHOUETTE} /></clipPath>
-      </defs>
-      <!-- grass: fair + foul territory in one silhouette -->
-      <path d={SILHOUETTE} class="grass" />
-      <!-- warning track hugging the fence contour -->
-      <path d={FENCE} class="track" clip-path="url(#park)" />
-      <!-- outfield wall -->
-      <path d={FENCE} class="wall" />
-      <!-- infield dirt (95ft radius from the mound, as built) -->
-      <circle cx="480" cy="569" r="143" class="dirt" clip-path="url(#park)" />
-      <!-- infield grass cut -->
-      <path d="M480 646 L566 566 L480 486 L394 566 Z" class="grass-cut" />
-      <!-- mound + rubber -->
-      <circle cx="480" cy="569" r="15" class="mound" />
-      <rect x="474" y="566" width="12" height="4" rx="1" class="rubber" />
-      <!-- foul lines -->
-      <path d="M478 656 L130 310 M482 656 L835 305" class="foul" />
-      <!-- bases + plate -->
-      <rect x="570" y="559" width="11" height="11" class="base" transform="rotate(45 575 565)" />
-      <rect x="475" y="464" width="11" height="11" class="base" transform="rotate(45 480 469)" />
-      <rect x="379" y="559" width="11" height="11" class="base" transform="rotate(45 384 565)" />
-      <rect x="475" y="650" width="10" height="10" class="base" transform="rotate(45 480 655)" />
-      <!-- distance markers on the wall -->
-      <circle cx="130" cy="310" r="4.5" class="marker" />
-      <circle cx="212" cy="195" r="4.5" class="marker" />
-      <circle cx="327" cy="89" r="4.5" class="marker" />
-      <circle cx="480" cy="75" r="4.5" class="marker" />
-      <circle cx="621" cy="136" r="4.5" class="marker" />
-      <circle cx="734" cy="220" r="4.5" class="marker" />
-      <circle cx="835" cy="305" r="4.5" class="marker" />
-      <!-- park name + real wall distances -->
-      <text x="480" y="178" class="wm">Mac Nease Baseball Park</text>
-      <text x="114" y="322" text-anchor="end" class="dist">330'</text>
-      <text x="196" y="186" text-anchor="end" class="dist">358'</text>
-      <text x="322" y="72" text-anchor="middle" class="dist">394'</text>
-      <text x="490" y="58" text-anchor="middle" class="dist">390'</text>
-      <text x="638" y="122" text-anchor="start" class="dist">362'</text>
-      <text x="750" y="208" text-anchor="start" class="dist">339'</text>
-      <text x="852" y="318" text-anchor="start" class="dist">335'</text>
-    </svg>
-    {FIELD_ZONES.filter((z) => groups[z.key].length > 0).map((z) => (
-      <div class="zone" style={`left:${z.x}%;top:${z.y}%`}>
-        <span class="chips">
-          {groups[z.key].map((m) => (
-            <a
-              class={m.arriving ? 'arr' : 'ret'}
-              href={`/players/${m.p.slug}`}
-              aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
-            >
-              <Headshot name={m.p.name} photo={m.p.photo} size={44} variant="bust" />
-              <span class="tip" role="tooltip">
-                <strong>{m.p.name}</strong>
-                <span class="meta">{m.meta}</span>
-                <span class="st">{m.status}</span>
-              </span>
-            </a>
-          ))}
-        </span>
-        <span class="tag">{z.label} · {groups[z.key].length}</span>
-      </div>
-    ))}
-  </div>
-  </div>
-  {groups.P.length > 0 && (
-    <div class="staff">
-      <span class="tag">P · {groups.P.length}</span>
-      <span class="chips">
-        {groups.P.map((m) => (
-          <a
-            class={m.arriving ? 'arr-l' : ''}
-            href={`/players/${m.p.slug}`}
-            aria-label={`${m.p.name} — ${m.meta}, ${m.status}`}
-          >
-            <Headshot name={m.p.name} photo={m.p.photo} size={40} variant="bust" />
-            <span class="sname">{m.p.name.split(' ').slice(-1)[0]}</span>
-            <span class="tip" role="tooltip">
-              <strong>{m.p.name}</strong>
-              <span class="meta">{m.meta}</span>
-              <span class="st">{m.status}</span>
-            </span>
-          </a>
+<div class="crop">
+<div class="field" role="group" aria-label={`2027 roster by position group at Mac Nease Baseball Park: ${summary}. Each group expands to its players.`}>
+  <svg viewBox="0 0 960 780" aria-hidden="true">
+    <defs>
+      <clipPath id="park"><path d={SILHOUETTE} /></clipPath>
+    </defs>
+    <path d={SILHOUETTE} class="grass" />
+    <path d={FENCE} class="track" clip-path="url(#park)" />
+    <path d={FENCE} class="wall" />
+    <circle cx="480" cy="569" r="143" class="dirt" clip-path="url(#park)" />
+    <path d="M480 646 L566 566 L480 486 L394 566 Z" class="grass-cut" />
+    <circle cx="480" cy="569" r="15" class="mound" />
+    <!-- on-deck circles: painted rings in the foul-side dirt -->
+    <circle cx="560" cy="646" r="18" class="deck" clip-path="url(#park)" />
+    <circle cx="400" cy="646" r="18" class="deck" clip-path="url(#park)" />
+    <path d="M478 656 L130 310 M482 656 L835 305" class="foul" />
+    <rect x="570" y="559" width="11" height="11" class="base" transform="rotate(45 575 565)" />
+    <rect x="475" y="464" width="11" height="11" class="base" transform="rotate(45 480 469)" />
+    <rect x="379" y="559" width="11" height="11" class="base" transform="rotate(45 384 565)" />
+    <rect x="475" y="650" width="10" height="10" class="base" transform="rotate(45 480 655)" />
+    <circle cx="130" cy="310" r="4.5" class="marker" />
+    <circle cx="212" cy="195" r="4.5" class="marker" />
+    <circle cx="327" cy="89" r="4.5" class="marker" />
+    <circle cx="480" cy="75" r="4.5" class="marker" />
+    <circle cx="621" cy="136" r="4.5" class="marker" />
+    <circle cx="734" cy="220" r="4.5" class="marker" />
+    <circle cx="835" cy="305" r="4.5" class="marker" />
+    <text x="480" y="150" class="wm">Mac Nease Baseball Park</text>
+    <text x="114" y="322" text-anchor="end" class="dist">330'</text>
+    <text x="196" y="186" text-anchor="end" class="dist">358'</text>
+    <text x="322" y="72" text-anchor="middle" class="dist">394'</text>
+    <text x="490" y="58" text-anchor="middle" class="dist">390'</text>
+    <text x="638" y="122" text-anchor="start" class="dist">362'</text>
+    <text x="750" y="208" text-anchor="start" class="dist">339'</text>
+    <text x="852" y="318" text-anchor="start" class="dist">335'</text>
+  </svg>
+
+  {ZONES.map((z) => (
+    <button
+      type="button"
+      class="plate"
+      data-group={z.key}
+      aria-expanded="false"
+      aria-controls={`panel-${z.key}`}
+      aria-label={`${z.full} group, ${groups[z.key].length} players — expand`}
+      style={`left:${(z.plate.x / 960) * 100}%;top:${(z.plate.y / 780) * 100}%`}
+    >
+      <span class="stack">
+        {groups[z.key].slice(0, 3).map((m) => (
+          <span class="scard"><Headshot name={m.p.name} photo={m.p.photo} size={26} variant="bust" /></span>
         ))}
       </span>
+      <span class="scount" aria-hidden="true">{groups[z.key].length}</span>
+    </button>
+  ))}
+
+  {ZONES.map((z) => {
+    const n = groups[z.key].length;
+    const zh = hands(z.key);
+    const maxRow = Math.max(...zh.flatMap((h) => h.rows.map((r) => r.length)));
+    let ci = 0;
+    return (
+    <div class={`panel pn-${z.key}`} id={`panel-${z.key}`} data-group={z.key} role="region"
+      aria-label={`${z.full} group, ${n} players`}
+      style={`--fanw:${CARD_W + (maxRow - 1) * fanPitch(maxRow)}px`}>
+      <p class="phead">{z.full} · {n}
+        <button type="button" class="pclose" aria-label={`Close ${z.full} group`}>×</button>
+      </p>
+      {zh.map((h) => (
+        <>
+          {h.label && <p class="shead"><span class="shp">{h.label}</span></p>}
+          {h.rows.map((row) => {
+            const f = fan(row.length);
+            return (
+              <div class="prow">
+                {row.map((m, i) => {
+                  const gi = ci++;
+                  const pct = summerPct(m.p);
+                  const limbo = undecidedSet.has(m.p.slug);
+                  const fanw = CARD_W + (maxRow - 1) * fanPitch(maxRow) + 36;
+                  const txp = ((f[i].tx / fanw) * 100).toFixed(2);
+                  return (
+                    <a class="fcard" href={`/players/${m.p.slug}`} data-slug={m.p.slug}
+                      style={`--i:${gi};--txp:${txp}%;--ty:${f[i].ty.toFixed(1)}px;--rot:${f[i].rot.toFixed(2)}deg`}>
+                      <Headshot name={m.p.name} photo={m.p.photo} size={64} variant="bust"
+                        incoming={m.arriving && !limbo} incomingTitle={provenanceLabel(m.p)} />
+                      <span class="cname">{m.p.name}</span>
+                      <span class="csub">{[m.p.position || '—', m.p.classYear].filter(Boolean).join(' · ')}</span>
+                      {pct !== null && <span class="cchip"><PercentileChip percentile={pct} metric={m.p.hitting ? 'OPS' : 'ERA'} /></span>}
+                      {limbo && <span class="ctag"><ProvenanceTag kind="drafted" deadline={null} /></span>}
+                    </a>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </>
+      ))}
     </div>
-  )}
+  )})}
+</div>
 </div>
 
+<script>
+  const field = document.querySelector<HTMLElement>('.field');
+  const plates = [...document.querySelectorAll<HTMLButtonElement>('.field .plate')];
+  const panels = [...document.querySelectorAll<HTMLElement>('.field .panel')];
+  const hoverFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+  let pinned = false;
+  let openTimer = 0;
+  let closeTimer = 0;
+
+  function current(): string | null {
+    return field?.dataset.open ?? null;
+  }
+
+  function setOpen(key: string | null) {
+    if (!field) return;
+    if (key) field.dataset.open = key;
+    else delete field.dataset.open;
+    plates.forEach((b) => b.setAttribute('aria-expanded', String(b.dataset.group === key)));
+    panels.forEach((p) => p.classList.toggle('open', p.dataset.group === key));
+  }
+
+  function scheduleClose() {
+    if (pinned) return;
+    window.clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(() => setOpen(null), 180);
+  }
+  function cancelClose() {
+    window.clearTimeout(closeTimer);
+  }
+
+  plates.forEach((plate) => {
+    const key = plate.dataset.group!;
+    plate.addEventListener('click', () => {
+      if (current() === key && pinned) {
+        pinned = false;
+        setOpen(null);
+      } else {
+        pinned = true;
+        setOpen(key);
+      }
+    });
+    plate.addEventListener('mouseenter', () => {
+      if (!hoverFine.matches) return;
+      cancelClose();
+      window.clearTimeout(openTimer);
+      // small intent delay so sweeping the cursor across the park stays calm
+      openTimer = window.setTimeout(() => {
+        if (!pinned) setOpen(key);
+      }, 70);
+    });
+    plate.addEventListener('mouseleave', () => {
+      window.clearTimeout(openTimer);
+      if (hoverFine.matches) scheduleClose();
+    });
+  });
+
+  panels.forEach((panel) => {
+    panel.addEventListener('mouseenter', cancelClose);
+    panel.addEventListener('mouseleave', () => {
+      if (hoverFine.matches) scheduleClose();
+    });
+    // explicit close — the panel covers its own plate on small screens,
+    // and touch has no Esc
+    panel.querySelector('.pclose')?.addEventListener('click', () => {
+      const key = panel.dataset.group!;
+      pinned = false;
+      setOpen(null);
+      plates.find((b) => b.dataset.group === key)?.focus();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !current()) return;
+    const key = current();
+    pinned = false;
+    setOpen(null);
+    plates.find((b) => b.dataset.group === key)?.focus();
+  });
+
+  // clicking the park outside any plate/panel closes a pinned group
+  document.addEventListener('click', (e) => {
+    if (!current()) return;
+    const t = e.target as HTMLElement;
+    if (t.closest('.plate') || t.closest('.panel')) return;
+    pinned = false;
+    setOpen(null);
+  });
+</script>
+
 <style>
-  .layout { display: flex; gap: 22px; align-items: flex-start; }
-  .field-crop { flex: 1; min-width: 0; overflow: hidden; }
   .field {
     position: relative;
     aspect-ratio: 960 / 780; /* must match the viewBox exactly — a forced
@@ -183,7 +341,6 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
   .wall { fill: none; stroke: var(--grass-dark); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
   .dirt { fill: var(--dirt); }
   .mound { fill: var(--dirt); }
-  .rubber { fill: var(--field-white); }
   .base { fill: var(--field-white); }
   .foul { fill: none; stroke: var(--field-white); stroke-width: 3; stroke-linecap: round; opacity: 0.9; }
   .wm {
@@ -204,152 +361,296 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     font-variant-numeric: tabular-nums;
   }
 
-  .zone {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    max-width: 300px; /* six 46px bust cards per row — clusters stack instead of stretching */
-  }
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2px;
-    align-items: center;
-  }
-  .chips a { display: inline-flex; border-radius: 50%; position: relative; }
-  .chips a:hover { transform: translateY(-2px); z-index: 6; }
-  .arr :global(.shot) { border-style: dashed; border-color: var(--card); }
-  .tag {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.06em;
-    color: var(--navy);
-    background: var(--card);
-    border-radius: 999px;
-    padding: 1px 10px;
-    white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  }
-
-  /* next-season tooltip */
-  .tip {
-    position: absolute;
-    bottom: calc(100% + 9px);
-    left: 50%;
-    transform: translateX(-50%) translateY(3px);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: max-content;
-    max-width: 200px;
-    background: var(--navy-dark);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 8px;
-    padding: 9px 11px;
-    text-align: left;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    z-index: 7;
-  }
-  .tip::after {
+  .deck { fill: none; stroke: var(--field-white); stroke-width: 2.5; opacity: 0.9; }
+  /* while a hand is up, the park steps back */
+  .field::after {
     content: '';
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--navy-dark);
+    inset: 0;
+    background: var(--navy-dark);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
   }
-  .tip strong {
+  [data-open].field::after { opacity: 0.22; }
+  /* an open group owns the stage — sibling stacks recede */
+  [data-open] .plate { opacity: 0.45; }
+
+  /* Group stacks — a fanned hand of the group's cards; the fan is the
+     invitation to open it. Location on the park is the label. */
+  .plate {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .stack { position: relative; display: block; width: 62px; height: 40px; }
+  .scard {
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    margin-left: -13px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  }
+  .scard:nth-child(1) { transform: rotate(-10deg) translate(-13px, 2px); }
+  .scard:nth-child(2) { z-index: 2; }
+  .scard:nth-child(3) { transform: rotate(10deg) translate(13px, 2px); }
+  .scount {
+    position: absolute;
+    top: -9px;
+    right: -7px;
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--navy);
+    color: var(--on-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 17px;
+    text-align: center;
+    border: 2px solid var(--card);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    z-index: 4;
+  }
+  /* the fan spreads when courted — hover, focus, or open */
+  .plate:hover .scard:nth-child(1), .plate:focus-visible .scard:nth-child(1) { transform: rotate(-16deg) translate(-19px, 0); }
+  .plate:hover .scard:nth-child(3), .plate:focus-visible .scard:nth-child(3) { transform: rotate(16deg) translate(19px, 0); }
+  .plate:hover .stack, .plate:focus-visible .stack { translate: 0 -2px; }
+  .plate:focus-visible { outline: 2px solid var(--navy); outline-offset: 5px; border-radius: 12px; }
+  [data-open='OF'] .plate[data-group='OF'], [data-open='UT'] .plate[data-group='UT'],
+  [data-open='P'] .plate[data-group='P'], [data-open='IF'] .plate[data-group='IF'],
+  [data-open='C'] .plate[data-group='C'] { opacity: 1; }
+  [data-open='OF'] .plate[data-group='OF'] .scard:nth-child(1), [data-open='UT'] .plate[data-group='UT'] .scard:nth-child(1),
+  [data-open='P'] .plate[data-group='P'] .scard:nth-child(1), [data-open='IF'] .plate[data-group='IF'] .scard:nth-child(1),
+  [data-open='C'] .plate[data-group='C'] .scard:nth-child(1) { transform: rotate(-16deg) translate(-19px, 0); }
+  [data-open='OF'] .plate[data-group='OF'] .scard:nth-child(3), [data-open='UT'] .plate[data-group='UT'] .scard:nth-child(3),
+  [data-open='P'] .plate[data-group='P'] .scard:nth-child(3), [data-open='IF'] .plate[data-group='IF'] .scard:nth-child(3),
+  [data-open='C'] .plate[data-group='C'] .scard:nth-child(3) { transform: rotate(16deg) translate(19px, 0); }
+
+  /* Detail panels — the group's hand of cards, held up over the park. */
+  .panel {
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    width: min(calc(var(--fanw) + 36px), 96%);
+    z-index: 4;
+    visibility: hidden;
+    text-align: center;
+  }
+  .panel.open { visibility: visible; }
+  .pn-OF { top: 33%; }
+  .pn-UT { top: 34%; }
+  .pn-P  { top: 10%; }
+  .pn-IF { top: 26%; }
+  .pn-C  { bottom: 22%; }
+  .phead {
+    margin: 0 auto 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 15px;
-    letter-spacing: 0.02em;
-    color: var(--on-navy);
-    white-space: nowrap;
-  }
-  .tip .meta { font-size: 11px; color: var(--on-navy-mut); white-space: nowrap; }
-  .tip .st {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 11px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--gold-light);
-    white-space: nowrap;
+    color: var(--navy);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 2px 8px 2px 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    opacity: 0;
   }
-  .chips a:hover .tip,
-  .chips a:focus-visible .tip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
+  .panel.open .phead { opacity: 1; }
+  .pclose {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    font-size: 17px;
+    line-height: 1;
+    color: var(--text-mut);
+    cursor: pointer;
   }
-
-  .staff {
-    flex: 0 0 236px;
+  .pclose:hover { background: var(--line-soft); color: var(--text); }
+  .pclose:focus-visible { outline: 2px solid var(--navy); }
+  .prow {
+    position: relative;
+    height: 224px;
+  }
+  .prow + .prow { margin-top: -14px; }
+  /* sub-hand divider: gold rules flanking a named pill — the deal is labeled */
+  .shead {
+    margin: 4px auto 2px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(var(--fanw), 100%);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--navy);
+    opacity: 0;
+  }
+  .shead::before,
+  .shead::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0.75;
+    border-radius: 1px;
+  }
+  .shp {
+    flex-shrink: 0;
+    background: var(--card);
+    border-radius: 999px;
+    padding: 1px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+  .panel.open .shead { opacity: 1; }
+  /* a trading card: the portrait anchors, the details ride below */
+  .fcard {
+    position: absolute;
+    left: calc(50% + var(--txp, 0%));
+    top: 6px;
+    width: 112px;
+    height: 176px; /* every card in the hand is the same card */
+    margin-left: -56px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 12px;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 8px;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 6px 8px;
+    background: var(--card);
+    border: 2px solid var(--gold); /* the trading-card gold frame */
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    color: var(--text);
+    transform: translate(0, 18px) scale(0.72);
+    opacity: 0;
+    transform-origin: 50% 130%;
   }
-  .staff .tag { box-shadow: none; border: 1px solid var(--line); }
-  .staff .chips {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px 6px;
-    width: 100%;
+  .panel.open .fcard {
+    transform: translateY(var(--ty)) rotate(var(--rot));
+    opacity: 1;
   }
-  .staff .chips a { flex-direction: column; align-items: center; gap: 2px; }
-  .sname {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-mut);
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  /* sliding a card up out of the hand to read it */
+  .panel.open .fcard:hover,
+  .panel.open .fcard:focus-visible {
+    transform: translateY(calc(var(--ty) - 18px)) rotate(0deg) scale(1.05);
+    z-index: 9;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.38);
   }
-  .arr-l :global(.shot) { border-style: dashed; border-color: var(--navy-bright); }
+  .fcard:hover { text-decoration: none; }
+  .fcard:hover .cname { color: var(--navy); }
+  .fcard:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  .cname {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .csub { color: var(--text-mut); font-size: 11px; line-height: 1.2; }
+  .cchip { margin-top: 1px; }
+  .ctag { margin-top: 2px; max-width: 100%; }
+  .ctag :global(.ptag) { white-space: normal; display: inline-block; line-height: 1.35; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .chips a { transition: transform var(--t-fast) var(--ease-out); }
-    .tip { transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out), visibility 0s linear var(--t-fast); }
-    .chips a:hover .tip, .chips a:focus-visible .tip { transition-delay: 0s; }
+    .plate { transition: opacity var(--t-fast) var(--ease-out); }
+    .scard { transition: transform var(--t-fast) var(--ease-out); }
+    .stack { transition: translate var(--t-fast) var(--ease-out); }
+    .field::after { transition: opacity 200ms var(--ease-out); }
+    /* the hand fans open in ≤360ms; close snaps back in 150ms (score-bug rule) */
+    .panel { transition: visibility 0s linear 150ms; }
+    .panel.open { transition: visibility 0s; }
+    .phead, .shead { transition: opacity 150ms var(--ease-out); }
+    .fcard {
+      transition:
+        transform 150ms var(--ease-out),
+        opacity 150ms var(--ease-out),
+        box-shadow var(--t-fast) var(--ease-out);
+    }
+    .panel.open .fcard {
+      transition:
+        transform 260ms var(--ease-out),
+        opacity 260ms var(--ease-out),
+        box-shadow var(--t-fast) var(--ease-out);
+      /* stagger caps at 100ms so even P · 20 completes inside the 400ms budget */
+      transition-delay: min(calc(var(--i) * 14ms), 100ms), min(calc(var(--i) * 14ms), 100ms), 0s;
+    }
+    .panel.open .fcard:hover,
+    .panel.open .fcard:focus-visible { transition-delay: 0s, 0s, 0s; }
   }
+
   @media (max-width: 700px) {
-    .layout { flex-direction: column; }
-    .field-crop { flex: none; width: 100%; }
-    .staff { flex: none; width: 100%; }
-    .zone { max-width: 250px; }
-    .chips :global(.shot) { width: 34px !important; height: 42px !important; }
-    .tag { font-size: 12px; padding: 1px 8px; }
+    .stack { width: 52px; height: 34px; }
+    .scard :global(.shot) { width: 22px !important; height: 28px !important; }
+    .scard { margin-left: -11px; }
+    .scount { min-width: 19px; height: 19px; font-size: 12px; line-height: 15px; }
   }
   /* Phones, Gameday-style: the field bleeds to the card edge and crops foul
-     territory at the sides, keeping the playable area large enough that the
-     faces stay on the field. */
+     territory at the sides. Panels size to the VISIBLE window (~66% of the
+     zoomed field), not the cropped canvas, so they never get clipped. */
   @media (max-width: 560px) {
-    .field-crop { margin: 0 -14px; }
+    .crop { margin: 0 -14px; overflow: hidden; }
     .field { width: 150%; margin-left: -25%; }
-    /* taller bust cards need more vertical spread at phone scale */
-    .zone:nth-of-type(1) { top: 27% !important; }
-    .zone:nth-of-type(2) { top: 43% !important; }
-    .zone:nth-of-type(3) { top: 62% !important; }
-    .zone { max-width: 175px; }
-    .chips { gap: 2px; }
-    .chips :global(.shot) { width: 26px !important; height: 32px !important; }
-    .tag { font-size: 12px; }
-    .wm { font-size: 26px; }
+    .wm { display: none; }
     .dist { font-size: 20px; }
+    .panel {
+      width: 65%;
+      max-height: 86%;
+      top: 7% !important;
+      bottom: auto !important;
+      left: 50% !important;
+      translate: -50% 0 !important;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+      padding: 10px 10px 12px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    .phead { display: flex; box-shadow: none; border-radius: 0; padding: 0 0 5px; margin: 0 0 8px; border-bottom: 2px solid var(--gold); justify-content: space-between; }
+    .prow { height: auto; position: static; }
+    .prow + .prow { margin-top: 0; }
+    .shead { display: flex; padding: 0; margin: 8px 0 4px; opacity: 1; width: 100%; }
+    .shp { background: none; box-shadow: none; padding: 0 4px; }
+    /* cards fold back into rows — a fan needs a hand's width */
+    .fcard {
+      position: static;
+      margin: 0 0 6px;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 6px;
+      transform: none;
+      opacity: 1;
+      box-shadow: none;
+      border: none;
+      text-align: left;
+    }
+    .panel.open .fcard,
+    .panel.open .fcard:hover,
+    .panel.open .fcard:focus-visible { transform: none; }
+    .fcard:hover { background: var(--line-soft); }
+    .fcard :global(.shot) { width: 40px !important; height: 50px !important; }
+    .cname { text-align: left; margin: 0; }
+    .csub { margin-left: auto; }
+    .cchip, .ctag { margin: 0; }
   }
 </style>

@@ -76,7 +76,7 @@ def test_league_missing_required_key_rejected(tmp_path):
 def test_assigned_missing_player_type_rejected(tmp_path):
     p = tmp_path / "players.yaml"
     p.write_text(
-        "- {name: A, slug: a, gt_status: transfer,"
+        "- {name: A, slug: a, gt_status: transfer, from_school: Somewhere,"
         " summer: {status: assigned, team: T, league: lg, stats_id: x}}\n"
     )
     l = tmp_path / "leagues.yaml"
@@ -95,3 +95,21 @@ def test_assigned_missing_team_or_stats_id_rejected(tmp_path):
     l.write_text(VALID_LEAGUE)
     with pytest.raises(registry.RegistryError, match="needs team and stats_id"):
         registry.load_all(str(p), str(l))
+
+
+def test_transfer_requires_from_school(tmp_path):
+    p = tmp_path / "players.yaml"
+    p.write_text(
+        "- {name: A, slug: a, gt_status: transfer, summer: {status: unassigned}}\n"
+    )
+    l = tmp_path / "leagues.yaml"
+    l.write_text("{}")
+    with pytest.raises(registry.RegistryError, match="from_school"):
+        registry.load_all(str(p), str(l))
+
+
+def test_seed_transfers_all_have_from_school():
+    players, _ = registry.load_all("pipeline/players.yaml", "pipeline/leagues.yaml")
+    transfers = [p for p in players if p["gt_status"] == "transfer"]
+    assert len(transfers) == 11
+    assert all(p.get("from_school") for p in transfers)

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fmtDate, fmtEra, fmtPct, fmtPer9, fmtRate3, outsToIp } from '../src/lib/format';
+import { fmtDate, fmtEra, fmtPct, fmtPer9, fmtRate3, outsToIp, classFull } from '../src/lib/format';
 
 describe('formatters', () => {
   it('formats batting rates savant-style', () => {
@@ -32,5 +32,22 @@ describe('formatters', () => {
 
   it('formats ISO dates as short month-day', () => {
     expect(fmtDate('2026-07-12')).toBe('Jul 12');
+  });
+});
+
+describe('classFull', () => {
+  it('writes out class years', () => {
+    expect(classFull('FR')).toBe('Freshman');
+    expect(classFull('SO')).toBe('Sophomore');
+    expect(classFull('JR')).toBe('Junior');
+    expect(classFull('SR')).toBe('Senior');
+  });
+  it('expands redshirt prefixes', () => {
+    expect(classFull('R-SO')).toBe('Redshirt Sophomore');
+    expect(classFull('R-SR')).toBe('Redshirt Senior');
+  });
+  it('passes unknown values through', () => {
+    expect(classFull('GR')).toBe('GR');
+    expect(classFull('')).toBe('');
   });
 });

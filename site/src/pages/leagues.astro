@@ -1,9 +1,11 @@
 ---
 import Headshot from '../components/Headshot.astro';
 import PercentileChip from '../components/PercentileChip.astro';
+import ProvenanceTag from '../components/ProvenanceTag.astro';
 import Base from '../layouts/Base.astro';
-import { getLeagues, getPlayer } from '../lib/data';
+import { getLeagues, getPlayer, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
+import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 
 const leagues = getLeagues();
 
@@ -13,6 +15,12 @@ function headlinePct(p: Player): number | null {
   const metric = side === 'hitting' ? 'ops' : 'era';
   return p[side]?.sliders?.find((s) => s.metric === metric)?.percentile ?? null;
 }
+
+const draftLimbo = new Set(
+  getDraft().players
+    .filter((d) => d.gtRole === 'signee' && d.status === 'unsigned' && d.slug)
+    .map((d) => d.slug as string),
+);
 
 ---
 <Base title="Leagues — GT Summer Tracker">
@@ -37,8 +45,15 @@ function headlinePct(p: Player): number | null {
             return (
               <li>
                 <a href={`/players/${p.slug}`}>
-                  <Headshot name={p.name} photo={p.photo} size={28} />
-                  <span class="who">{p.name}<span class="team">{p.summer.team}</span></span>
+                  <Headshot name={p.name} photo={p.photo} size={26} variant="bust"
+                    incoming={p.gtStatus !== 'returning' && !draftLimbo.has(p.slug)}
+                    incomingTitle={provenanceLabel(p)} />
+                  <span class="who">
+                    <span class="nm">{p.name} {draftLimbo.has(p.slug) && (
+                      <ProvenanceTag kind="drafted" deadline={isDeadlinePending() ? DEADLINE_LABEL : null} />
+                    )}</span>
+                    <span class="team">{p.summer.team}</span>
+                  </span>
                   {pct !== null && <span class="tail"><PercentileChip percentile={pct} /></span>}
                 </a>
               </li>

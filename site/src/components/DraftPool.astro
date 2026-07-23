@@ -1,57 +1,63 @@
 ---
-import { fmtMoneyCompact, poolSummary } from '../lib/draft';
+// The class-money band: what GT's draftees actually signed for, one segment
+// per signing (hover/focus names it), with MLB's slot total as a labeled
+// reference — not a denominator. No clamp, no impossible fraction. After the
+// deadline the band reads as the final ledger line.
+import { fmtMoney, fmtMoneyCompact, poolSummary } from '../lib/draft';
 import type { DraftPlayer } from '../lib/draft';
-
-// The draft-week signature: how much of the class's slot-value pool has turned
-// into signed money, with the deadline visible. After July 27 it degrades into
-// the archival "how the class signed" display.
 
 interface Props {
   players: DraftPlayer[];
+  /** Signing period still open (isDeadlinePending at build time). */
+  pending: boolean;
 }
-const { players } = Astro.props;
+const { players, pending } = Astro.props;
 const s = poolSummary(players);
-const pctFilled = s.slotPool > 0 ? Math.min(1, s.signedKnown / s.slotPool) : 0;
 const drafted = players.length;
-const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
+const arrived = players.filter((p) => p.gtRole === 'signee' && p.status === 'did_not_sign').length;
+
+const segs = players
+  .filter((p) => (p.status === 'signed' || p.status === 'signed_udfa') && p.bonus != null)
+  .sort((a, b) => (b.bonus ?? 0) - (a.bonus ?? 0))
+  .map((p, i) => ({
+    id: `dc-${p.personId ?? p.slug ?? i}`,
+    name: p.name,
+    bonus: p.bonus as number,
+    tone: i % 2 === 0 ? 't1' : 't2',
+    pct: ((p.bonus as number) / Math.max(s.signedKnown, 1)) * 100,
+  }));
 ---
-{s.slotPool > 0 && (
-  <section class="pool" aria-label="Draft bonus pool tracker">
+{s.signedKnown > 0 && (
+  <section class="pool" aria-label="Draft class signing money">
     <div class="top">
       <span class="money">
-        <strong>{fmtMoneyCompact(s.signedKnown)}</strong> of {fmtMoneyCompact(s.slotPool)} slot pool committed
+        <strong>{fmtMoneyCompact(s.signedKnown)}</strong> committed across {s.signedCount} signings
       </span>
-      <span class="deadline" id="pool-deadline" data-deadline={DEADLINE_ISO}>
-        Signing deadline: July 27, 5 p.m. ET
+      <span class="mode">
+        {pending
+          ? `Signing period open through July 27`
+          : `Final · signing period closed July 27`}
       </span>
     </div>
-    <div class="bar" role="img" aria-label={`${fmtMoneyCompact(s.signedKnown)} of ${fmtMoneyCompact(s.slotPool)} slot pool committed`}>
-      <div class="fill" style={`width:${(pctFilled * 100).toFixed(1)}%`}></div>
+    <div class="bar" role="group" aria-label={`${fmtMoneyCompact(s.signedKnown)} committed; each segment is one player's bonus`}>
+      {segs.map((g) => (
+        <a class={`seg ${g.tone}`} href={`#${g.id}`} style={`width:${g.pct.toFixed(2)}%`}
+          aria-label={`${g.name}, ${fmtMoney(g.bonus)}`}>
+          <span class="stip" role="tooltip">{g.name} · {fmtMoney(g.bonus)}</span>
+        </a>
+      ))}
     </div>
     <div class="bottom">
       <span>{s.signedCount} of {drafted} drafted Jackets signed</span>
       {s.unsignedCount > 0 && <span>· {s.unsignedCount} unsigned</span>}
+      {arrived > 0 && <span>· {arrived} arrived on campus</span>}
       {s.unreportedCount > 0 && <span>· {s.unreportedCount} signed, terms not yet reported</span>}
+      {s.slotPool > 0 && (
+        <span class="slotref">MLB slot value of GT's picks: {fmtMoneyCompact(s.slotPool)}</span>
+      )}
     </div>
   </section>
 )}
-
-<script>
-  // Countdown is display-only; the static fallback text stays correct without JS.
-  const el = document.getElementById('pool-deadline');
-  if (el?.dataset.deadline) {
-    const ms = Date.parse(el.dataset.deadline) - Date.now();
-    if (ms <= 0) {
-      el.textContent = 'Signing deadline passed — July 27';
-    } else {
-      const days = Math.floor(ms / 86_400_000);
-      const hours = Math.floor((ms % 86_400_000) / 3_600_000);
-      el.textContent = days > 0
-        ? `Deadline in ${days}d ${hours}h — July 27, 5 p.m. ET`
-        : `Deadline in ${hours}h — today, 5 p.m. ET`;
-    }
-  }
-</script>
 
 <style>
   .pool {
@@ -60,7 +66,7 @@ const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
     box-shadow: inset 0 3px 0 var(--gold);
     border-radius: 8px;
     padding: 16px 20px 18px;
-    margin: 0 0 20px;
+    margin: 0 0 16px;
     color: var(--on-navy);
   }
   .top {
@@ -80,31 +86,67 @@ const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
     letter-spacing: 0.01em;
     margin-right: 2px;
   }
-  .deadline {
+  .mode {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--gold-light);
   }
   .bar {
-    height: 12px;
-    border-radius: 6px;
+    display: flex;
+    height: 14px;
+    border-radius: 7px;
+    overflow: visible;
     background: rgba(255, 255, 255, 0.14);
-    overflow: hidden;
   }
-  .fill {
+  .seg {
+    position: relative;
+    display: block;
     height: 100%;
-    border-radius: 6px;
-    background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-light));
+    min-width: 3px; /* the $500 senior sign stays hoverable; the ladder below
+                       carries the exact lengths */
   }
+  .seg.t1 { background: var(--gold); }
+  .seg.t2 { background: var(--gold-deep); }
+  .seg:first-child { border-radius: 7px 0 0 7px; }
+  .seg:last-child { border-radius: 0 7px 7px 0; }
+  .seg:hover, .seg:focus-visible { outline: 2px solid var(--card); outline-offset: 1px; z-index: 2; }
+  .stip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    background: var(--navy-dark);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--on-navy);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 9px;
+    border-radius: 7px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .seg:hover .stip, .seg:focus-visible .stip { opacity: 1; visibility: visible; }
   .bottom {
-    margin-top: 8px;
+    margin-top: 9px;
     font-size: 12px;
     color: var(--on-navy-mut);
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .slotref { margin-left: auto; color: var(--on-navy-faint); }
+  @media (prefers-reduced-motion: no-preference) {
+    .stip { transition: opacity var(--t-fast) var(--ease-out); }
+  }
+  @media (max-width: 560px) {
+    .slotref { margin-left: 0; width: 100%; }
   }
 </style>

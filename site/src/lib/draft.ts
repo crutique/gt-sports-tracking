@@ -27,6 +27,15 @@ export interface DraftData {
   udfa: DraftPlayer[];
 }
 
+/** MLB signing deadline for the 2026 class — 5 p.m. ET, July 27. */
+export const SIGNING_DEADLINE = '2026-07-27T17:00:00-04:00';
+export const DEADLINE_LABEL = 'Jul 27';
+
+/** True while unsigned draftees can still sign (pages degrade after). */
+export function isDeadlinePending(now: Date = new Date()): boolean {
+  return now.getTime() < new Date(SIGNING_DEADLINE).getTime();
+}
+
 export const STATUS_LABEL: Record<DraftStatus, string> = {
   signed: 'Signed',
   unsigned: 'Unsigned',

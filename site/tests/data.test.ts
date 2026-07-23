@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   getAssignedPlayers, getGamelog, getLeagueByKey, getLeagues,
-  getPlayer, getPlayers, getUnassignedPlayers, isSampleLeague,
+  getPlayer, getPlayers, getUnassignedPlayers, isSampleLeague, provenanceLabel,
+  provenanceLabel,
 } from '../src/lib/data';
 
 describe('data access', () => {
@@ -58,5 +59,21 @@ describe('data access', () => {
     expect(getGamelog('riley-hasenstab').length).toBeGreaterThanOrEqual(2);
     expect(getGamelog('jackson-blakely')).toEqual([]);
     expect(getGamelog('will-baker')).toEqual([]);
+  });
+});
+
+describe('provenanceLabel', () => {
+  const base = { fromSchool: null, recruit: null } as any;
+  it('describes a transfer with his origin school', () => {
+    expect(provenanceLabel({ ...base, gtStatus: 'transfer', fromSchool: 'Jacksonville State' }))
+      .toBe('Incoming transfer from Jacksonville State');
+  });
+  it('describes a freshman with his high school when known', () => {
+    expect(provenanceLabel({ ...base, gtStatus: 'freshman', recruit: { high_school: 'Etowah' } }))
+      .toBe('Incoming freshman · Etowah HS');
+    expect(provenanceLabel({ ...base, gtStatus: 'freshman' })).toBe('Incoming freshman');
+  });
+  it('is null for returning players', () => {
+    expect(provenanceLabel({ ...base, gtStatus: 'returning' })).toBeNull();
   });
 });

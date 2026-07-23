@@ -29,3 +29,15 @@ export function fmtDate(iso: string): string {
   const [, m, d] = iso.split('-').map(Number);
   return `${MONTHS[m - 1]} ${d}`;
 }
+
+/** Written-out class year for the card: SO → Sophomore, R-SO → Redshirt Sophomore. */
+export function classFull(cls: string): string {
+  const NAMES: Record<string, string> = {
+    FR: 'Freshman', SO: 'Sophomore', JR: 'Junior', SR: 'Senior',
+  };
+  const redshirt = cls.startsWith('R-');
+  const base = redshirt ? cls.slice(2) : cls;
+  const name = NAMES[base];
+  if (!name) return cls;
+  return redshirt ? `Redshirt ${name}` : name;
+}

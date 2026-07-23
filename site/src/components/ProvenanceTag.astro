@@ -1,0 +1,61 @@
+---
+// Provenance micro-tags: where a player came from, said in about one word.
+// One grammar for every roster list — navy filled = incoming transfer (label
+// is the origin school), gold outlined = incoming freshman, amber = drafted
+// but unsigned (recruit in limbo until the signing deadline). Returning
+// players go untagged: they are the default population. Categorical only —
+// the blue→red ramp stays reserved for performance percentiles.
+interface Props {
+  kind: 'transfer' | 'freshman' | 'drafted' | 'signee';
+  /** Tag text for transfers — the short origin-school name (e.g. "Jax State"). */
+  school?: string | null;
+  /** Full origin school for the tooltip (e.g. "Jacksonville State"). */
+  schoolFull?: string | null;
+  /** Freshman's high school, spoken in the tooltip. */
+  hs?: string | null;
+  /** Draft context for the tooltip (e.g. "R17 by Washington"). */
+  draft?: string | null;
+  /** Deadline label (e.g. "Jul 27") shown in the drafted-limbo tag while
+      signing is still open — pass isDeadlinePending() ? DEADLINE_LABEL : null. */
+  deadline?: string | null;
+}
+const { kind, school, schoolFull, hs, draft, deadline } = Astro.props;
+// The + arrival mark lives on the player card (Headshot `incoming`), not
+// here — the tag carries only the provenance word.
+const label = kind === 'transfer' ? (school ?? 'Transfer')
+  : kind === 'freshman' ? 'FR'
+  : kind === 'signee' ? 'GT signee'
+  : `Drafted · unsigned${deadline ? ` · ${deadline}` : ''}`;
+const title = kind === 'transfer'
+  ? `Incoming transfer from ${schoolFull ?? school ?? 'another school'}`
+  : kind === 'freshman'
+    ? `Incoming freshman${hs ? ` · ${hs} HS` : ''}`
+    : kind === 'signee'
+      ? 'Incoming GT signee — drafted out of high school, not a 2026 GT player'
+      : `Drafted${draft ? ` ${draft}` : ''} — unsigned; the July 27 deadline decides`;
+---
+<span class={`ptag ${kind}`} role="img" title={title} aria-label={title}>{label}</span>
+
+<style>
+  .ptag {
+    display: inline-block;
+    font-size: 11px; /* the project's label floor — never below */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    border-radius: 8px;
+    padding: 1px 7px;
+    white-space: nowrap;
+    vertical-align: 1px;
+  }
+  .transfer { background: var(--navy); color: var(--on-navy); }
+  .freshman,
+  .signee {
+    color: var(--navy);
+    background: var(--card);
+    border: 1.5px solid var(--gold);
+    padding: 0 5.5px; /* border compensates the sizing difference */
+  }
+  .drafted { color: var(--warn-ink); background: var(--warn-bg); }
+</style>

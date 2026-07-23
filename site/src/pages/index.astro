@@ -2,9 +2,11 @@
 import Base from '../layouts/Base.astro';
 import Headshot from '../components/Headshot.astro';
 import HomeHero from '../components/HomeHero.astro';
+import ProvenanceTag from '../components/ProvenanceTag.astro';
 import RosterTable from '../components/RosterTable.astro';
-import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague } from '../lib/data';
+import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
+import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 
 const unassigned = getUnassignedPlayers();
 const pending = unassigned.filter((p) => p.summer.status === 'unassigned' && p.gtStatus !== 'freshman');
@@ -16,10 +18,25 @@ const awaiting = getAssignedPlayers().filter(
   (p) => (!p.hitting && !p.pitching) || isSampleLeague(p.summer.leagueKey),
 );
 
+// Provenance lives on the portrait's + badge (tooltip says where from);
+// only the drafted-but-unsigned limbo keeps a visible tag.
+const draftLimbo = new Set(
+  getDraft().players
+    .filter((d) => d.gtRole === 'signee' && d.status === 'unsigned' && d.slug)
+    .map((d) => d.slug as string),
+);
+type Prov = { kind: 'drafted'; deadline: string | null } | null;
+const isIncoming = (p: Player) => p.gtStatus !== 'returning' && !draftLimbo.has(p.slug);
+function prov(p: Player): Prov {
+  if (draftLimbo.has(p.slug))
+    return { kind: 'drafted', deadline: isDeadlinePending() ? DEADLINE_LABEL : null };
+  return null;
+}
+
 interface QuietGroup {
   title: string;
   note?: string;
-  players: { p: Player; sub: string }[];
+  players: { p: Player; sub: string; tag: Prov }[];
 }
 const quietGroups: QuietGroup[] = [
   {
@@ -27,20 +44,21 @@ const quietGroups: QuietGroup[] = [
     players: awaiting.map((p) => ({
       p,
       sub: [p.summer.team, getLeagueByKey(p.summer.leagueKey)?.abbrev].filter(Boolean).join(' · '),
+      tag: prov(p),
     })),
   },
   {
     title: 'No summer team yet',
-    players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+    players: pending.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
   },
   {
     title: 'Incoming freshmen',
     note: "High school Class of 2026 signees — incoming freshmen typically don't play collegiate summer ball.",
-    players: freshmen.map((p) => ({ p, sub: p.position || 'signee' })),
+    players: freshmen.map((p) => ({ p, sub: p.position || 'signee', tag: prov(p) })),
   },
   {
     title: 'Not playing this summer',
-    players: notPlaying.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—' })),
+    players: notPlaying.map((p) => ({ p, sub: [p.position, p.classYear].filter(Boolean).join(' · ') || '—', tag: prov(p) })),
   },
 ].filter((g) => g.players.length > 0);
 ---
@@ -62,11 +80,12 @@ const quietGroups: QuietGroup[] = [
             </header>
             {g.note && <p class="qnote">{g.note}</p>}
             <ul>
-              {g.players.map(({ p, sub }) => (
+              {g.players.map(({ p, sub, tag }) => (
                 <li>
                   <a href={`/players/${p.slug}`}>
-                    <Headshot name={p.name} photo={p.photo} size={30} variant="bust" />
+                    <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} />
                     <span class="who">{p.name}<span class="sub">{sub}</span></span>
+                    {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
                   </a>
                 </li>
               ))}
@@ -124,4 +143,5 @@ const quietGroups: QuietGroup[] = [
   .col li a:hover .who { color: var(--navy); text-decoration: underline; }
   .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
   .sub { color: var(--text-mut); font-weight: 400; font-size: 11px; }
+  .tail { margin-left: auto; flex-shrink: 0; }
 </style>

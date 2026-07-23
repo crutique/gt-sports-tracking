@@ -26,6 +26,13 @@ export interface Player {
   slug: string;
   name: string;
   gtStatus: 'returning' | 'transfer' | 'freshman';
+  /** Transfer origin school (full name), null for non-transfers. */
+  fromSchool: string | null;
+  /** Short display form of fromSchool for tags (e.g. "Jax State"). */
+  fromShort: string | null;
+  /** Listed height/weight from an official roster (null when unsourced). */
+  height: string | null;
+  weight: number | null;
   position: string;
   classYear: string;
   playerType: 'hitter' | 'pitcher' | 'two_way' | null;
@@ -105,6 +112,23 @@ export function getDisplayablePlayers(): Player[] {
   return getAssignedPlayers().filter(
     (p) => (p.hitting || p.pitching) && !isSampleLeague(p.summer.leagueKey),
   );
+}
+
+/**
+ * One-line provenance for an incoming player — spoken by the + arrival
+ * badge's tooltip. Null for returning players (the unmarked default).
+ */
+export function provenanceLabel(
+  p: Pick<Player, 'gtStatus' | 'fromSchool' | 'recruit'>,
+): string | null {
+  if (p.gtStatus === 'transfer') {
+    return `Incoming transfer from ${p.fromSchool ?? 'another school'}`;
+  }
+  if (p.gtStatus === 'freshman') {
+    const hs = p.recruit?.high_school;
+    return `Incoming freshman${hs ? ` · ${String(hs)} HS` : ''}`;
+  }
+  return null;
 }
 
 export function getGamelog(slug: string): GameLogEntry[] {

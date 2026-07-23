@@ -1,184 +1,358 @@
 ---
+// DIRECTION CONTRACT
+// THESIS: the draft page is the program's permanent Class of 2026 artifact —
+//   a card set, not an admin table. The countdown is the temporary layer.
+// OWN-WORLD: Under the Lights card grammar — gold-framed cards with pick
+//   corners, bonus as the headline numeral carrying its receipt, the class
+//   money as honest length encodings (segments + ladder), amber for limbo.
+// STORY: a fan sees what the class signed for in one band, meets the one
+//   unresolved decision (with its clock), reads the set card by card, then
+//   the ladder shows the $9.5M→$500 cliff; the ledger serves the numerate.
+// FIRST VIEWPORT: money band → limbo card (while it lives) → the card set.
+// FORM: user-selected from critique brainstorm (card set + limbo/archive
+//   flip + money ladder + compact ledger); archive mode designed in.
 import DraftPool from '../components/DraftPool.astro';
 import Headshot from '../components/Headshot.astro';
+import ProvenanceTag from '../components/ProvenanceTag.astro';
 import Base from '../layouts/Base.astro';
-import { fmtMoney, fmtMoneyDelta, getDraft, STATUS_LABEL } from '../lib/draft';
+import { fmtMoney, fmtMoneyDelta, getDraft, isDeadlinePending } from '../lib/draft';
+import type { DraftPlayer } from '../lib/draft';
 import { getPlayer } from '../lib/data';
+import { fmtDate } from '../lib/format';
 
 const draft = getDraft();
+const pending = isDeadlinePending();
+
+// One set: the drafted class in pick order, then UDFA signings.
+const setPlayers: DraftPlayer[] = [...draft.players, ...draft.udfa];
+const cardId = (p: DraftPlayer, i: number) => `dc-${p.personId ?? p.slug ?? i}`;
+const photoFor = (p: DraftPlayer) =>
+  (p.slug ? getPlayer(p.slug)?.photo : null) ?? p.headshot ?? null;
+
+function stampFor(p: DraftPlayer): string {
+  if (p.status === 'signed' || p.status === 'signed_udfa') {
+    return p.signedDate ? `Signed ${fmtDate(p.signedDate)}` : 'Signed';
+  }
+  if (p.status === 'unsigned') return pending ? 'Unsigned' : 'Awaiting confirmation';
+  if (p.status === 'did_not_sign') {
+    return p.gtRole === 'signee' ? 'To Georgia Tech' : 'Did not sign';
+  }
+  return 'Withdrew — returning';
+}
+
+// The one live storyline (while the deadline pends) / its resolution (after).
+const signee = draft.players.find((p) => p.gtRole === 'signee') ?? null;
+const signeeReg = signee?.slug ? getPlayer(signee.slug) : undefined;
+const DEADLINE_ISO = '2026-07-27T17:00:00-04:00';
+
+// Money ladder: shared linear dollar scale; slot ticks only where MLB assigns
+// them (rounds 1–10) — the missing tick IS the rule.
+const laddered = setPlayers
+  .filter((p) => p.bonus != null)
+  .sort((a, b) => (b.bonus ?? 0) - (a.bonus ?? 0));
+const ladderStates = setPlayers.filter((p) => p.bonus == null);
+const scaleMax = Math.max(
+  ...laddered.map((p) => p.bonus ?? 0),
+  ...setPlayers.map((p) => p.slot ?? 0),
+  1,
+);
 ---
-<Base title="2026 MLB Draft — GT Summer Tracker">
+<Base title="2026 MLB Draft — GT Summer Tracker"
+  description="Georgia Tech's 2026 draft class — who signed, for how much, every figure sourced.">
   <h1>2026 MLB Draft — Georgia Tech</h1>
   <p class="sub">
     GT's draft class: who signed, for how much, and who's headed (back) to campus.
-    {draft.asOf && <span class="asof">Updated {draft.asOf}</span>}
+    {draft.asOf && <span class="asof">Updated {fmtDate(draft.asOf)}</span>}
   </p>
 
-  {draft.players.length > 0 && <DraftPool players={draft.players} />}
+  {setPlayers.length === 0 && <p class="empty">Draft data loads with the next nightly refresh.</p>}
 
-  {draft.players.length === 0 && <p class="empty">Draft data loads with the next nightly refresh.</p>}
+  {draft.players.length > 0 && <DraftPool players={draft.players} pending={pending} />}
 
-  {draft.players.length > 0 && (
-    <div class="card table-card">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Pick</th>
-            <th scope="col">Player</th>
-            <th scope="col">Drafted by</th>
-            <th scope="col" class="r">Slot value</th>
-            <th scope="col" class="r">Bonus</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {draft.players.map((p) => {
-            const reg = p.slug ? getPlayer(p.slug) : undefined;
-            return (
-              <tr>
-                <td class="pick">{p.pick != null ? `R${p.round} · #${p.pick}` : '—'}</td>
-                <td class="player">
-                  <div class="pwrap">
-                    <Headshot name={p.name} photo={reg?.photo ?? p.headshot ?? null} size={34} />
-                    <span class="pcell">
-                      {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : <span class="pname">{p.name}</span>}
-                      <span class="role">{p.gtRole === 'signee' ? 'Incoming signee' : 'GT 2026'}</span>
-                      {p.note && <span class="pnote">{p.note}</span>}
-                    </span>
-                  </div>
-                </td>
-                <td class="team">{p.team ?? '—'}</td>
-                <td class="num money">{fmtMoney(p.slot)}</td>
-                <td class="num">
-                  <span class="bonus-cell">
-                    <span class="money">
-                      {p.bonus == null && (p.status === 'signed' || p.status === 'signed_udfa') && p.reportedSourceUrl
-                        ? <a class="pending" href={p.reportedSourceUrl} rel="noopener">terms not yet reported</a>
-                        : (p.bonusSource === 'reported' && p.reportedSourceUrl)
-                        ? <a class="valuelink" href={p.reportedSourceUrl} rel="noopener"
-                             title="Reported figure — click for source" aria-label={`${fmtMoney(p.bonus)}, reported, source link`}>{fmtMoney(p.bonus)}</a>
-                        : (p.bonusSource === 'unverified' && p.unverifiedSourceUrl)
-                        ? <a class="valuelink" href={p.unverifiedSourceUrl} rel="noopener">{fmtMoney(p.bonus)}</a>
-                        : fmtMoney(p.bonus)}
-                    </span>
-                    {p.bonus != null && p.slot != null && (
-                      <span class={`delta ${p.bonus > p.slot ? 'over' : p.bonus < p.slot ? 'under' : 'even'}`}>
-                        {p.bonus === p.slot ? 'at slot' : `${fmtMoneyDelta(p.bonus, p.slot)} vs slot`}
-                      </span>
-                    )}
-                    {p.bonusSource === 'unverified' && p.unverifiedSourceUrl &&
-                      <a class="unverified" href={p.unverifiedSourceUrl} rel="noopener">unverified</a>}
-                  </span>
-                </td>
-                <td><span class={`chip ${p.status}`}>{STATUS_LABEL[p.status]}</span></td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  )}
-
-  {draft.udfa.length > 0 && (
-    <section class="card udfa">
-      <h2 class="section-title">Undrafted free agents</h2>
-      <ul>
-        {draft.udfa.map((p) => (
-          <li>
-            <Headshot name={p.name} photo={p.headshot} size={26} />
-            <span class="ucell">
-              <span class="uname">{p.name}</span>
-              <span class="usub">{p.team}{p.signedDate ? ` · signed ${p.signedDate}` : ''}</span>
-            </span>
-            {p.reportedSourceUrl && <a class="usrc" href={p.reportedSourceUrl} rel="noopener">source</a>}
-          </li>
-        ))}
-      </ul>
+  {signee && pending && signee.status === 'unsigned' && (
+    <section class="card limbo" aria-label="Signing decision pending">
+      <Headshot name={signee.name} photo={photoFor(signee)} size={56} variant="bust" />
+      <div class="l-info">
+        <span class="l-name">
+          {signee.slug ? <a href={`/players/${signee.slug}`}>{signee.name}</a> : signee.name}
+          <ProvenanceTag kind="signee" />
+        </span>
+        <span class="l-sub">R{signee.round} · #{signee.pick} · {signee.team}</span>
+        <span class="l-paths">Signs by Jul 27, 5 p.m. ET → pro · No deal → Georgia Tech</span>
+      </div>
+      <div class="l-clock">
+        <span class="l-count" id="pool-deadline" data-deadline={DEADLINE_ISO}>
+          Deadline July 27, 5 p.m. ET
+        </span>
+      </div>
     </section>
   )}
+  {signee && !pending && (
+    <section class={`card limbo done ${signee.status === 'did_not_sign' ? 'home' : ''}`}
+      aria-label="Signing decision resolved">
+      <Headshot name={signee.name} photo={photoFor(signee)} size={56} variant="bust"
+        incoming={signee.status === 'did_not_sign'} />
+      <div class="l-info">
+        <span class="l-name">
+          {signee.slug ? <a href={`/players/${signee.slug}`}>{signee.name}</a> : signee.name}
+          <ProvenanceTag kind="signee" />
+        </span>
+        <span class="l-sub">R{signee.round} · #{signee.pick} · {signee.team}</span>
+      </div>
+      <div class="l-clock">
+        <span class="l-verdict">
+          {signee.status === 'did_not_sign'
+            ? 'Arrived at Georgia Tech'
+            : signee.status === 'unsigned'
+              ? 'Deadline passed · confirmation with the next refresh'
+              : `Signed${signee.bonus != null ? ` · ${fmtMoney(signee.bonus)}` : ''}`}
+        </span>
+        {signee.status === 'did_not_sign' && <a class="l-link" href="/outlook">2027 roster →</a>}
+      </div>
+    </section>
+  )}
+
+  {setPlayers.length > 0 && (
+    <section class="setwrap">
+      <h2 class="section-title">Draft class</h2>
+      <div class="set">
+        {setPlayers.map((p, i) => {
+          const limboCard = p.gtRole === 'signee' && p.status === 'unsigned';
+          return (
+            <article class:list={['dcard', { amber: limboCard }]} id={cardId(p, i)}>
+              <span class="pick-tag">{p.pick != null ? `R${p.round} · #${p.pick}` : 'UDFA'}</span>
+              <Headshot name={p.name} photo={photoFor(p)} size={64} variant="bust" />
+              <span class="dname">
+                {p.slug ? <a href={`/players/${p.slug}`}>{p.name}</a> : p.name}
+              </span>
+              <span class="dteam">{p.team ?? '—'}</span>
+              <span class="dmoney">
+                {p.bonus == null && (p.status === 'signed' || p.status === 'signed_udfa') && p.reportedSourceUrl ? (
+                  <a class="pending" href={p.reportedSourceUrl} rel="noopener">terms pending</a>
+                ) : p.bonus == null ? (
+                  <span class="dnone">—</span>
+                ) : p.bonusSource === 'reported' && p.reportedSourceUrl ? (
+                  <a class="valuelink" href={p.reportedSourceUrl} rel="noopener"
+                    aria-label={`${fmtMoney(p.bonus)}, reported figure, source link`}>{fmtMoney(p.bonus)}</a>
+                ) : p.bonusSource === 'unverified' && p.unverifiedSourceUrl ? (
+                  <a class="valuelink" href={p.unverifiedSourceUrl} rel="noopener"
+                    aria-label={`${fmtMoney(p.bonus)}, unverified figure, source link`}>{fmtMoney(p.bonus)}</a>
+                ) : (
+                  fmtMoney(p.bonus)
+                )}
+              </span>
+              {p.bonus != null && p.slot != null && (
+                <span class={`delta ${p.bonus > p.slot ? 'over' : p.bonus < p.slot ? 'under' : 'even'}`}>
+                  {p.bonus === p.slot ? 'at slot' : `${fmtMoneyDelta(p.bonus, p.slot)} vs slot`}
+                </span>
+              )}
+              <span class:list={['stamp', { warnst: limboCard }]}>{stampFor(p)}</span>
+            </article>
+          );
+        })}
+      </div>
+      <p class="lkey">Bonuses: official MLB figures; dotted-underlined figures are reported — each links its source. Slot values are MLB's assigned pick values (rounds 1–10).</p>
+    </section>
+  )}
+
+  {laddered.length > 0 && (
+    <section class="card ladder">
+      <h2 class="section-title">Signing bonuses</h2>
+      <div class="lrows">
+        {laddered.map((p) => (
+          <div class="lrow">
+            <span class="lname">{p.name}</span>
+            <div class="ltrack">
+              <div class="lbar" style={`width:${(((p.bonus ?? 0) / scaleMax) * 100).toFixed(2)}%`}></div>
+              {p.slot != null && (
+                <span class="ltick" style={`left:${((p.slot / scaleMax) * 100).toFixed(2)}%`}
+                  aria-label={`slot value ${fmtMoney(p.slot)}`} role="img"></span>
+              )}
+            </div>
+            <span class="lval">{fmtMoney(p.bonus)}</span>
+          </div>
+        ))}
+        {ladderStates.map((p) => (
+          <div class="lrow lstate">
+            <span class="lname">{p.name}</span>
+            <span class="lnote">{stampFor(p)}</span>
+          </div>
+        ))}
+      </div>
+      <p class="lkey">Gold bar = signing bonus · navy tick = MLB slot value, assigned for rounds 1–10 — later picks carry none.</p>
+    </section>
+  )}
+
 </Base>
+
+<script>
+  // Countdown is display-only; the static fallback text stays correct without JS.
+  const el = document.getElementById('pool-deadline');
+  if (el?.dataset.deadline) {
+    const ms = Date.parse(el.dataset.deadline) - Date.now();
+    if (ms <= 0) {
+      el.textContent = 'Deadline passed — July 27';
+    } else {
+      const days = Math.floor(ms / 86_400_000);
+      const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+      el.textContent = days > 0
+        ? `${days}d ${hours}h to the deadline — July 27, 5 p.m. ET`
+        : `${hours}h to the deadline — today, 5 p.m. ET`;
+    }
+  }
+</script>
 
 <style>
   h1 { margin: 0 0 2px; }
   .sub { margin: 0 0 18px; color: var(--text-mut); font-size: 14px; max-width: 65ch; }
-  .asof { margin-left: 10px; font-size: 12px; }
+  .asof { margin-left: 10px; font-size: 12px; white-space: nowrap; }
   .empty { color: var(--text-mut); font-size: 14px; }
 
-  .table-card { overflow-x: auto; }
-  table { font-size: 13px; }
-  th {
-    text-align: left;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-mut);
-    font-weight: 700;
-    padding: 10px 8px;
-    border-bottom: 2px solid var(--gold);
-    white-space: nowrap;
+  /* the one live storyline, amber-edged while it lives */
+  .limbo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    border: 2px solid var(--warn-ink);
+    background: var(--warn-bg);
   }
-  th.r { text-align: right; }
-  td { padding: 10px 8px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
-  th:first-child, td:first-child { padding-left: 14px; }
-  th:last-child, td:last-child { padding-right: 14px; }
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover td { background: var(--line-soft); }
-
-  .pick {
+  .limbo.done { border-color: var(--line); background: var(--card); }
+  .limbo.done.home { border-color: var(--navy); }
+  .l-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .l-name { font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+  .l-sub { font-size: 12px; color: var(--text); }
+  .l-paths {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--warn-ink);
+    margin-top: 3px;
+  }
+  .l-clock { margin-left: auto; text-align: right; flex-shrink: 0; }
+  .l-count {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--text-mut);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--warn-ink);
+  }
+  .l-verdict {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .l-link { display: block; font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+  /* the class as a card set — the site's card grammar at shelf scale */
+  .setwrap { margin-bottom: 16px; }
+  .set {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+    gap: 12px;
+  }
+  .dcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 22px 10px 12px;
+    background: var(--card);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  .dcard.amber { border-color: var(--warn-ink); }
+  .pick-tag {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--on-navy);
+    background: var(--navy);
+    border: 2px solid var(--card);
+    border-radius: 8px;
+    padding: 1px 8px;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
-  .player { min-width: 230px; }
-  .pwrap { display: flex; align-items: center; gap: 10px; }
-  .pcell { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
-  .pcell a, .pname { font-weight: 700; }
-  .role { font-size: 11px; color: var(--text-mut); }
-  .pnote { font-size: 12px; color: var(--text-mut); font-style: italic; max-width: 340px; white-space: normal; }
-  .team { white-space: nowrap; }
-  .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .money {
+  .dname { font-weight: 700; font-size: 13px; text-align: center; line-height: 1.2; margin-top: 4px; }
+  .dname a { color: var(--text); }
+  .dname a:hover { color: var(--navy); }
+  .dteam { font-size: 11px; color: var(--text-mut); text-align: center; }
+  .dmoney {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 21px;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+    margin-top: 3px;
+  }
+  .dnone { color: var(--text-mut); }
+  .stamp {
+    font-size: 10px; /* uppercase micro-stamp — the sanctioned 10px register */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-mut);
+    margin-top: 3px;
+  }
+  .stamp.warnst { color: var(--warn-ink); }
+
+  /* money ladder — length finally encodes the cliff */
+  .ladder { padding: 16px 20px 14px; margin-bottom: 16px; }
+  .lrows { display: flex; flex-direction: column; gap: 7px; }
+  .lrow { display: flex; align-items: center; gap: 12px; }
+  .lname { flex: 0 0 150px; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ltrack { flex: 1; position: relative; height: 13px; background: var(--well); border-radius: 6px; }
+  .lbar { height: 100%; border-radius: 6px; background: var(--gold); min-width: 2px; }
+  .ltick {
+    position: absolute;
+    top: -3px;
+    width: 2.5px;
+    height: 19px;
+    background: var(--navy);
+    border-radius: 1px;
+    transform: translateX(-50%);
+  }
+  .lval {
+    flex: 0 0 96px;
+    text-align: right;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
     color: var(--navy);
     font-variant-numeric: tabular-nums;
   }
-  .bonus-cell { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.3; }
+  .lstate .lnote { font-size: 12px; color: var(--text); font-weight: 600; }
+  .lkey {
+    margin: 12px 0 0;
+    font-size: 12px;
+    color: var(--text-mut);
+    max-width: 78ch;
+    text-wrap: pretty;
+  }
+
   .valuelink { text-decoration: underline dotted; color: inherit; }
-  .pending { font-size: 11px; font-style: italic; color: var(--text-mut); text-decoration: underline dotted; }
-  .unverified { margin-left: 6px; font-size: 11px; font-style: italic; color: var(--text-mut); text-decoration: underline dotted; }
-  .delta { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 700; font-size: 11px; }
+  .pending { font-size: 11px; font-style: italic; color: var(--text); text-decoration: underline dotted; }
+  .delta { font-weight: 700; font-size: 11px; }
   .delta.over { color: var(--up); }
   .delta.under { color: var(--down); }
   .delta.even { color: var(--text-mut); font-weight: 400; font-style: italic; }
-  .pick { color: var(--text-mut); }
-  .chip { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
-  .chip.signed, .chip.signed_udfa { background: var(--ok-bg); color: var(--ok-ink); }
-  .chip.unsigned { background: var(--line-soft); color: var(--text-mut); }
-  .chip.returning { background: var(--navy); color: var(--gold); }
-  .chip.did_not_sign { background: var(--bad-bg); color: var(--bad-ink); }
-
-  .udfa { margin-top: 14px; padding: 16px; }
-  .udfa ul { list-style: none; margin: 0; padding: 0; }
-  .udfa li {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 5px 0;
-    font-size: 13px;
-    border-bottom: 1px dotted var(--line);
-  }
-  .udfa li:last-child { border-bottom: none; }
-  .ucell { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
-  .uname { font-weight: 600; }
-  .usub { font-size: 11px; color: var(--text-mut); }
-  .usrc { margin-left: auto; font-size: 12px; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    td { transition: background-color var(--t-fast) var(--ease-out); }
+  @media (max-width: 560px) {
+    .limbo { flex-wrap: wrap; }
+    .l-clock { margin-left: 0; text-align: left; width: 100%; }
+    .lname { flex-basis: 108px; font-size: 12px; }
+    .lval { flex-basis: 84px; font-size: 12.5px; }
   }
 </style>

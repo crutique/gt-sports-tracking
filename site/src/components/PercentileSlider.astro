@@ -23,11 +23,13 @@ function fmtValue(metric: string, v: number): string {
 const color = percentileColor(slider.percentile);
 const label = LABELS[slider.metric] ?? slider.metric.toUpperCase();
 const tick = slider.leagueAvgPercentile;
+const spoken = `${label} ${fmtValue(slider.metric, slider.value)}, ${slider.percentile}th percentile`
+  + (slider.leagueAvg !== null ? `, league average ${fmtValue(slider.metric, slider.leagueAvg)}` : '');
 ---
-<div class="slider-row">
+<div class="slider-row" role="img" aria-label={spoken}>
   <span class="metric">{label}</span>
   <div class="track">
-    <div class="fill" style={`width:${slider.percentile}%;background:linear-gradient(90deg, var(--pct-low), ${color})`}></div>
+    <div class="fill" style={`width:${slider.percentile}%;background:${color}`}></div>
     {tick !== null && (
       <>
         <div class="tick" style={`left:${tick}%`}></div>
@@ -71,7 +73,7 @@ const tick = slider.leagueAvgPercentile;
     top: 15px;
     transform: translateX(-50%);
     font-size: 11px;
-    color: var(--text-mut);
+    color: var(--text); /* --text-mut measured 4.0:1 on --well — under AA */
     white-space: nowrap;
   }
   .bubble {
@@ -81,10 +83,10 @@ const tick = slider.leagueAvgPercentile;
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 2px solid #fff;
+    border: 2px solid var(--on-navy);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-    color: #fff;
-    font-size: 10.5px;
+    color: var(--on-navy);
+    font-size: 11px;
     font-weight: 800;
     display: flex;
     align-items: center;

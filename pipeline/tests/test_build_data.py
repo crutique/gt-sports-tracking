@@ -158,6 +158,7 @@ def test_name_watch_warning_surfaces_in_build(tmp_path, capsys):
     players = tmp_path / "players.yaml"
     players.write_text(PLAYERS_YAML + (
         "- {name: Sample Slugger, slug: sample-slugger, gt_status: transfer,"
+        " from_school: Somewhere,"
         " summer: {status: unassigned}}\n"))
     leagues = tmp_path / "leagues.yaml"
     leagues.write_text(LEAGUES_TEMPLATE.format(fixture_dir=fixture_dir))

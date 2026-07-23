@@ -18,8 +18,7 @@ interface Cell {
 }
 
 // Big games get quiet emphasis: multi-hit and HR games for hitters,
-// big strikeout days for pitchers. Weight and one accent only — the
-// table stays a table.
+// big strikeout days for pitchers. Weight only — the table stays a table.
 function cells(e: GameLogEntry): Cell[] {
   if (side === 'hitting') {
     const g = e as HitterGame;
@@ -27,7 +26,7 @@ function cells(e: GameLogEntry): Cell[] {
       { v: fmtDate(g.date) }, { v: g.opponent }, { v: g.ab }, { v: g.r },
       { v: g.h, cls: g.h >= 2 ? 'big' : undefined },
       { v: g.d }, { v: g.t },
-      { v: g.hr, cls: g.hr >= 1 ? 'hot' : undefined },
+      { v: g.hr, cls: g.hr >= 1 ? 'big' : undefined },
       { v: g.rbi }, { v: g.bb }, { v: g.k }, { v: g.sb },
     ];
   }
@@ -35,7 +34,7 @@ function cells(e: GameLogEntry): Cell[] {
   return [
     { v: fmtDate(g.date) }, { v: g.opponent }, { v: outsToIp(g.ip_outs) },
     { v: g.h }, { v: g.r }, { v: g.er }, { v: g.bb },
-    { v: g.k, cls: g.k >= 7 ? 'hot' : undefined },
+    { v: g.k, cls: g.k >= 7 ? 'big' : undefined },
     { v: g.hr }, { v: g.dec || '—' },
   ];
 }
@@ -45,7 +44,8 @@ function cells(e: GameLogEntry): Cell[] {
   {entries.length === 0 ? (
     <p class="none">No games recorded yet.</p>
   ) : (
-    <div class="scroller">
+    <div class="scroller" tabindex="0" role="region"
+      aria-label={`${side === 'hitting' ? 'Batting' : 'Pitching'} game log — scrolls horizontally`}>
       <table>
         <thead>
           <tr>{headers.map((h) => <th scope="col">{h}</th>)}</tr>
@@ -58,10 +58,21 @@ function cells(e: GameLogEntry): Cell[] {
   )}
 </section>
 
+<script>
+  document.querySelectorAll<HTMLElement>('.scroller').forEach((s) => {
+    const update = () => s.toggleAttribute('data-scrolled', s.scrollLeft > 2);
+    s.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>
+
 <style>
-  section { padding: 0 22px 22px; background: var(--bg); }
+  section { padding: 16px 20px 20px; }
   .none { color: var(--text-mut); font-size: 13px; }
-  .scroller { overflow-x: auto; }
+  .scroller { overflow-x: auto; position: relative; }
+  .scroller:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; border-radius: 6px; }
+  /* edge shadow while more columns wait off-screen (mirrors the roster table) */
+  .scroller[data-scrolled] table { box-shadow: -8px 0 8px -8px rgba(0, 0, 0, 0.28) inset; }
   table { background: var(--card); border-radius: 6px; font-size: 12.5px; }
   th {
     text-align: left;
@@ -73,9 +84,8 @@ function cells(e: GameLogEntry): Cell[] {
     padding: 6px 8px;
     border-bottom: 2px solid var(--gold);
   }
-  td { padding: 6px 8px; border-bottom: 1px solid var(--line-soft); }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
   .big { font-weight: 700; }
-  .hot { font-weight: 700; color: var(--pct-high); }
   tr:last-child td { border-bottom: none; }
   th:nth-child(n + 3), td:nth-child(n + 3) { text-align: center; }
 </style>

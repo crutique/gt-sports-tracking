@@ -36,6 +36,8 @@ def load_all(players_path, leagues_path):
         seen.add(slug)
         if p.get("gt_status") not in VALID_GT_STATUS:
             raise RegistryError(f"{slug}: bad gt_status {p.get('gt_status')!r}")
+        if p.get("gt_status") == "transfer" and not p.get("from_school"):
+            raise RegistryError(f"{slug}: transfer needs from_school")
         summer = p.get("summer") or {}
         if summer.get("status") not in VALID_SUMMER_STATUS:
             raise RegistryError(f"{slug}: bad summer.status {summer.get('status')!r}")

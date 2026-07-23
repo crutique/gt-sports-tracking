@@ -10,8 +10,8 @@ interface Props {
 }
 const { block, leagueName, side, dual } = Astro.props;
 const title = dual
-  ? `${leagueName} Percentiles — ${side === 'hitting' ? 'Batting' : 'Pitching'}`
-  : `${leagueName} Percentiles`;
+  ? `${leagueName} Percentile Rankings — ${side === 'hitting' ? 'Batting' : 'Pitching'}`
+  : `${leagueName} Percentile Rankings`;
 ---
 <section>
   <h2 class="section-title">{title}</h2>

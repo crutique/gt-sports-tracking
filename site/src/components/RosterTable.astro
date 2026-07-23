@@ -1,12 +1,29 @@
 ---
 import { fmtDate, fmtEra, fmtRate3 } from '../lib/format';
-import { getDisplayablePlayers, getLeagueByKey } from '../lib/data';
+import { getDisplayablePlayers, getLeagueByKey, provenanceLabel } from '../lib/data';
 import type { Player, Slider } from '../lib/data';
+import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 import Headshot from './Headshot.astro';
 import PercentileBar from './PercentileBar.astro';
 import PercentileChip from './PercentileChip.astro';
+import ProvenanceTag from './ProvenanceTag.astro';
 
 const assigned = getDisplayablePlayers();
+
+// Provenance lives on the portrait: the + badge marks players new to GT and
+// its tooltip says where they're from. Only the drafted-but-unsigned limbo
+// keeps a visible tag — that deadline is a warning, not a footnote.
+const draftLimbo = new Set(
+  getDraft().players
+    .filter((d) => d.gtRole === 'signee' && d.status === 'unsigned' && d.slug)
+    .map((d) => d.slug as string),
+);
+function provProps(p: Player) {
+  if (draftLimbo.has(p.slug))
+    return { kind: 'drafted', deadline: isDeadlinePending() ? DEADLINE_LABEL : null } as const;
+  return null;
+}
+const isIncoming = (p: Player) => p.gtStatus !== 'returning' && !draftLimbo.has(p.slug);
 
 function sliderPct(p: Player, side: 'hitting' | 'pitching', metric: string): number | null {
   const s: Slider | undefined = p[side]?.sliders?.find((x) => x.metric === metric);
@@ -46,7 +63,7 @@ function leagueName(p: Player): string {
   return getLeagueByKey(p.summer.leagueKey)?.name ?? '';
 }
 function searchKey(p: Player): string {
-  return `${p.name} ${p.summer.team ?? ''}`.toLowerCase();
+  return `${p.name} ${p.summer.team ?? ''} ${p.fromSchool ?? ''} ${p.fromShort ?? ''}`.toLowerCase();
 }
 
 const statsThrough = assigned.map((p) => p.asOf).filter(Boolean).sort().at(-1) ?? null;
@@ -130,9 +147,10 @@ const PIT_COLS = [
           const c = p.hitting!.counting;
           const r = p.hitting!.rates;
           const pct = sliderPct(p, 'hitting', 'ops');
+          const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -164,9 +182,10 @@ const PIT_COLS = [
             const c = p.hitting!.counting;
             const r = p.hitting!.rates;
             const pct = sliderPct(p, 'hitting', 'ops');
+            const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -215,9 +234,10 @@ const PIT_COLS = [
           const c = p.pitching!.counting;
           const r = p.pitching!.rates;
           const pct = sliderPct(p, 'pitching', 'era');
+          const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -248,9 +268,10 @@ const PIT_COLS = [
             const c = p.pitching!.counting;
             const r = p.pitching!.rates;
             const pct = sliderPct(p, 'pitching', 'era');
+            const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" /><span class="who"><span class="pname">{p.name} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={leagueAbbrev(p)} class="opt"><abbr title={leagueName(p)} aria-label={leagueName(p)}>{leagueAbbrev(p)}</abbr></td>
@@ -275,6 +296,7 @@ const PIT_COLS = [
   <p class="tfoot">
     Percentiles rank each player against all hitters or pitchers in his league, 2026 season.
     Qualified: {QUALIFY_AB}+ AB (hitters) or 8.0+ IP (pitchers) — others sit below the threshold line.
+    A + on the portrait marks players new to GT for 2027 — hover or focus it for where they're from · unmarked players were on GT's 2026 roster.
   </p>
   <p class="tfoot legend">
     {leagues.map((l, i) => (

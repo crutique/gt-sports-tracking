@@ -1,8 +1,11 @@
 ---
+// The card front: the whole page is the trading card, and this is its photo
+// panel — big gold-framed portrait on the navy felt, the headline percentile
+// riding the photo corner like a grading sticker.
 import type { League, Player } from '../lib/data';
-import { isSampleLeague } from '../lib/data';
+import { provenanceLabel } from '../lib/data';
+import { classFull } from '../lib/format';
 import Headshot from './Headshot.astro';
-import PercentileChip from './PercentileChip.astro';
 
 interface Props {
   player: Player;
@@ -10,7 +13,9 @@ interface Props {
 }
 const { player, league } = Astro.props;
 
-const meta = [player.position, player.classYear].filter(Boolean).join(' · ');
+const cls = classFull(player.classYear);
+const meta = [cls, player.fromSchool ? `From ${player.fromSchool}` : null]
+  .filter(Boolean).join(' · ');
 
 let context = '';
 if (player.hitting) {
@@ -19,50 +24,78 @@ if (player.hitting) {
   context = `${player.pitching.counting.g} G · ${player.pitching.counting.ip} IP`;
 }
 
-// The hero states the player's level visually: headline percentile as a chip.
-const side = player.hitting ? 'hitting' : player.pitching ? 'pitching' : null;
-const heroPct = side && !isSampleLeague(player.summer.leagueKey)
-  ? player[side]?.sliders?.find((s) => s.metric === (side === 'hitting' ? 'ops' : 'era'))?.percentile ?? null
-  : null;
-const pctLabel = side === 'hitting' ? 'OPS %ile' : 'ERA %ile';
+const incoming = player.gtStatus !== 'returning';
+const provTitle = provenanceLabel(player);
+const hasContext = Boolean(context);
 ---
 <header class="hero">
-  <Headshot name={player.name} photo={player.photo} size={92} variant="bust" />
+  <div class="photo">
+    <Headshot name={player.name} photo={player.photo} size={172} variant="bust"
+      incoming={incoming} incomingTitle={provTitle} />
+    <span class="pos-tag">
+      <span class="pos">{player.position || '—'}</span>
+    </span>
+  </div>
   <div class="who">
-    <div class="row">
-      <h1>{player.name}</h1>
-      <span class="meta">{meta}</span>
-    </div>
+    <h1>{player.name}</h1>
+    {meta && <div class="meta">{meta}</div>}
     <div class="row team-row">
       {player.summer.team && <span class="team">{player.summer.team}</span>}
-      {league && <span class="pill">{league.name}</span>}
+      {league && (
+        <span class="pill">
+          <span class="lg-full">{league.name}</span>
+          <span class="lg-ab" title={league.name}>{league.abbrev}</span>
+        </span>
+      )}
       {!player.summer.team && <span class="team">No summer assignment confirmed yet</span>}
     </div>
   </div>
-  <div class="context">
-    <div class="season">2026 Summer</div>
-    {context && <div class="line">{context}</div>}
-    {heroPct !== null && (
-      <div class="pct-row">
-        <PercentileChip percentile={heroPct} />
-        <span class="pct-label">{pctLabel}</span>
-      </div>
-    )}
-  </div>
+  {hasContext && (
+    <div class="context">
+      <div class="season">2026 Summer</div>
+      <div class="line">{context}</div>
+    </div>
+  )}
 </header>
 
 <style>
   .hero {
+    /* the page's outer gold frame supplies the card edge — no hatband here */
     background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-bright) 100%);
-    border-top: 3px solid var(--gold);
-    border-radius: 8px 8px 0 0;
-    padding: 20px 22px;
+    padding: 22px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 22px;
+  }
+  .photo {
+    position: relative;
+    flex-shrink: 0;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.4));
+  }
+  /* position tag: the card-corner position mark, class written out beneath */
+  .pos-tag {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    z-index: 2;
+  }
+  .pos {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--on-navy);
+    background: var(--navy);
+    border: 2px solid var(--card);
+    border-radius: 8px;
+    padding: 1px 8px;
+    white-space: nowrap;
   }
   .who { flex: 1; min-width: 0; }
-  .row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   h1 {
     margin: 0;
     color: var(--on-navy);
@@ -75,8 +108,10 @@ const pctLabel = side === 'hitting' ? 'OPS %ile' : 'ERA %ile';
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    margin-top: 2px;
   }
-  .team-row { margin-top: 6px; align-items: center; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .team-row { margin-top: 8px; }
   .team { color: var(--on-navy-mut); font-size: 13px; }
   .pill {
     background: var(--gold);
@@ -87,8 +122,10 @@ const pctLabel = side === 'hitting' ? 'OPS %ile' : 'ERA %ile';
     letter-spacing: 0.05em;
     border-radius: 12px;
     padding: 2px 10px;
+    white-space: nowrap;
   }
-  .context { text-align: right; flex-shrink: 0; }
+  .lg-ab { display: none; }
+  .context { text-align: right; flex-shrink: 0; align-self: flex-start; padding-top: 4px; }
   .season {
     color: var(--on-navy-faint);
     font-size: 11px;
@@ -96,24 +133,27 @@ const pctLabel = side === 'hitting' ? 'OPS %ile' : 'ERA %ile';
     letter-spacing: 0.06em;
   }
   .line { color: var(--on-navy-mut); font-size: 13px; margin-top: 2px; }
-  .pct-row {
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
-  }
-  .pct-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--on-navy-faint);
-  }
   @media (max-width: 560px) {
-    .pct-row { justify-content: flex-start; }
-  }
-  @media (max-width: 560px) {
-    .hero { flex-wrap: wrap; }
-    .context { text-align: left; }
+    .hero {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      padding: 20px 16px 18px;
+    }
+    .who { width: 100%; }
+    h1 { font-size: 30px; }
+    .team-row { justify-content: center; }
+    .lg-full { display: none; }
+    .lg-ab { display: inline; }
+    .context {
+      text-align: center;
+      align-self: center;
+      padding-top: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .line { margin-top: 0; }
   }
 </style>

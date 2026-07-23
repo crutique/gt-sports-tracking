@@ -30,7 +30,11 @@ function isCurrent(href: string): boolean {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 52px;
+    flex-wrap: wrap; /* fixed height made wrapped links spill over the page */
+    min-height: 52px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    row-gap: 2px;
   }
   .brand {
     color: var(--on-navy);
@@ -41,6 +45,7 @@ function isCurrent(href: string): boolean {
   }
   .brand span { color: var(--gold); }
   .brand:hover { text-decoration: none; color: var(--gold-light); }
+  .links { display: flex; flex-wrap: wrap; }
   .links a {
     color: var(--on-navy-mut);
     font-size: 13px;
@@ -48,6 +53,12 @@ function isCurrent(href: string): boolean {
     margin-left: 18px;
     padding: 4px 2px;
     border-bottom: 2px solid transparent;
+    white-space: nowrap; /* labels never break mid-phrase ("2027 / Outlook") */
+  }
+  .links a:first-child { margin-left: 0; }
+  @media (max-width: 420px) {
+    .brand { font-size: 18px; }
+    .links a { margin-left: 12px; }
   }
   .links a:hover { color: var(--on-navy); text-decoration: none; }
   .links a[aria-current='page'] {

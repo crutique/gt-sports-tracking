@@ -6,6 +6,10 @@
   "position": "RHP",
   "classYear": "R-SR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-1",
+  "weight": 195,
   "note": "Draft-eligible after a 46-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
@@ -23,6 +27,10 @@
   "position": "RHP",
   "classYear": "R-JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-2",
+  "weight": 191,
   "note": "No 2026 summer club found (pitched for Willmar in 2025); went undrafted July 14.",
   "playerType": "pitcher",
   "summer": {
@@ -40,6 +48,10 @@
   "position": "LHP",
   "classYear": "SR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 208,
   "note": "Draft-eligible after a 45-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
@@ -57,6 +69,10 @@
   "position": "RHP",
   "classYear": "R-SR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 207,
   "note": "Graduated in May after a team-leading 26 appearances; sitting out the summer.",
   "playerType": "pitcher",
   "summer": {
@@ -74,6 +90,10 @@
   "position": "RHP",
   "classYear": "R-JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-6",
+  "weight": 235,
   "note": "Held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "pitcher",
   "summer": {
@@ -91,6 +111,10 @@
   "position": "RHP",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 220,
   "note": "Signed with Willmar in February but has not appeared \u2014 likely a post-Tommy John innings shutdown after his 64-inning spring.",
   "playerType": "pitcher",
   "summer": {
@@ -110,6 +134,10 @@
   "position": "RHP",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-5",
+  "weight": 202,
   "note": "No longer on Willmar's roster as of mid-July, after five appearances.",
   "playerType": "pitcher",
   "summer": {
@@ -206,6 +234,10 @@
   "position": "LHP",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-1",
+  "weight": 190,
   "note": "Assigned to Y-D and featured in the league's June preview, but removed from the roster without appearing \u2014 likely shut down after 23.2 freshman innings.",
   "playerType": "pitcher",
   "summer": {
@@ -225,6 +257,10 @@
   "position": "RHP",
   "classYear": "R-SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-1",
+  "weight": 214,
   "note": "Made one Brookhaven (Sunbelt) appearance on June 26 before joining Y-D two days later.",
   "playerType": "pitcher",
   "summer": {
@@ -321,6 +357,10 @@
   "position": "RHP",
   "classYear": "R-SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-2",
+  "weight": 218,
   "note": null,
   "playerType": "pitcher",
   "summer": {
@@ -417,6 +457,10 @@
   "position": "LHP",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-4",
+  "weight": 248,
   "note": null,
   "playerType": "pitcher",
   "summer": {
@@ -513,6 +557,10 @@
   "position": "INF",
   "classYear": "SR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-4",
+  "weight": 230,
   "note": "2026 ACC MVP held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "hitter",
   "summer": {
@@ -530,6 +578,10 @@
   "position": "INF/UTL",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 197,
   "note": "Held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
   "playerType": "hitter",
   "summer": {
@@ -547,6 +599,10 @@
   "position": "INF",
   "classYear": "SR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 225,
   "note": "Forwent the 2026 MLB Draft to return for his senior year; not re-signed by Falmouth after his 2025 Cape All-Star summer.",
   "playerType": "hitter",
   "summer": {
@@ -564,6 +620,10 @@
   "position": "C/INF",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-1",
+  "weight": 220,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -657,6 +717,10 @@
   "position": "OF/UTL",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 188,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -750,6 +814,10 @@
   "position": "OF",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-1",
+  "weight": 220,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -843,6 +911,10 @@
   "position": "INF/OF",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-3",
+  "weight": 215,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -936,6 +1008,10 @@
   "position": "C/INF",
   "classYear": "R-JR",
   "recruit": null,
+  "fromSchool": null,
+  "fromShort": null,
+  "height": "6-0",
+  "weight": 218,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -1029,6 +1105,10 @@
   "position": "C",
   "classYear": "R-SO",
   "recruit": null,
+  "fromSchool": "Central Michigan",
+  "fromShort": "C. Michigan",
+  "height": "6-0",
+  "weight": 215,
   "note": "No longer on Bismarck's roster as of early July, after 13 games.",
   "playerType": "hitter",
   "summer": {
@@ -1122,6 +1202,10 @@
   "position": "INF",
   "classYear": "R-SR",
   "recruit": null,
+  "fromSchool": "Jacksonville State",
+  "fromShort": "Jax State",
+  "height": "6-1",
+  "weight": 185,
   "note": "Committed to GT on June 26 after a 62-game season at Jacksonville State; no 2026 summer club.",
   "playerType": null,
   "summer": {
@@ -1139,6 +1223,10 @@
   "position": "INF",
   "classYear": "R-JR",
   "recruit": null,
+  "fromSchool": "Walters State",
+  "fromShort": "Walters St",
+  "height": "6-1",
+  "weight": 200,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -1232,6 +1320,10 @@
   "position": "C",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": "Mercer",
+  "fromShort": "Mercer",
+  "height": "6-2",
+  "weight": 215,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -1402,6 +1494,10 @@
   "position": "INF/OF",
   "classYear": "R-JR",
   "recruit": null,
+  "fromSchool": "Young Harris",
+  "fromShort": "Young Harris",
+  "height": "6-1",
+  "weight": 195,
   "note": "No 2026 summer club found; played for the Alpharetta Aviators (Sunbelt) in 2024.",
   "playerType": null,
   "summer": {
@@ -1419,6 +1515,10 @@
   "position": "SS",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": "UCF",
+  "fromShort": "UCF",
+  "height": "6-1",
+  "weight": 185,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -1512,6 +1612,10 @@
   "position": "INF",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": "Navy",
+  "fromShort": "Navy",
+  "height": "6-1",
+  "weight": 210,
   "note": null,
   "playerType": "hitter",
   "summer": {
@@ -1605,6 +1709,10 @@
   "position": "RHP",
   "classYear": "SR",
   "recruit": null,
+  "fromSchool": "South Carolina",
+  "fromShort": "S. Carolina",
+  "height": "5-11",
+  "weight": 206,
   "note": "Went undrafted July 14; no 2026 summer club \u2014 likely training privately after 37.2 IP at South Carolina.",
   "playerType": null,
   "summer": {
@@ -1622,6 +1730,10 @@
   "position": "LHP",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": "UMBC",
+  "fromShort": "UMBC",
+  "height": "5-10",
+  "weight": 185,
   "note": null,
   "playerType": "pitcher",
   "summer": {
@@ -1718,6 +1830,10 @@
   "position": "RHP/1B",
   "classYear": "JR",
   "recruit": null,
+  "fromSchool": "Iowa",
+  "fromShort": "Iowa",
+  "height": "6-6",
+  "weight": 228,
   "note": null,
   "playerType": "pitcher",
   "summer": {
@@ -1814,6 +1930,10 @@
   "position": "RHP/INF",
   "classYear": "SO",
   "recruit": null,
+  "fromSchool": "Virginia",
+  "fromShort": "Virginia",
+  "height": "6-1",
+  "weight": 205,
   "note": "Off Orleans' active roster since late June after three relief appearances.",
   "playerType": "pitcher",
   "summer": {
@@ -1919,6 +2039,10 @@
    "pg_rank": 143,
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692757"
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -1946,6 +2070,10 @@
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=817386",
    "highlight": "First-team all-state 3B/RHP as a junior; dual-sport athlete who also signed with GT football."
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -1973,6 +2101,10 @@
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=537878",
    "highlight": "Prep Baseball California Hitter of the Week after a 7-for-11 road trip with Mater Dei."
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -1998,6 +2130,10 @@
    "pg_rank": 500,
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=631514"
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": "Has not appeared for Brookhaven since June 17 but remains on the active roster.",
   "playerType": "hitter",
   "summer": {
@@ -2100,6 +2236,10 @@
    "pg_rank": 386,
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1032346"
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -2126,6 +2266,10 @@
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692022",
    "highlight": "Threw a nine-strikeout no-hitter for Creekview this spring; GHSA All-State first team. Son of former MLB LHP C.J. Nitkowski."
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -2153,6 +2297,10 @@
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=851616",
    "highlight": "Threw back-to-back no-hitters this spring (26 K over 12 IP) \u2014 a Prep Baseball National Pitcher of the Week."
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -2182,6 +2330,10 @@
    "hs_batting": ".425/.579/.975, 9 HR, 31 RBI",
    "hs_source": "https://www.maxpreps.com/ga/columbus/columbus-blue-devils/athletes/michael-nottleman/baseball/stats/?careerid=khbg2rhfu9o44"
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -2210,6 +2362,10 @@
    "hs_pitching": "7 G, 31.0 IP, 2.26 ERA, 32 K, 9 BB",
    "hs_source": "https://www.maxpreps.com/ca/san-juan-capistrano/capistrano-valley-christian-eagles/athletes/brett-slymen/baseball/stats/?careerid=g6tuo7p5v0qaa"
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": null,
   "playerType": null,
   "summer": {
@@ -2239,6 +2395,10 @@
    "hs_source": "https://www.mlb.com/press-release/nationals-complete-2026-first-year-player-draft",
    "highlight": "2025 PG All-American Classic selection and PG's No. 2 HS shortstop in Georgia; hit .422 with 28 steals as a senior before going in round 17 to the Nationals."
   },
+  "fromSchool": null,
+  "fromShort": null,
+  "height": null,
+  "weight": null,
   "note": "On Macon's roster but no game stats recorded. Drafted in round 17 (No. 496) by Washington on July 12 \u2014 viewed as an unlikely-to-sign insurance pick; expected at GT barring a surprise before the July 27 deadline.",
   "playerType": "hitter",
   "summer": {

@@ -1,6 +1,5 @@
 ---
-import CountingList from '../../components/CountingList.astro';
-import StatGrid from '../../components/StatGrid.astro';
+import CardBackStats from '../../components/CardBackStats.astro';
 import PlayerHero from '../../components/PlayerHero.astro';
 import SliderPanel from '../../components/SliderPanel.astro';
 import Sparkline from '../../components/Sparkline.astro';
@@ -9,7 +8,6 @@ import Base from '../../layouts/Base.astro';
 import { getGamelog, getLeagueByKey, getPlayers, isSampleLeague } from '../../lib/data';
 import type { HitterGame, PitcherGame, Player } from '../../lib/data';
 import { rollingEra, rollingOps } from '../../lib/stats';
-import { detectHitterEvents, detectPitcherEvents } from '../../lib/events';
 import { fmtDate, fmtEra, fmtRate3 } from '../../lib/format';
 
 export function getStaticPaths() {
@@ -42,22 +40,61 @@ const trendBaseline = player[logSide]?.sliders
   ?.find((s) => s.metric === (logSide === 'hitting' ? 'ops' : 'era'))?.leagueAvg ?? null;
 const trendLast = [...trend].reverse().find((p) => p.value !== null)?.value ?? null;
 const trendLabelStat = logSide === 'hitting' ? 'Rolling 10-game OPS' : 'Rolling 5-start ERA';
+const rollingTitle = logSide === 'hitting' ? 'Rolling OPS' : 'Rolling ERA';
 const fmtTrend = logSide === 'hitting' ? fmtRate3 : fmtEra;
 
-// Season notes: notable games (sparse by design) marked on the trend line
-// and listed beneath it, newest first.
-const events = trend.length > 0
-  ? logSide === 'hitting'
-    ? detectHitterEvents(gamelog as HitterGame[])
-    : detectPitcherEvents(gamelog as PitcherGame[])
-  : [];
-const eventMarks = events
-  .map((e) => trend.findIndex((t) => t.date === e.date))
-  .filter((i) => i >= 0);
-const NOTES_SHOWN = 5;
-const notes = [...events].reverse().slice(0, NOTES_SHOWN);
+const trendDates = trend.filter((t) => t.value !== null).map((t) => t.date);
+
+// Savant-style axis: round gridline values spanning the chart's domain.
+const trendVals = trend.filter((t) => t.value !== null).map((t) => t.value as number);
+const trendDomain = [...trendVals, ...(trendBaseline !== null ? [trendBaseline] : [])];
+const trendSpread = trendDomain.length > 0
+  ? Math.max(...trendDomain) - Math.min(...trendDomain)
+  : 0;
+const tickStep = logSide === 'hitting'
+  ? (trendSpread > 0.55 ? 0.2 : 0.1)
+  : (trendSpread > 4 ? 2 : 1);
+const trendTicks: number[] = [];
+if (trendDomain.length > 0) {
+  const lo = Math.min(...trendDomain);
+  const hi = Math.max(...trendDomain);
+  for (let v = Math.ceil(lo / tickStep) * tickStep; v <= hi + 1e-9; v += tickStep) {
+    trendTicks.push(Number(v.toFixed(3)));
+  }
+}
+
+// Card bio: listed measurements only (returners via the official GT roster,
+// freshmen via PG; transfers pending backfill render nothing).
+const ht = player.height ?? (player.recruit?.height ? String(player.recruit.height) : null);
+const wt = player.weight ?? (player.recruit?.weight ? Number(player.recruit.weight) : null);
+const bt = player.recruit?.bats_throws ? String(player.recruit.bats_throws) : null;
+const vitals = [
+  ht ? { h: 'HT', v: ht } : null,
+  wt ? { h: 'WT', v: String(wt) } : null,
+  bt ? { h: 'B/T', v: bt } : null,
+].filter((c): c is { h: string; v: string } => c !== null);
+
+// The no-stats explainer never speculates past a note that already explains —
+// "check back soon" under "held out for the draft" was a false promise.
+const emptyMsg = hasStats ? null
+  : player.recruit
+    ? `${firstName} hasn't played a game for Georgia Tech yet — here's what we know from his recruiting profile.`
+    : player.summer.status === 'assigned'
+      ? `Stats for ${firstName} aren't flowing yet — the ${league?.name ?? 'league'} feed is coming online soon.`
+      : player.summer.status === 'not_playing'
+        ? `${firstName} is not playing summer ball this year.`
+        : player.note
+          ? null
+          : `${firstName} doesn't have a confirmed summer team yet. Check back soon.`;
+
+const shareDesc = [
+  player.position || null,
+  player.summer.team ?? null,
+  league?.name ?? null,
+].filter(Boolean).join(' · ') || 'Georgia Tech baseball';
 ---
-<Base title={`${player.name} — GT Summer Tracker`}>
+<Base title={`${player.name} — GT Summer Tracker`}
+  description={`${player.name} — ${shareDesc} · 2026 summer tracking.`}>
   <a class="back" id="back-link" href="/">← All players</a>
   <article class="card profile">
     <PlayerHero player={player} league={league} />
@@ -69,25 +106,7 @@ const notes = [...events].reverse().slice(0, NOTES_SHOWN);
       </div>
     )}
 
-    {hasStats && league && (
-      <div class="strip">
-        <span class="dot">i</span>
-        Percentiles rank {firstName} against all <strong>{league.name}</strong> {side},
-        2026 season · stats through {player.asOf}
-      </div>
-    )}
-
-    {!hasStats && (
-      <div class="empty">
-        {player.recruit
-          ? `${firstName} hasn't played a game for Georgia Tech yet — here's what we know from his recruiting profile.`
-          : player.summer.status === 'assigned'
-            ? `Stats for ${firstName} aren't flowing yet — the ${league?.name ?? 'league'} feed is coming online soon.`
-            : player.summer.status === 'not_playing'
-              ? `${firstName} is not playing summer ball this year.`
-              : `${firstName} doesn't have a confirmed summer team yet. Check back soon.`}
-      </div>
-    )}
+    {emptyMsg && <div class="empty">{emptyMsg}</div>}
 
     {player.recruit && (
       <section class="recruit">
@@ -115,66 +134,95 @@ const notes = [...events].reverse().slice(0, NOTES_SHOWN);
     {hasStats && (
       <div class="body">
         <div class="left">
+          {vitals.length > 0 && (
+            <table class="vitals">
+              <thead><tr>{vitals.map((c) => <th scope="col">{c.h}</th>)}</tr></thead>
+              <tbody><tr>{vitals.map((c) => <td>{c.v}</td>)}</tr></tbody>
+            </table>
+          )}
           {(['hitting', 'pitching'] as const).map((s) =>
             player[s] ? (
               <section>
-                <h2 class="section-title">{player.hitting && player.pitching ? `Season Stats — ${s === 'hitting' ? 'Batting' : 'Pitching'}` : 'Season Stats'}</h2>
-                <StatGrid block={player[s]!} side={s} />
-                <CountingList block={player[s]!} side={s} />
+                <h2 class="section-title">{player.hitting && player.pitching ? `Summer 2026 Stats — ${s === 'hitting' ? 'Batting' : 'Pitching'}` : 'Summer 2026 Stats'}</h2>
+                <CardBackStats block={player[s]!} side={s} />
               </section>
             ) : null
           )}
-          {trend.length > 0 && trendLast !== null && (
-            <section class="trend">
-              <h2 class="section-title">Trend</h2>
-              <div class="trend-now">
-                <span class="trend-value">{fmtTrend(trendLast)}</span>
-                <span class="trend-cap">{trendLabelStat}{trendBaseline !== null ? ` · dashed = lg avg ${fmtTrend(trendBaseline)}` : ''}</span>
-              </div>
-              <Sparkline
-                points={trend}
-                baseline={trendBaseline}
-                marks={eventMarks}
-                label={`${trendLabelStat}, currently ${fmtTrend(trendLast)}`}
-                width={280}
-              />
-              {notes.length > 0 && (
-                <ul class="notes">
-                  {notes.map((e) => (
-                    <li><span class="nd">{fmtDate(e.date)}</span> {e.label}</li>
-                  ))}
-                </ul>
-              )}
-            </section>
-          )}
         </div>
         <div class="right">
-          {(['hitting', 'pitching'] as const).map((s) =>
-            player[s] && league ? (
-              <SliderPanel block={player[s]!} leagueName={league.name} side={s}
-                dual={Boolean(player.hitting && player.pitching)} />
-            ) : null
-          )}
+          <div class="pct-panel">
+            {(['hitting', 'pitching'] as const).map((s) =>
+              player[s] && league ? (
+                <SliderPanel block={player[s]!} leagueName={league.name} side={s}
+                  dual={Boolean(player.hitting && player.pitching)} />
+              ) : null
+            )}
+            {league && (
+              <p class="pct-note">
+                Percentiles rank {firstName} against all {league.name} {side},
+                2026 season · stats through {player.asOf}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     )}
 
-    {hasStats && <GameLogTable entries={gamelog} side={logSide} />}
   </article>
+
+  {hasStats && trend.length > 0 && trendLast !== null && (
+      <section class="card trendband">
+        <h2 class="section-title">{rollingTitle}</h2>
+        <div class="tb-grid">
+          <div class="tb-chart">
+            <div class="trend-now">
+              <span class="trend-value">{fmtTrend(trendLast)}</span>
+              <span class="trend-cap">{trendLabelStat}</span>
+            </div>
+            <Sparkline
+              points={trend}
+              baseline={trendBaseline}
+              label={`${trendLabelStat}, currently ${fmtTrend(trendLast)}${trendBaseline !== null ? `, league average ${fmtTrend(trendBaseline)}` : ''}`}
+              width={880}
+              height={150}
+              smooth
+              endDot={false}
+              ticks={trendTicks}
+              fmtTick={fmtTrend}
+              baselineLabel={trendBaseline !== null ? 'LG AVG' : null}
+              ramp={{ invert: logSide === 'pitching', ref: logSide === 'hitting' ? 0.2 : 2 }}
+            />
+            {trendDates.length >= 2 && (
+              <div class="tb-axis" aria-hidden="true">
+                <span>{fmtDate(trendDates[0])}</span>
+                <span>{fmtDate(trendDates[trendDates.length - 1])}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+  )}
+
+  {hasStats && (
+    <section class="card logcard">
+      <GameLogTable entries={gamelog} side={logSide} />
+    </section>
+  )}
 </Base>
 
 <script>
-  // Go back via history when the visitor came from this site, so the dashboard
-  // keeps its tab/filter/sort state (carried in its URL). href="/" stays as the
-  // fallback for direct visits and new tabs.
+  // Go back via history ONLY when the visitor came from the players dashboard,
+  // so its tab/filter/sort state (carried in its URL) survives — from any other
+  // page the label "All players" must mean what it says, so the plain href runs.
   document.getElementById('back-link')!.addEventListener('click', (e) => {
-    let sameOrigin = false;
+    let fromDashboard = false;
     try {
-      sameOrigin = Boolean(document.referrer) && new URL(document.referrer).origin === location.origin;
+      const ref = new URL(document.referrer);
+      fromDashboard = ref.origin === location.origin && ref.pathname === '/';
     } catch {
       /* unparseable referrer: use the href fallback */
     }
-    if (sameOrigin && history.length > 1) {
+    if (fromDashboard && history.length > 1) {
       e.preventDefault();
       history.back();
     }
@@ -188,13 +236,37 @@ const notes = [...events].reverse().slice(0, NOTES_SHOWN);
     font-weight: 600;
     margin: 0 0 10px;
   }
-  .profile { overflow: hidden; }
+  /* the page is the card: gold frame, white face, object shadow on the table */
+  .profile {
+    overflow: hidden;
+    border: 4px solid var(--gold);
+    border-radius: 16px;
+    /* classic card frame: gold edge, white gutter, gold pinstripe */
+    box-shadow:
+      inset 0 0 0 2px var(--card),
+      inset 0 0 0 3px var(--gold-deep),
+      0 14px 34px rgba(0, 0, 0, 0.16);
+  }
+  /* card-back section headers: the navy bar */
+  .profile :global(.section-title) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--on-navy);
+    background: var(--navy);
+    border-radius: 6px;
+    padding: 4px 10px;
+    margin: 0 0 10px;
+    border-bottom: none;
+  }
   .strip {
     background: var(--line-soft);
     border-bottom: 1px solid var(--line);
     padding: 7px 22px;
     font-size: 12px;
-    color: var(--text-mut);
+    color: var(--text); /* --text-mut measured 4.3:1 on this surface — under AA */
   }
   .dot {
     display: inline-block;
@@ -236,11 +308,53 @@ const notes = [...events].reverse().slice(0, NOTES_SHOWN);
   .body {
     display: flex;
     gap: 24px;
-    padding: 20px 22px;
-    background: var(--bg);
+    padding: 20px 22px 24px;
+    background: var(--card);
   }
   .left { flex: 0 0 40%; min-width: 0; }
-  .right { flex: 1; min-width: 0; }
+  /* the card-back vitals box: same panel grammar as the stat tables */
+  .vitals {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .vitals th {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--text-mut);
+    background: var(--line-soft);
+    padding: 4px 2px;
+    text-align: center;
+  }
+  .vitals td {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    padding: 5px 2px 6px;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .right { flex: 1; min-width: 0; border-left: 1px solid var(--line); padding-left: 24px; }
+  .pct-panel {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px 10px;
+  }
+  .pct-note {
+    margin: 8px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--text);
+    max-width: 65ch;
+  }
   .left section + section { margin-top: 20px; }
   .trend-now { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
   .trend-value {
@@ -250,21 +364,28 @@ const notes = [...events].reverse().slice(0, NOTES_SHOWN);
     line-height: 1.1;
     font-variant-numeric: tabular-nums;
   }
-  .trend-cap { font-size: 11px; color: var(--text-mut); }
-  .notes { list-style: none; margin: 10px 0 0; padding: 0; font-size: 12.5px; }
-  .notes li { padding: 3px 0; border-bottom: 1px dotted var(--line); }
-  .notes li:last-child { border-bottom: none; }
-  .nd {
-    display: inline-block;
-    min-width: 46px;
+  .trend-cap { font-size: 12px; color: var(--text-mut); }
+  .trendband { margin-top: 16px; padding: 16px 20px 20px; }
+  .logcard { margin-top: 16px; }
+  .tb-grid { display: flex; gap: 26px; align-items: flex-start; }
+  .tb-chart { flex: 1; min-width: 0; }
+  .tb-chart :global(.spark) { max-width: none; }
+  .tb-axis {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 48px;
+    padding-right: 58px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: var(--navy);
+    color: var(--text-mut);
+    margin-top: 3px;
   }
   @media (max-width: 700px) {
     .body { flex-direction: column; }
     .left { flex: 1; }
+    .right { border-left: none; padding-left: 0; }
   }
 </style>

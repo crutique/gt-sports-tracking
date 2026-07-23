@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fmtMoney, fmtMoneyDelta, getDraft, poolSummary, STATUS_LABEL, type DraftPlayer } from '../src/lib/draft';
+import { DEADLINE_LABEL, fmtMoney, fmtMoneyDelta, getDraft, isDeadlinePending, poolSummary, SIGNING_DEADLINE, STATUS_LABEL, type DraftPlayer } from '../src/lib/draft';
 
 describe('poolSummary', () => {
   const base: Omit<DraftPlayer, 'name' | 'slot' | 'bonus' | 'status'> = {
@@ -95,5 +95,18 @@ describe('draft data', () => {
     };
     expect(p.bonusSource).toBe('unverified');
     expect(p.unverifiedSourceUrl).toBe('https://fan.example');
+  });
+});
+
+describe('signing deadline', () => {
+  it('exposes the deadline label and instant', () => {
+    expect(DEADLINE_LABEL).toBe('Jul 27');
+    expect(new Date(SIGNING_DEADLINE).getTime()).toBeGreaterThan(0);
+  });
+  it('is pending before the deadline and resolved after', () => {
+    expect(isDeadlinePending(new Date('2026-07-22T12:00:00-04:00'))).toBe(true);
+    expect(isDeadlinePending(new Date('2026-07-27T16:59:00-04:00'))).toBe(true);
+    expect(isDeadlinePending(new Date('2026-07-27T17:01:00-04:00'))).toBe(false);
+    expect(isDeadlinePending(new Date('2026-08-01T00:00:00-04:00'))).toBe(false);
   });
 });

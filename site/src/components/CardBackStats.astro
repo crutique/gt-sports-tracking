@@ -1,0 +1,96 @@
+---
+// The card back: one condensed counting line and one rate line, set the way
+// card backs have always set them — every column, tabular numerals, no tiles.
+import { fmtEra, fmtPer9, fmtRate3 } from '../lib/format';
+import type { StatBlock } from '../lib/data';
+
+interface Props {
+  block: StatBlock;
+  side: 'hitting' | 'pitching';
+}
+const { block, side } = Astro.props;
+const c = block.counting;
+
+type Row = { h: string; v: string | number }[];
+// Two counting lines — the card back breathes instead of cramming one line.
+const countingRows: Row[] = side === 'hitting'
+  ? [
+      [
+        { h: 'G', v: c.g }, { h: 'AB', v: c.ab }, { h: 'R', v: c.r }, { h: 'H', v: c.h },
+        { h: '2B', v: c.d }, { h: '3B', v: c.t }, { h: 'HR', v: c.hr },
+      ],
+      [
+        { h: 'RBI', v: c.rbi }, { h: 'BB', v: c.bb }, { h: 'HBP', v: c.hbp },
+        { h: 'K', v: c.k }, { h: 'SB', v: c.sb }, { h: 'CS', v: c.cs },
+      ],
+    ]
+  : [
+      [
+        { h: 'G', v: c.g }, { h: 'GS', v: c.gs }, { h: 'IP', v: c.ip },
+        { h: 'W–L', v: `${c.w}–${c.l}` }, { h: 'SV', v: c.sv }, { h: 'HLD', v: c.hld },
+      ],
+      [
+        { h: 'H', v: c.h }, { h: 'R', v: c.r }, { h: 'ER', v: c.er }, { h: 'HB', v: c.hb },
+        { h: 'BB', v: c.bb }, { h: 'K', v: c.k }, { h: 'HR', v: c.hr },
+      ],
+    ];
+
+const rates: { h: string; v: string; key: boolean }[] = side === 'hitting'
+  ? [
+      { h: 'AVG', v: fmtRate3(block.rates.avg), key: false },
+      { h: 'OBP', v: fmtRate3(block.rates.obp), key: false },
+      { h: 'SLG', v: fmtRate3(block.rates.slg), key: false },
+      { h: 'OPS', v: fmtRate3(block.rates.ops), key: true },
+    ]
+  : [
+      { h: 'ERA', v: fmtEra(block.rates.era), key: true },
+      { h: 'WHIP', v: fmtEra(block.rates.whip), key: false },
+      { h: 'K/9', v: fmtPer9(block.rates.k9), key: false },
+      { h: 'BB/9', v: fmtPer9(block.rates.bb9), key: false },
+    ];
+---
+<div class="back-panel">
+  {countingRows.map((row) => (
+    <table class="counting">
+      <thead><tr>{row.map((x) => <th scope="col">{x.h}</th>)}</tr></thead>
+      <tbody><tr>{row.map((x) => <td>{x.v}</td>)}</tr></tbody>
+    </table>
+  ))}
+  <table class="rates">
+    <thead><tr>{rates.map((x) => <th scope="col">{x.h}</th>)}</tr></thead>
+    <tbody><tr>{rates.map((x) => <td class={x.key ? 'key' : undefined}>{x.v}</td>)}</tr></tbody>
+  </table>
+</div>
+
+<style>
+  .back-panel {
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--card);
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    font-size: 10px; /* the one sanctioned 10px: uppercase table headers */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--text-mut);
+    background: var(--line-soft);
+    padding: 4px 2px;
+    text-align: center;
+  }
+  td {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    padding: 5px 2px 6px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .counting + .counting { border-top: 1px solid var(--line); }
+  .rates { border-top: 1px solid var(--gold); }
+  .rates td { font-size: 26px; padding: 3px 2px 7px; }
+  .rates td.key { color: var(--navy); font-weight: 700; }
+</style>

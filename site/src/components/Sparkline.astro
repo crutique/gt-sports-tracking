@@ -1,4 +1,9 @@
 ---
+// Trend line, Savant-style when asked: dashed y-gridlines with axis labels,
+// the league average named on the chart, and the line itself stroked in the
+// percentile ramp by distance from average (invert for ERA — low is hot).
+// Numbers stay present (axis + headline value); the ramp only reinforces.
+import { percentileColor } from '../lib/colors';
 import type { TrendPoint } from '../lib/stats';
 
 interface Props {
@@ -10,28 +15,70 @@ interface Props {
   label: string;
   width?: number;
   height?: number;
+  /** Catmull-Rom smoothing instead of straight segments. */
+  smooth?: boolean;
+  /** Gold dot on the latest value. */
+  endDot?: boolean;
+  /** Horizontal gridline values, drawn with left axis labels. */
+  ticks?: number[];
+  fmtTick?: (v: number) => string;
+  /** Text naming the baseline at the right edge (e.g. "LG AVG"). */
+  baselineLabel?: string | null;
+  /** Stroke the line in the percentile ramp relative to the baseline;
+      `ref` is the deviation that reaches full saturation (fixed per metric,
+      so color tracks the league relationship, not the chart's own extremes);
+      invert for stats where lower is better. */
+  ramp?: { invert: boolean; ref: number } | null;
 }
-const { points, baseline = null, marks = [], label, width = 240, height = 56 } = Astro.props;
+const {
+  points, baseline = null, marks = [], label, width = 240, height = 56,
+  smooth = false, endDot = true, ticks = [], fmtTick = (v) => String(v),
+  baselineLabel = null, ramp = null,
+} = Astro.props;
 
 const vals = points.filter((p): p is { date: string; value: number } => p.value !== null);
-const PAD = 6;
+const PAD_L = ticks.length > 0 ? 48 : 6;
+const PAD_R = baselineLabel ? 58 : 6;
+const PAD_Y = 8;
 
 let path = '';
 let endX = 0;
 let endY = 0;
 let baseY: number | null = null;
 let markPts: { x: number; y: number }[] = [];
+let tickRows: { y: number; v: number }[] = [];
+let stops: { off: number; color: string }[] = [];
 if (vals.length >= 2) {
   const nums = vals.map((v) => v.value);
-  const lo = Math.min(...nums, ...(baseline !== null ? [baseline] : []));
-  const hi = Math.max(...nums, ...(baseline !== null ? [baseline] : []));
+  const domain = [...nums, ...(baseline !== null ? [baseline] : []), ...ticks];
+  const lo = Math.min(...domain);
+  const hi = Math.max(...domain);
   const span = hi - lo || 1;
-  const x = (i: number) => PAD + (i / (vals.length - 1)) * (width - 2 * PAD);
-  const y = (v: number) => height - PAD - ((v - lo) / span) * (height - 2 * PAD);
-  path = vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)} ${y(v.value).toFixed(1)}`).join(' ');
-  endX = x(vals.length - 1);
-  endY = y(vals[vals.length - 1].value);
+  const x = (i: number) => PAD_L + (i / (vals.length - 1)) * (width - PAD_L - PAD_R);
+  const y = (v: number) => height - PAD_Y - ((v - lo) / span) * (height - 2 * PAD_Y);
+
+  const pts = vals.map((v, i) => ({ px: x(i), py: y(v.value) }));
+  if (smooth && pts.length >= 3) {
+    // Catmull-Rom → cubic Bézier: gentle smoothing, no overshoot drama
+    path = `M${pts[0].px.toFixed(1)} ${pts[0].py.toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(i - 1, 0)];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[Math.min(i + 2, pts.length - 1)];
+      const c1x = p1.px + (p2.px - p0.px) / 6;
+      const c1y = p1.py + (p2.py - p0.py) / 6;
+      const c2x = p2.px - (p3.px - p1.px) / 6;
+      const c2y = p2.py - (p3.py - p1.py) / 6;
+      path += ` C${c1x.toFixed(1)} ${c1y.toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)} ${p2.px.toFixed(1)} ${p2.py.toFixed(1)}`;
+    }
+  } else {
+    path = pts.map((pt, i) => `${i === 0 ? 'M' : 'L'}${pt.px.toFixed(1)} ${pt.py.toFixed(1)}`).join(' ');
+  }
+  endX = pts[pts.length - 1].px;
+  endY = pts[pts.length - 1].py;
   if (baseline !== null) baseY = y(baseline);
+  tickRows = ticks.map((t) => ({ y: y(t), v: t }));
 
   // points index → vals index (null-valued points can't carry a mark)
   const valIndex = new Map<number, number>();
@@ -43,6 +90,16 @@ if (vals.length >= 2) {
     .map((i) => valIndex.get(i))
     .filter((v): v is number => v !== undefined)
     .map((v) => ({ x: x(v), y: y(vals[v].value) }));
+
+  // ramp stops: distance from the league average on a FIXED scale — above
+  // average is warm everywhere it is above average, however mildly
+  if (ramp && baseline !== null) {
+    stops = nums.map((v, i) => {
+      const dev = ramp.invert ? baseline - v : v - baseline;
+      const p = Math.max(0, Math.min(100, Math.round(50 + (50 * dev) / ramp.ref)));
+      return { off: (x(i) - PAD_L) / (width - PAD_L - PAD_R), color: percentileColor(p) };
+    });
+  }
 }
 ---
 {vals.length >= 2 && (
@@ -54,19 +111,48 @@ if (vals.length >= 2) {
     role="img"
     aria-label={label}
   >
-    {baseY !== null && (
-      <line x1={PAD} y1={baseY} x2={width - PAD} y2={baseY} class="base" />
+    {stops.length > 0 && (
+      <defs>
+        <linearGradient id="sparkramp" gradientUnits="userSpaceOnUse"
+          x1={PAD_L} y1="0" x2={width - PAD_R} y2="0">
+          {stops.map((s) => <stop offset={s.off.toFixed(4)} stop-color={s.color} />)}
+        </linearGradient>
+      </defs>
     )}
-    <path d={path} class="line" />
+    {tickRows.map((t) => (
+      <>
+        <line x1={PAD_L} y1={t.y} x2={width - PAD_R} y2={t.y} class="grid" />
+        <text x={PAD_L - 9} y={t.y + 3.5} text-anchor="end" class="ax">{fmtTick(t.v)}</text>
+      </>
+    ))}
+    {baseY !== null && (
+      <>
+        <line x1={PAD_L} y1={baseY} x2={width - PAD_R} y2={baseY} class="base" />
+        {baselineLabel && (
+          <text x={width - PAD_R + 8} y={baseY + 3.5} text-anchor="start" class="axb">{baselineLabel}</text>
+        )}
+      </>
+    )}
+    <path d={path} class="line" style={stops.length > 0 ? 'stroke: url(#sparkramp)' : undefined} />
     {markPts.map((m) => <circle cx={m.x} cy={m.y} r="4.5" class="mark" />)}
-    <circle cx={endX} cy={endY} r="3.5" class="dot" />
+    {endDot && <circle cx={endX} cy={endY} r="3.5" class="dot" />}
   </svg>
 )}
 
 <style>
   .spark { display: block; width: 100%; max-width: 420px; height: auto; }
-  .line { fill: none; stroke: var(--navy); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-  .base { stroke: var(--text-mut); stroke-width: 1; stroke-dasharray: 3 4; }
+  .line { fill: none; stroke: var(--navy); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 4 5; }
+  .base { stroke: var(--text-mut); stroke-width: 1.5; stroke-dasharray: 3 4; }
+  .ax, .axb {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    fill: var(--text-mut);
+    font-variant-numeric: tabular-nums;
+  }
+  .axb { text-transform: uppercase; letter-spacing: 0.05em; }
   .dot { fill: var(--gold); stroke: var(--navy); stroke-width: 1.5; }
   .mark { fill: var(--gold); stroke: var(--navy-dark); stroke-width: 1.5; }
 </style>

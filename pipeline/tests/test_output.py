@@ -112,3 +112,36 @@ def test_write_meta_stamps_generated_at(tmp_path):
     meta = json.loads((tmp_path / "meta.json").read_text())
     assert meta["source"] == "draft-watch"
     datetime.datetime.fromisoformat(meta["generatedAt"])  # parses
+
+
+PLAYER_TRANSFER = {"name": "Jordan Lodise", "slug": "jordan-lodise",
+                   "gt_status": "transfer", "player_type": "hitter", "position": "SS",
+                   "from_school": "UCF", "summer": {"status": "unassigned"}}
+
+
+def test_assemble_transfer_from_school():
+    r = output.assemble([PLAYER_TRANSFER], {}, {}, previous={}, today="2026-07-22")[0]
+    assert r["fromSchool"] == "UCF" and r["fromShort"] == "UCF"
+
+
+def test_assemble_from_short_overrides_display_name():
+    p = dict(PLAYER_TRANSFER, from_school="Central Michigan", from_short="C. Michigan")
+    r = output.assemble([p], {}, {}, previous={}, today="2026-07-22")[0]
+    assert r["fromSchool"] == "Central Michigan"
+    assert r["fromShort"] == "C. Michigan"
+
+
+def test_assemble_non_transfer_from_school_none():
+    r = output.assemble([PLAYER_UNASSIGNED], {}, {}, previous={}, today="2026-07-22")[0]
+    assert r["fromSchool"] is None and r["fromShort"] is None
+
+
+def test_assemble_height_weight_passthrough():
+    p = dict(PLAYER_TRANSFER, height="6-1", weight=210)
+    r = output.assemble([p], {}, {}, previous={}, today="2026-07-23")[0]
+    assert r["height"] == "6-1" and r["weight"] == 210
+
+
+def test_assemble_height_weight_default_none():
+    r = output.assemble([PLAYER_UNASSIGNED], {}, {}, previous={}, today="2026-07-23")[0]
+    assert r["height"] is None and r["weight"] is None

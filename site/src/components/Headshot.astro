@@ -6,8 +6,17 @@ interface Props {
   /** circle = identity chip in dense rows; bust = 4:5 portrait card for
       visual surfaces (score cards, field, heroes). */
   variant?: 'circle' | 'bust';
+  /** New to GT for next season (transfer/freshman/signee) — draws the +
+      arrival badge on the card corner. Never set for drafted-undecided
+      players; their arrival is an open question. */
+  incoming?: boolean;
+  /** Where the incoming player comes from (provenanceLabel) — spoken as the
+      badge's tooltip and accessible name. */
+  incomingTitle?: string | null;
 }
-const { name, photo, size, variant = 'circle' } = Astro.props;
+const { name, photo, size, variant = 'circle', incoming = false, incomingTitle = null } = Astro.props;
+const badgeBox = Math.min(22, Math.max(11, Math.round(size * 0.32)));
+const badgeFont = Math.min(14, Math.max(8, Math.round(size * 0.2)));
 const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
 // Framing is face-detection-derived per photo (OpenCV face boxes → hat-top-
@@ -115,24 +124,78 @@ const frameStyle = variant === 'bust'
   ? `width:${size}px;height:${Math.round(size * 1.25)}px`
   : `width:${size}px;height:${size}px`;
 ---
-{usePhoto ? (
-  <span class={`shot frame ${variant}`} style={frameStyle}>
-    <img class="ph" src={photo} alt={name} style={cropStyle} />
-  </span>
-) : (
-  <span
-    class={`shot initials ${variant}`}
-    style={`${frameStyle};font-size:${Math.round(size * (variant === 'bust' ? 0.3 : 0.34))}px`}
-  >
-    {initials}
-  </span>
-)}
+<span class="hs">
+  {usePhoto ? (
+    <span class={`shot frame ${variant}`} style={frameStyle}>
+      <img class="ph" src={photo} alt={name} style={cropStyle} />
+      {incoming && <i class="inb" role={incomingTitle ? 'img' : undefined} aria-label={incomingTitle ?? undefined} aria-hidden={incomingTitle ? undefined : 'true'} style={`width:${badgeBox}px;height:${badgeBox}px;font-size:${badgeFont}px`}>+</i>}
+    </span>
+  ) : (
+    <span
+      class={`shot initials ${variant}`}
+      style={`${frameStyle};font-size:${Math.round(size * (variant === 'bust' ? 0.3 : 0.34))}px`}
+    >
+      {initials}
+      {incoming && <i class="inb" role={incomingTitle ? 'img' : undefined} aria-label={incomingTitle ?? undefined} aria-hidden={incomingTitle ? undefined : 'true'} style={`width:${badgeBox}px;height:${badgeBox}px;font-size:${badgeFont}px`}>+</i>}
+    </span>
+  )}
+  {incoming && incomingTitle && <span class="intip" role="tooltip">{incomingTitle}</span>}
+</span>
 
 <style>
+  .hs { position: relative; display: inline-flex; flex-shrink: 0; }
   .shot {
     flex-shrink: 0;
     border: 2px solid var(--gold-light);
     background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  }
+  /* the + badge speaks through the site's own tooltip, not the OS's slow one */
+  .intip {
+    position: absolute;
+    left: calc(100% + 9px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-3px);
+    width: max-content;
+    max-width: 230px;
+    background: var(--navy-dark);
+    color: var(--on-navy);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    padding: 7px 10px;
+    border-radius: 7px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 8;
+  }
+  .intip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: var(--navy-dark);
+  }
+  .hs:hover .intip,
+  :global(a:focus-visible) .hs .intip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .intip {
+      transition:
+        opacity 150ms var(--ease-out),
+        transform 150ms var(--ease-out),
+        visibility 0s linear 150ms;
+    }
+    .hs:hover .intip,
+    :global(a:focus-visible) .hs .intip {
+      transition-delay: 250ms, 250ms, 250ms;
+    }
   }
   .circle { border-radius: 50%; }
   .bust { border-radius: 9px; }
@@ -149,9 +212,24 @@ const frameStyle = variant === 'bust'
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     color: var(--navy-dark);
     font-weight: 800;
     /* flat gold: the gradient's deep end put navy-dark at 4.2:1 — below AA */
     background: var(--gold);
+  }
+  /* + arrival badge: the incoming mark lives on the card, not in the tag */
+  .inb {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    line-height: 1;
+    background: var(--navy);
+    color: var(--on-navy);
+    border-radius: 0 5px 0 0;
   }
 </style>
