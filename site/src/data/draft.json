@@ -11,8 +11,8 @@
    "team": "Minnesota Twins",
    "slot": 9740100,
    "bonus": 9497500,
-   "bonusSource": "reported",
-   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
+   "bonusSource": "official",
+   "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
    "signedDate": "2026-07-22",
@@ -123,7 +123,7 @@
    "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
-   "signedDate": null,
+   "signedDate": "2026-07-18",
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/806156/headshot/draft/current",
    "note": null
   },
@@ -141,7 +141,7 @@
    "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
-   "signedDate": null,
+   "signedDate": "2026-07-19",
    "headshot": "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/w_120,q_auto:best/v1/people/806040/headshot/draft/current",
    "note": null
   },
