@@ -1,5 +1,5 @@
 {
- "asOf": "2026-07-23",
+ "asOf": "2026-07-24",
  "players": [
   {
    "name": "Vahn Lackey",
@@ -47,8 +47,8 @@
    "team": "Los Angeles Angels",
    "slot": 2225800,
    "bonus": 2297500,
-   "bonusSource": "reported",
-   "reportedSourceUrl": "https://www.spotrac.com/mlb/draft/2026",
+   "bonusSource": "official",
+   "reportedSourceUrl": null,
    "unverifiedSourceUrl": null,
    "status": "signed",
    "signedDate": null,
