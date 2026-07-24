@@ -1,8 +1,12 @@
 name: Nightly stats refresh
 
 on:
-  schedule:
-    - cron: "0 8 * * *"        # ~4am ET, all leagues' games finished
+  # Disabled 2026-07-24: the nightly stats scrape now runs on the Raspberry Pi
+  # (cole@crouton:~/gt-ops/run-nightly.sh, 4 AM ET cron). The Pi's residential IP
+  # clears the league WAFs (necbl, sunbelt) that 405 GitHub's datacenter runners.
+  # Kept dispatchable as a manual fallback; re-enable the schedule if the Pi retires.
+  # schedule:
+  #   - cron: "0 8 * * *"        # ~4am ET, all leagues' games finished
   workflow_dispatch:
 
 concurrency:
