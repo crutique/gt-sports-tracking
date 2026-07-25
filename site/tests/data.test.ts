@@ -129,6 +129,7 @@ describe('mapPlayerToCard', () => {
     expect(card.ranks).toEqual([
       { k: 'PG Grade', v: '10' },
       { k: "Nat'l", v: '#143' },
+      { k: 'OF Rank', v: '#23' },
     ]);
     expect(card.hometown).toBe('Acworth, GA');
     expect(card.originSchool).toBe('Etowah');

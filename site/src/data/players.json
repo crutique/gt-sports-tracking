@@ -10,7 +10,7 @@
   "fromShort": null,
   "height": "6-1",
   "weight": 195,
-  "note": "Draft-eligible after a 46-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
+  "note": "Draft-eligible after a 46-inning spring; went undrafted July 14 — no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -52,7 +52,7 @@
   "fromShort": null,
   "height": "6-0",
   "weight": 208,
-  "note": "Draft-eligible after a 45-inning spring; went undrafted July 14 \u2014 no 2026 summer club.",
+  "note": "Draft-eligible after a 45-inning spring; went undrafted July 14 — no 2026 summer club.",
   "playerType": "pitcher",
   "summer": {
    "status": "unassigned"
@@ -115,7 +115,7 @@
   "fromShort": null,
   "height": "6-0",
   "weight": 220,
-  "note": "Signed with Willmar in February but has not appeared \u2014 likely a post-Tommy John innings shutdown after his 64-inning spring.",
+  "note": "Signed with Willmar in February but has not appeared — likely a post-Tommy John innings shutdown after his 64-inning spring.",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -239,7 +239,7 @@
   "fromShort": null,
   "height": "6-1",
   "weight": 190,
-  "note": "Assigned to Y-D and featured in the league's June preview, but removed from the roster without appearing \u2014 likely shut down after 23.2 freshman innings.",
+  "note": "Assigned to Y-D and featured in the league's June preview, but removed from the roster without appearing — likely shut down after 23.2 freshman innings.",
   "playerType": "pitcher",
   "summer": {
    "status": "assigned",
@@ -1728,7 +1728,7 @@
   "fromShort": "S. Carolina",
   "height": "5-11",
   "weight": 206,
-  "note": "Went undrafted July 14; no 2026 summer club \u2014 likely training privately after 37.2 IP at South Carolina.",
+  "note": "Went undrafted July 14; no 2026 summer club — likely training privately after 37.2 IP at South Carolina.",
   "playerType": null,
   "summer": {
    "status": "unassigned"
@@ -2055,7 +2055,9 @@
    "bats_throws": "R/R",
    "pg_grade": 10,
    "pg_rank": 143,
-   "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692757"
+   "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692757",
+   "pg_pos": "OF",
+   "pg_pos_rank": 23
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2086,7 +2088,9 @@
    "pg_grade": 10,
    "pg_rank": 208,
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=817386",
-   "highlight": "First-team all-state 3B/RHP as a junior; dual-sport athlete who also signed with GT football."
+   "highlight": "First-team all-state 3B/RHP as a junior; dual-sport athlete who also signed with GT football.",
+   "pg_pos": "3B",
+   "pg_pos_rank": 12
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2117,7 +2121,9 @@
    "pg_grade": 10,
    "pg_rank": 268,
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=537878",
-   "highlight": "Prep Baseball California Hitter of the Week after a 7-for-11 road trip with Mater Dei."
+   "highlight": "Prep Baseball California Hitter of the Week after a 7-for-11 road trip with Mater Dei.",
+   "pg_pos": "OF",
+   "pg_pos_rank": 44
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2146,7 +2152,9 @@
    "weight": 183,
    "bats_throws": "S/R",
    "pg_rank": 500,
-   "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=631514"
+   "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=631514",
+   "pg_pos": "SS",
+   "pg_pos_rank": 131
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2253,7 +2261,9 @@
    "bats_throws": "L/L",
    "pg_grade": 9.5,
    "pg_rank": 386,
-   "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1032346"
+   "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1032346",
+   "pg_pos": "LHP",
+   "pg_pos_rank": 15
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2283,7 +2293,9 @@
    "bats_throws": "L/R",
    "pg_rank": 429,
    "pg_url": "https://www.perfectgame.org/players/playerprofile.aspx?ID=692022",
-   "highlight": "Threw a nine-strikeout no-hitter for Creekview this spring; GHSA All-State first team. Son of former MLB LHP C.J. Nitkowski."
+   "highlight": "Threw a nine-strikeout no-hitter for Creekview this spring; GHSA All-State first team. Son of former MLB LHP C.J. Nitkowski.",
+   "pg_pos": "RHP",
+   "pg_pos_rank": 148
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2314,7 +2326,9 @@
    "pg_grade": 8.5,
    "pg_rank": 437,
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=851616",
-   "highlight": "Threw back-to-back no-hitters this spring (26 K over 12 IP) \u2014 a Prep Baseball National Pitcher of the Week."
+   "highlight": "Threw back-to-back no-hitters this spring (26 K over 12 IP) — a Prep Baseball National Pitcher of the Week.",
+   "pg_pos": "RHP",
+   "pg_pos_rank": 151
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2347,7 +2361,9 @@
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=669805",
    "hs_pitching": "13 G, 70.0 IP, 8-1, 0.90 ERA, 133 K",
    "hs_batting": ".425/.579/.975, 9 HR, 31 RBI",
-   "hs_source": "https://www.maxpreps.com/ga/columbus/columbus-blue-devils/athletes/michael-nottleman/baseball/stats/?careerid=khbg2rhfu9o44"
+   "hs_source": "https://www.maxpreps.com/ga/columbus/columbus-blue-devils/athletes/michael-nottleman/baseball/stats/?careerid=khbg2rhfu9o44",
+   "pg_pos": "LHP",
+   "pg_pos_rank": 48
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2379,7 +2395,9 @@
    "pg_rank": 500,
    "pg_url": "https://www.perfectgame.org/Players/PlayerProfile.aspx?ID=1123263",
    "hs_pitching": "7 G, 31.0 IP, 2.26 ERA, 32 K, 9 BB",
-   "hs_source": "https://www.maxpreps.com/ca/san-juan-capistrano/capistrano-valley-christian-eagles/athletes/brett-slymen/baseball/stats/?careerid=g6tuo7p5v0qaa"
+   "hs_source": "https://www.maxpreps.com/ca/san-juan-capistrano/capistrano-valley-christian-eagles/athletes/brett-slymen/baseball/stats/?careerid=g6tuo7p5v0qaa",
+   "pg_pos": "RHP",
+   "pg_pos_rank": 215
   },
   "fromSchool": null,
   "fromShort": null,
@@ -2412,13 +2430,15 @@
    "pg_url": "https://www.perfectgame.org/Players/Playerprofile.aspx?ID=620118",
    "hs_batting": ".422, 13 2B, 3 HR, 30 RBI, 28 SB, 43 R",
    "hs_source": "https://www.mlb.com/press-release/nationals-complete-2026-first-year-player-draft",
-   "highlight": "2025 PG All-American Classic selection and PG's No. 2 HS shortstop in Georgia; hit .422 with 28 steals as a senior before going in round 17 to the Nationals."
+   "highlight": "2025 PG All-American Classic selection and PG's No. 2 HS shortstop in Georgia; hit .422 with 28 steals as a senior before going in round 17 to the Nationals.",
+   "pg_pos": "SS",
+   "pg_pos_rank": 26
   },
   "fromSchool": null,
   "fromShort": null,
   "height": null,
   "weight": null,
-  "note": "On the Macon Bacon's iScore roster (#2 INF) \u2014 2 games through Jul 18 (1-for-7, 2 RBI), though absent from the team's public roster page. Drafted in round 17 (No. 496) by Washington on July 12 but declined pro ball to enroll at GT \u2014 one of two 2026 picks the club did not sign, per its July 22 class announcement.",
+  "note": "On the Macon Bacon's iScore roster (#2 INF) — 2 games through Jul 18 (1-for-7, 2 RBI), though absent from the team's public roster page. Drafted in round 17 (No. 496) by Washington on July 12 but declined pro ball to enroll at GT — one of two 2026 picks the club did not sign, per its July 22 class announcement.",
   "playerType": "hitter",
   "summer": {
    "status": "assigned",

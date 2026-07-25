@@ -258,8 +258,12 @@ export function mapPlayerToCard(p: Player): PlayerCardData {
     const ranks: { k: string; v: string }[] = [];
     if (r.pg_grade != null) ranks.push({ k: 'PG Grade', v: String(r.pg_grade) });
     if (r.pg_rank != null) ranks.push({ k: "Nat'l", v: `#${r.pg_rank}` });
+    if (r.pg_pos != null && r.pg_pos_rank != null) ranks.push({ k: `${r.pg_pos} Rank`, v: `#${r.pg_pos_rank}` });
     return {
       ...base,
+      // roster height/weight aren't published for signees yet — use the PG bio
+      height: p.height ?? (r.height ? String(r.height) : null),
+      weight: p.weight ?? (r.weight ? Number(r.weight) : null),
       bats: bt[0]?.trim() || null,
       throws: bt[1]?.trim() || null,
       eyebrow: `${RECRUIT_CLASS_YEAR} Recruit`,
