@@ -121,7 +121,7 @@ const totalTeams = board.reduce((s, l) => s + l.teams.length, 0);
           <div class="lgbody">
             <a class="official" href={l.officialUrl} rel="noopener">Official {l.abbrev} site&nbsp;→</a>
             {l.platform === 'fixture' && (
-              <p class="sample">Live stats feed coming soon — no numbers shown until they're real.</p>
+              <p class="sample">No stats available for this league — no numbers shown until they're real.</p>
             )}
             <div class="teams">
               {l.teams.map((t) => (

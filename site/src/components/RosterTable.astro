@@ -113,7 +113,7 @@ const PIT_COLS = [
         {leagues.map((l) => <option value={l.key}>{l.name}</option>)}
       </select>
       <span class="count" id="result-count" aria-live="polite"></span>
-      {meta.generatedAt && <span class="stamp">Data last updated {new Date(meta.generatedAt).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} ET</span>}
+      {(meta.statsUpdatedAt ?? meta.generatedAt) && <span class="stamp">Data last updated {new Date(meta.statsUpdatedAt ?? meta.generatedAt).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} ET</span>}
     </div>
   </div>
 
@@ -146,7 +146,7 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`} data-card-open={p.slug}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -180,7 +180,7 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`} data-card-open={p.slug}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -231,7 +231,7 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`} data-card-open={p.slug}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -264,7 +264,7 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`} data-card-open={p.slug}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>

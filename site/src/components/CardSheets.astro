@@ -1,0 +1,16 @@
+---
+// Renders one tap-to-open PlayerCardSheet per player. Drop it once on any page
+// whose players carry data-card-open="{slug}" triggers (field diagram, roster
+// lists). De-duped by slug so a player referenced from several surfaces on the
+// same page still has exactly one <dialog>.
+import PlayerCardSheet from './PlayerCardSheet.astro';
+import { mapPlayerToCard } from '../lib/data';
+import type { Player } from '../lib/data';
+
+const { players } = Astro.props as { players: Player[] };
+const seen = new Set<string>();
+const unique = players.filter((p) => (seen.has(p.slug) ? false : (seen.add(p.slug), true)));
+---
+{unique.map((p) => (
+  <PlayerCardSheet id={p.slug} {...mapPlayerToCard(p)} profileHref={`/players/${p.slug}`} />
+))}

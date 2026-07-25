@@ -4,7 +4,8 @@ import Headshot from '../components/Headshot.astro';
 import HomeHero from '../components/HomeHero.astro';
 import ProvenanceTag from '../components/ProvenanceTag.astro';
 import RosterTable from '../components/RosterTable.astro';
-import { cardTheme, getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
+import CardSheets from '../components/CardSheets.astro';
+import { cardTheme, getAssignedPlayers, getLeagueByKey, getPlayers, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 
@@ -98,7 +99,7 @@ function splitByType(items: QuietItem[]) {
                 <ul>
                   {sg.items.map(({ p, sub, tag }) => (
                     <li>
-                      <a href={`/players/${p.slug}`}>
+                      <a href={`/players/${p.slug}`} data-card-open={p.slug}>
                         <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} />
                         <span class="who">{p.name}<span class="sub">{sub}</span></span>
                         {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
@@ -113,6 +114,8 @@ function splitByType(items: QuietItem[]) {
       </div>
     </section>
   )}
+
+  <CardSheets players={getPlayers()} />
 </Base>
 
 <style>

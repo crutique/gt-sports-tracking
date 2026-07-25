@@ -1,0 +1,95 @@
+---
+// Tap-to-open card reveal. Wraps a PlayerCard in a native <dialog>: desktop
+// centres it as a lightbox, phones float it up as a bottom sheet. showModal()
+// hands us the focus trap, Esc-to-close, ::backdrop scrim and inert background
+// for free; one small delegated script opens by id and closes on scrim / × / Esc.
+// One <dialog> per player; a trigger anywhere carries data-card-open="{id}".
+import PlayerCard from './PlayerCard.astro';
+const { id, profileHref = null, ...card } = Astro.props;
+---
+<dialog class="pcsheet" id={`pc-${id}`} aria-label={`${card.name} — player card`}>
+  <button type="button" class="pcx" data-card-close aria-label="Close card">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+  </button>
+  <div class="pcwrap">
+    <span class="grab" aria-hidden="true"></span>
+    <div class="pccard"><PlayerCard {...card} /></div>
+    {profileHref && <a class="pcprofile" href={profileHref}>Full profile →</a>}
+  </div>
+</dialog>
+
+<style>
+  .pcsheet {
+    width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh;
+    margin: 0; padding: 0; border: 0; background: transparent; color: var(--on-navy);
+    overflow: visible;
+  }
+  .pcsheet:not([open]) { display: none; }
+  .pcsheet[open] { display: flex; align-items: center; justify-content: center; overflow-y: auto; }
+  .pcsheet::backdrop { background: rgba(0, 34, 63, 0.6); }
+  @supports (backdrop-filter: blur(3px)) { .pcsheet::backdrop { background: rgba(0, 34, 63, 0.48); backdrop-filter: blur(3px); } }
+
+  .pcwrap {
+    position: relative; margin: auto;
+    padding: 46px 0 0;                 /* room for the head breaking the top edge */
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .pccard { width: 288px; }
+  .grab { display: none; }
+
+  .pcx {
+    position: fixed; top: 16px; right: 16px; z-index: 2;
+    display: grid; place-items: center; width: 38px; height: 38px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    color: var(--on-navy); background: rgba(255, 255, 255, 0.14);
+  }
+  .pcx:hover { background: rgba(255, 255, 255, 0.26); }
+  .pcx:focus-visible { outline: 2px solid var(--on-navy); outline-offset: 2px; }
+
+  .pcprofile {
+    font-family: var(--font-display); font-weight: 600; font-size: 13px;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--on-navy);
+    text-decoration: none; padding: 6px 4px; border-bottom: 1.5px solid var(--gold);
+  }
+  .pcprofile:hover { color: var(--gold-light); }
+  .pcprofile:focus-visible { outline: 2px solid var(--on-navy); outline-offset: 3px; }
+
+  /* Phones: the card floats up from the bottom as a sheet. */
+  @media (max-width: 560px) {
+    .pcsheet[open] { align-items: flex-end; }
+    .pcwrap {
+      margin: 0 auto; width: 100%; padding: 12px 0 max(20px, env(safe-area-inset-bottom));
+      gap: 12px;
+    }
+    .grab { display: block; width: 42px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.7); }
+    .pcx { top: max(14px, env(safe-area-inset-top)); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pcsheet[open]::backdrop { animation: pc-fade 200ms var(--ease-out); }
+    .pcsheet[open] .pcwrap { animation: pc-pop 220ms var(--ease-out); }
+    @media (max-width: 560px) { .pcsheet[open] .pcwrap { animation: pc-up 260ms var(--ease-out); } }
+  }
+  @keyframes pc-fade { from { opacity: 0; } }
+  @keyframes pc-pop { from { opacity: 0; transform: translateY(10px) scale(0.965); } }
+  @keyframes pc-up { from { transform: translateY(100%); } }
+</style>
+
+<script>
+  // One delegated listener for every sheet on the page.
+  function sheet(id: string): HTMLDialogElement | null {
+    return document.getElementById(`pc-${id}`) as HTMLDialogElement | null;
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const opener = t.closest<HTMLElement>('[data-card-open]');
+    if (opener) {
+      const d = sheet(opener.dataset.cardOpen!);
+      if (d?.showModal) { e.preventDefault(); if (!d.open) d.showModal(); }
+      return;
+    }
+    if (t.closest('[data-card-close]')) { t.closest('dialog')?.close(); return; }
+    // scrim tap: the click landed on the dialog's own flex area, outside the card
+    if (t instanceof HTMLDialogElement && t.classList.contains('pcsheet')) t.close();
+  });
+</script>

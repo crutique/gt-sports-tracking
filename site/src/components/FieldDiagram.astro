@@ -218,7 +218,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
                   const fanw = CARD_W + (maxRow - 1) * fanPitch(maxRow) + 36;
                   const txp = ((f[i].tx / fanw) * 100).toFixed(2);
                   return (
-                    <a class={`fcard t-${cardTheme(m.p.gtStatus)}`} href={`/players/${m.p.slug}`} data-slug={m.p.slug}
+                    <a class={`fcard t-${cardTheme(m.p.gtStatus)}`} href={`/players/${m.p.slug}`} data-slug={m.p.slug} data-card-open={m.p.slug}
                       style={`--i:${gi};--txp:${txp}%;--ty:${f[i].ty.toFixed(1)}px;--rot:${f[i].rot.toFixed(2)}deg`}>
                       <Headshot name={m.p.name} photo={m.p.photo} size={64} variant="bust"
                         incoming={m.arriving && !limbo} incomingTitle={provenanceLabel(m.p)} theme={cardTheme(m.p.gtStatus)} />

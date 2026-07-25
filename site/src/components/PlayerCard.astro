@@ -1,0 +1,234 @@
+---
+// Trading card, "Under the Lights". The dominant colour encodes roster status —
+// gold = returning, navy = incoming transfer, white = incoming recruit (all in
+// navy + gold + white, the two team primaries plus white). Classic gold/navy
+// edge · white gutter · pinstripe frame; a nameplate whose band hides the
+// photo's cropped bottom so the background-removed player reads as rising OUT of
+// the card. Fixed size for every player. Data-driven so it extends past the POC.
+//
+// Stats are PRIOR seasons only (never the live summer line): college players show
+// a row per previous season — hitters G/AVG/OPS/HR/SB, pitchers G/IP/ERA/WHIP/K —
+// and recruits show Perfect Game marks. Rows/columns arrive prepared (mapPlayerToCard).
+interface Row { label: string; values: string[] }
+interface Rank { k: string; v: string }
+interface Props {
+  name: string;
+  cutout: string | null;       // /cutouts/{slug}.png (background removed); null → initials monogram
+  theme: 'gold' | 'navy' | 'white';
+  posAbbr: string;             // colour badge only; utility carries both groups ("INF/OF")
+  classYear: string;           // nameplate subtitle, on its own — position lives in the badge
+  height?: string | null;
+  weight?: number | null;
+  bats?: string | null;        // R | L | S
+  throws?: string | null;      // R | L | S
+  eyebrow: string;             // "2026 Recruit" | "Returning" | "Transfer" (recruit year = signing year)
+  eyebrowSub?: string | null;  // transfer: the school they came from, under the TRANSFER label
+  hometown?: string | null;    // shown at the foot for every status
+  originSchool?: string | null; // HS for recruits; roster "Last School" otherwise
+  ranks?: Rank[] | null;       // recruits: PG Grade · national rank
+  statLabel?: string;          // stat-table caption — the school the seasons belong to
+  cols?: string[];             // column headers, matched to each row's values
+  rows?: Row[];                // prior seasons, newest first
+  pending?: string | null;     // neutral empty state when no prior seasons are available
+}
+const {
+  name, cutout, theme, posAbbr, classYear, height, weight, bats, throws,
+  eyebrow, eyebrowSub = null, hometown = null, originSchool = null,
+  ranks = null, statLabel = '', cols = [], rows = [], pending = null,
+} = Astro.props;
+const bio = [
+  height,
+  weight ? `${weight} lb` : null,
+  bats && throws ? `Bats ${bats} Throws ${throws}` : null,
+].filter(Boolean);
+const initials = name.split(/\s+/).filter(Boolean).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+---
+<div class={`frame t-${theme}`}>
+  {cutout && <img class="cutout" src={cutout} alt={name} loading="lazy" />}
+  <div class="gutter">
+    <article class="card">
+      <img class="wm" src="/gt-logo.png" alt="" aria-hidden="true" />
+      {!cutout && <div class="monogram" aria-hidden="true"><span>{initials}</span></div>}
+      <div class="hero">
+        <span class="eyebrow">{eyebrow}</span>
+        {eyebrowSub && <span class="eyebrowsub">{eyebrowSub}</span>}
+      </div>
+
+      <div class="plate">
+        <span class="pname">{name}</span>
+        <span class="ppos">{classYear}</span>
+        <span class="postab">{posAbbr}</span>
+      </div>
+
+      <div class="body">
+        {bio.length > 0 && <p class="bio">{bio.join('   ')}</p>}
+        {ranks && (
+          <div class="ranks">
+            {ranks.map((r) => <span class="rank"><b>{r.v}</b><i>{r.k}</i></span>)}
+          </div>
+        )}
+        {rows.length > 0 ? (
+          <table class="stat">
+            <caption>{statLabel}</caption>
+            <thead>
+              <tr><th scope="col" class="rl"></th>{cols.map((c) => <th scope="col">{c}</th>)}</tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr>
+                  <th scope="row" class="rl">{r.label}</th>
+                  {r.values.map((v) => <td>{v}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : pending && <p class="pending">{pending}</p>}
+
+        {(hometown || originSchool) && (
+          <p class="place">{hometown}{originSchool && <span> · {originSchool}</span>}</p>
+        )}
+      </div>
+    </article>
+  </div>
+</div>
+
+<style>
+  /* ── theme: dominant colour by roster status (navy + gold + white) ── */
+  .t-navy {
+    --surface: radial-gradient(122% 82% at 72% -6%, var(--navy-bright), var(--navy) 46%, var(--navy-dark));
+    --ink: var(--on-navy); --ink2: var(--on-navy-mut); --ink3: var(--on-navy-faint);
+    --edge: var(--gold); --pin: var(--gold-light);
+    --plate: linear-gradient(180deg, var(--gold-light), var(--gold)); --plate-ink: var(--navy-dark); --plate-sub: var(--gold-deep);
+    --tab-bg: var(--navy); --tab-ink: var(--gold-light);
+    --eyebrow: var(--gold-light); --accent: var(--gold-light);
+    --hair: rgba(217, 182, 119, 0.42); --box-bd: rgba(217, 182, 119, 0.32); --box-bg: rgba(255, 255, 255, 0.05);
+  }
+  .t-white {
+    --surface: linear-gradient(180deg, var(--card), var(--well));
+    --ink: var(--navy); --ink2: var(--text-mut); --ink3: var(--text-mut);
+    --edge: var(--gold); --pin: var(--gold-light);
+    --plate: linear-gradient(180deg, var(--navy-bright), var(--navy)); --plate-ink: var(--on-navy); --plate-sub: var(--gold-light);
+    --tab-bg: var(--gold); --tab-ink: var(--navy-dark);
+    --eyebrow: var(--gold-deep); --accent: var(--navy);
+    --hair: var(--line); --box-bd: var(--line); --box-bg: var(--bg);
+  }
+  .t-gold {
+    --surface: radial-gradient(122% 82% at 72% -6%, var(--gold-light), var(--gold) 52%, var(--gold-deep));
+    --ink: var(--navy-dark); --ink2: var(--navy); --ink3: var(--navy);
+    --edge: var(--navy); --pin: var(--navy-bright);
+    --plate: linear-gradient(180deg, var(--navy-bright), var(--navy)); --plate-ink: var(--on-navy); --plate-sub: var(--gold-light);
+    --tab-bg: var(--gold-light); --tab-ink: var(--navy-dark);
+    --eyebrow: var(--navy-dark); --accent: var(--navy-dark);
+    --hair: rgba(0, 34, 63, 0.32); --box-bd: rgba(0, 34, 63, 0.24); --box-bg: rgba(255, 255, 255, 0.16);
+  }
+
+  .frame {
+    position: relative;
+    width: min(288px, 100%);
+    border-radius: 16px;
+    background: var(--edge);                  /* 1 · coloured edge */
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.32);
+    overflow: visible;                        /* the head breaks the top edge */
+  }
+  .gutter { margin: 3px; border-radius: 13px; background: var(--card); padding: 3px; } /* 2 · white gutter */
+  .card {
+    position: relative;
+    height: 388px;
+    border-radius: 10px;
+    border: 1px solid var(--pin);             /* 3 · pinstripe */
+    background: var(--surface);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cutout {
+    position: absolute;
+    z-index: 1;                               /* BEHIND the plate — the band hides the cropped bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 250px;
+    height: 182px;
+    width: auto;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+    pointer-events: none;
+  }
+  .wm { position: absolute; z-index: 0; right: 6px; bottom: 8px; width: 140px; opacity: 0.08; pointer-events: none; }
+  /* portrait placeholder when a player has no headshot to cut out */
+  .monogram { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 150px; display: grid; place-items: center; pointer-events: none; }
+  .monogram span {
+    font-family: var(--font-display); font-weight: 700; font-size: 66px; line-height: 1;
+    letter-spacing: 0.04em; color: var(--ink); opacity: 0.22;
+  }
+
+  .hero { position: relative; z-index: 4; padding: 11px 13px 0; height: 118px; }
+  .eyebrow {
+    display: block;
+    font-family: var(--font-display); font-weight: 700; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--eyebrow);
+  }
+  .eyebrowsub {
+    display: block; margin-top: 3px; max-width: 8.5ch;
+    font-family: var(--font-display); font-weight: 600; font-size: 12.5px;
+    line-height: 1.05; letter-spacing: 0.01em; color: var(--ink2);
+  }
+
+  .plate {
+    position: relative; z-index: 2;
+    background: var(--plate);
+    border-top: 1px solid var(--pin);
+    padding: 7px 74px 8px 13px;
+  }
+  .pname {
+    display: block; font-family: var(--font-display); font-weight: 700; font-size: 22px;
+    line-height: 1.02; letter-spacing: 0.01em; text-transform: uppercase; color: var(--plate-ink);
+  }
+  .ppos {
+    display: block; margin-top: 2px; font-family: var(--font-display); font-weight: 600;
+    font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--plate-sub);
+  }
+  .postab {
+    position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1; white-space: nowrap;
+    color: var(--tab-ink); background: var(--tab-bg); border-radius: 7px; padding: 4px 8px; letter-spacing: 0.02em;
+  }
+
+  .body { position: relative; z-index: 2; flex: 1; padding: 9px 13px 12px; display: flex; flex-direction: column; }
+  .bio {
+    margin: 0 0 9px; font-family: var(--font-display); font-weight: 600; font-size: 12.5px;
+    letter-spacing: 0.02em; color: var(--ink2); font-variant-numeric: tabular-nums; white-space: pre;
+  }
+
+  .ranks { display: flex; gap: 7px; margin: 0 0 11px; }
+  .rank {
+    flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px 0 4px;
+    border: 1px solid var(--box-bd); border-radius: 8px; background: var(--box-bg);
+  }
+  .rank b {
+    font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .rank i {
+    font-style: normal; margin-top: 3px; font-size: 9px; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--ink3); text-align: center;
+  }
+
+  .stat { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .stat caption {
+    caption-side: top; text-align: left; font-family: var(--font-display); font-weight: 600;
+    font-size: 9.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink3); padding-bottom: 3px;
+  }
+  .stat th, .stat td { text-align: right; padding: 3px 0; font-variant-numeric: tabular-nums; }
+  .stat thead th {
+    font-family: var(--font-display); font-weight: 700; font-size: 9.5px; letter-spacing: 0.04em;
+    color: var(--ink3); border-bottom: 1px solid var(--hair);
+  }
+  .stat tbody td { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--ink); }
+  .stat tbody tr + tr td, .stat tbody tr + tr .rl { padding-top: 4px; }
+  .stat .rl { text-align: left; width: 30%; }
+  .stat tbody .rl { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; color: var(--accent); vertical-align: middle; }
+
+  .place { margin: auto 0 0; padding-top: 9px; font-size: 12px; font-weight: 600; color: var(--ink2); }
+  .place span { color: var(--ink3); font-weight: 400; }
+  .pending { margin: 6px 0 0; font-size: 10.5px; font-style: italic; color: var(--ink3); }
+</style>

@@ -83,9 +83,19 @@ def load_previous(out_dir):
 def write_meta(out_dir, source):
     """Stamp site/src/data/meta.json with the run time -- the site footer's
     "last updated" heartbeat. Written on EVERY successful run (nightly build
-    and draft-watch), so each run commits and the footer proves liveness."""
+    and draft-watch), so each run commits and the footer proves liveness.
+
+    `statsUpdatedAt` tracks only the last *stats* scrape (source "nightly");
+    draft-watch runs preserve it, so the stats table's stamp reflects when the
+    games were pulled, not the every-6h draft poll."""
     import datetime as _dt
     Path(out_dir).mkdir(parents=True, exist_ok=True)
-    meta = {"generatedAt": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
-            "source": source}
+    now = _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds")
+    prev = {}
+    try:
+        prev = json.loads(Path(out_dir, "meta.json").read_text())
+    except (FileNotFoundError, ValueError):
+        prev = {}
+    stats_updated = now if source == "nightly" else (prev.get("statsUpdatedAt") or now)
+    meta = {"generatedAt": now, "source": source, "statsUpdatedAt": stats_updated}
     Path(out_dir, "meta.json").write_text(json.dumps(meta, indent=1))

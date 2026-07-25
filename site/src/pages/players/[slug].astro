@@ -80,7 +80,7 @@ const emptyMsg = hasStats ? null
   : player.recruit
     ? `${firstName} hasn't played a game for Georgia Tech yet — here's what we know from his recruiting profile.`
     : player.summer.status === 'assigned'
-      ? `Stats for ${firstName} aren't flowing yet — the ${league?.name ?? 'league'} feed is coming online soon.`
+      ? `Stats for ${firstName} aren't available yet.`
       : player.summer.status === 'not_playing'
         ? `${firstName} is not playing summer ball this year.`
         : player.note
