@@ -4,7 +4,7 @@ import LeagueMap from '../components/LeagueMap.astro';
 import PercentileBar from '../components/PercentileBar.astro';
 import ProvenanceTag from '../components/ProvenanceTag.astro';
 import Base from '../layouts/Base.astro';
-import { getLeagues, getPlayer, provenanceLabel } from '../lib/data';
+import { cardTheme, getLeagues, getPlayer, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 import usmap from '../data/usmap.json';
@@ -136,7 +136,7 @@ const totalTeams = board.reduce((s, l) => s + l.teams.length, 0);
                           <a href={`/players/${p.slug}`}>
                             <Headshot name={p.name} photo={p.photo} size={30} variant="bust"
                               incoming={p.gtStatus !== 'returning' && !limbo}
-                              incomingTitle={provenanceLabel(p)} />
+                              incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} />
                             <span class="who">
                               <span class="nm">{p.name}</span>
                               <span class="pos">{[p.position, p.classYear].filter(Boolean).join(' · ') || '—'}</span>

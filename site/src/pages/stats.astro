@@ -4,7 +4,7 @@ import Headshot from '../components/Headshot.astro';
 import HomeHero from '../components/HomeHero.astro';
 import ProvenanceTag from '../components/ProvenanceTag.astro';
 import RosterTable from '../components/RosterTable.astro';
-import { getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
+import { cardTheme, getAssignedPlayers, getLeagueByKey, getUnassignedPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 
@@ -82,7 +82,7 @@ function splitByType(items: QuietItem[]) {
   {quietGroups.length > 0 && (
     <section class="card others">
       <div class="others-head">
-        <span class="ttl">Rest of the roster</span>
+        <span class="ttl">Other Rostered Players</span>
       </div>
       <div class="cols">
         {quietGroups.map((g) => (
@@ -99,7 +99,7 @@ function splitByType(items: QuietItem[]) {
                   {sg.items.map(({ p, sub, tag }) => (
                     <li>
                       <a href={`/players/${p.slug}`}>
-                        <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} />
+                        <Headshot name={p.name} photo={p.photo} size={30} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} />
                         <span class="who">{p.name}<span class="sub">{sub}</span></span>
                         {tag && <span class="tail"><ProvenanceTag {...tag} /></span>}
                       </a>

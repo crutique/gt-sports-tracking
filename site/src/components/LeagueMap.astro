@@ -135,21 +135,27 @@ const INSET_Y = VH - inset.h - 16;
     ))}
 
     <!-- national team nodes -->
-    {mainNodes.map((t) => (
-      <g class="node" data-league={t.league} data-team={t.slug}
-        tabindex="0" role="button"
-        aria-label={`${t.name} — ${t.city}, ${t.abbrev}, ${t.count} GT player${t.count === 1 ? '' : 's'}`}
-        transform={`translate(${t.x} ${t.y})`}>
-        <circle class="hit" r="16"></circle>
-        <circle class="dot" r={radius(t.count)} style={`fill:${t.color}`}></circle>
-        {t.count > 1 && <text class="cnt" y="3.5">{t.count}</text>}
-        <g class="tip" aria-hidden="true">
-          <rect class="tipbox" x="-72" y={`${-(radius(t.count)) - 44}`} width="144" height="34" rx="6"></rect>
-          <text class="tipt" x="0" y={`${-(radius(t.count)) - 28}`} text-anchor="middle">{t.name}</text>
-          <text class="tips" x="0" y={`${-(radius(t.count)) - 16}`} text-anchor="middle">{t.city} · {t.count} GT</text>
+    {mainNodes.map((t) => {
+      const sub = `${t.city} · ${t.count} GT`;
+      // Size the tooltip box to its widest line (Barlow Condensed ~6.5px/char)
+      // so long team names can never overflow the fill.
+      const tw = Math.max(120, Math.round(Math.max(t.name.length * 6.5, sub.length * 6)) + 24);
+      return (
+        <g class="node" data-league={t.league} data-team={t.slug}
+          tabindex="0" role="button"
+          aria-label={`${t.name} — ${t.city}, ${t.abbrev}, ${t.count} GT player${t.count === 1 ? '' : 's'}`}
+          transform={`translate(${t.x} ${t.y})`}>
+          <circle class="hit" r="16"></circle>
+          <circle class="dot" r={radius(t.count)} style={`fill:${t.color}`}></circle>
+          {t.count > 1 && <text class="cnt" y="3.5">{t.count}</text>}
+          <g class="tip" aria-hidden="true">
+            <rect class="tipbox" x={-tw / 2} y={`${-(radius(t.count)) - 44}`} width={tw} height="34" rx="6"></rect>
+            <text class="tipt" x="0" y={`${-(radius(t.count)) - 28}`} text-anchor="middle">{t.name}</text>
+            <text class="tips" x="0" y={`${-(radius(t.count)) - 16}`} text-anchor="middle">{sub}</text>
+          </g>
         </g>
-      </g>
-    ))}
+      );
+    })}
 
     <!-- mobile fallback: the Cape inset can't shrink legibly, so on phones the
          seven towns collapse to one aggregate node (the section below lists them) -->

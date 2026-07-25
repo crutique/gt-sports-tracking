@@ -1,6 +1,7 @@
 ---
-import { fmtDate, fmtEra, fmtRate3 } from '../lib/format';
-import { getDisplayablePlayers, getLeagueByKey, provenanceLabel } from '../lib/data';
+import { fmtEra, fmtRate3 } from '../lib/format';
+import meta from '../data/meta.json';
+import { cardTheme, getDisplayablePlayers, getLeagueByKey, provenanceLabel } from '../lib/data';
 import type { Player, Slider } from '../lib/data';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 import Headshot from './Headshot.astro';
@@ -65,8 +66,6 @@ function searchKey(p: Player): string {
   return `${p.name} ${p.summer.team ?? ''} ${lg?.name ?? ''} ${lg?.abbrev ?? ''} ${p.fromSchool ?? ''} ${p.fromShort ?? ''}`.toLowerCase();
 }
 
-const statsThrough = assigned.map((p) => p.asOf).filter(Boolean).sort().at(-1) ?? null;
-
 const HIT_COLS = [
   { key: 'name', label: 'Player' },
   { key: 'pos', label: 'Pos', opt: true },
@@ -99,7 +98,7 @@ const PIT_COLS = [
 ---
 <div class="card shell">
   <div class="toolbar">
-    <span class="ttl">Player statistics</span>
+    <span class="ttl">Summer League Player Statistics</span>
     <div class="tabs seg" role="tablist" aria-label="Player type">
       <button class="tab active" data-target="hitters" type="button" role="tab" id="tab-hitters"
         aria-selected="true" aria-controls="hitters" tabindex="0">Hitters</button>
@@ -114,7 +113,7 @@ const PIT_COLS = [
         {leagues.map((l) => <option value={l.key}>{l.name}</option>)}
       </select>
       <span class="count" id="result-count" aria-live="polite"></span>
-      {statsThrough && <span class="stamp">Stats through {fmtDate(statsThrough)}</span>}
+      {meta.generatedAt && <span class="stamp">Data last updated {new Date(meta.generatedAt).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} ET</span>}
     </div>
   </div>
 
@@ -147,7 +146,7 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -181,7 +180,7 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="OPS" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ab} AB</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -232,7 +231,7 @@ const PIT_COLS = [
           const prov = provProps(p);
           return (
             <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+              <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
               <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
               <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
               <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -265,7 +264,7 @@ const PIT_COLS = [
             const prov = provProps(p);
             return (
               <tr data-league={p.summer.leagueKey} data-q={searchKey(p)}>
-                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
+                <td data-v={p.name}><a href={`/players/${p.slug}`}><Headshot name={p.name} photo={p.photo} size={40} variant="bust" incoming={isIncoming(p)} incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} /><span class="who"><span class="pname">{p.name} {prov && <ProvenanceTag {...prov} />} <span class="mchip"><PercentileChip percentile={pct} metric="ERA" muted /></span></span><span class="pteam">{p.summer.team}{leagueAbbrev(p) && <>{' · '}<abbr title={leagueName(p)}>{leagueAbbrev(p)}</abbr></>}<span class="denom"> · {c.ip} IP</span></span></span></a></td>
                 <td data-v={p.position || '—'} class="opt">{p.position || '—'}</td>
                 <td data-v={p.classYear || '—'} class="opt">{p.classYear || '—'}</td>
                 <td data-v={c.g} class="opt gsep">{c.g}</td>
@@ -286,11 +285,10 @@ const PIT_COLS = [
   )}
   </div>
 
-  <p class="tfoot">
-    Percentiles rank each player against all hitters or pitchers in his league, 2026 season.
-    Qualified: 2.0 PA (hitters) or 0.5 IP (pitchers) per team game — others sit below the threshold line.
-    A + on the portrait marks players new to GT for 2027 — hover or focus it for where they're from · unmarked players were on GT's 2026 roster.
-  </p>
+  <ul class="notes">
+    <li>Percentiles rank each player against all hitters or pitchers in their league (2026 season).</li>
+    <li>Qualified: 2.0 PA (hitters) or 0.5 IP (pitchers) per team game — players below sit under the threshold line.</li>
+  </ul>
   <p class="tfoot legend">
     {leagues.map((l, i) => (
       <span class="lg"><strong>{l.abbrev}</strong> {l.name}{i < leagues.length - 1 ? '' : ''}</span>
@@ -569,6 +567,9 @@ const PIT_COLS = [
   .tab:hover:not(.active) { background: var(--line-soft); }
   .tab.active { background: var(--navy); color: var(--on-navy); }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; align-items: center; }
+  /* Search + league filter hidden 2026-07-24 to free space. The filter JS is
+     intact (elements stay in the DOM); delete this one rule to bring them back. */
+  #player-search, #league-filter, #result-count { display: none; }
   select,
   input[type='search'] {
     font-size: 12px;
@@ -698,6 +699,18 @@ const PIT_COLS = [
     max-width: 78ch;
     text-wrap: pretty;
   }
+  .notes {
+    list-style: none;
+    margin: 0;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 12px;
+    color: var(--text-mut);
+    max-width: 78ch;
+  }
+  .notes li { position: relative; padding-left: 14px; margin-bottom: 4px; text-wrap: pretty; }
+  .notes li:last-child { margin-bottom: 0; }
+  .notes li::before { content: '–'; position: absolute; left: 0; color: var(--gold); }
   .legend { padding-top: 0; border-top: none; max-width: none; display: flex; flex-wrap: wrap; gap: 2px 16px; }
   .legend .lg { white-space: nowrap; }
   .legend strong { color: var(--text); font-weight: 700; }

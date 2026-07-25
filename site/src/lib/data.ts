@@ -134,6 +134,19 @@ export function provenanceLabel(
   return null;
 }
 
+/**
+ * Baseball-card color theme by roster status — gold = returning, navy =
+ * incoming transfer, white = incoming recruit. Drives the Headshot frame so
+ * a player's path onto (or off) the roster reads at a glance.
+ */
+export function cardTheme(
+  gtStatus: Player['gtStatus'] | undefined,
+): 'gold' | 'navy' | 'white' {
+  if (gtStatus === 'transfer') return 'navy';
+  if (gtStatus === 'freshman') return 'white';
+  return 'gold';
+}
+
 export function getGamelog(slug: string): GameLogEntry[] {
   return gamelogModules[`../data/gamelogs/${slug}.json`] ?? [];
 }

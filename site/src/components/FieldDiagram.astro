@@ -16,7 +16,7 @@
 import Headshot from './Headshot.astro';
 import PercentileChip from './PercentileChip.astro';
 import ProvenanceTag from './ProvenanceTag.astro';
-import { isSampleLeague, provenanceLabel } from '../lib/data';
+import { cardTheme, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player, Slider } from '../lib/data';
 
 interface Props {
@@ -184,7 +184,7 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     >
       <span class="stack">
         {groups[z.key].slice(0, 3).map((m) => (
-          <span class="scard"><Headshot name={m.p.name} photo={m.p.photo} size={26} variant="bust" /></span>
+          <span class="scard"><Headshot name={m.p.name} photo={m.p.photo} size={26} variant="bust" theme={cardTheme(m.p.gtStatus)} /></span>
         ))}
       </span>
       <span class="scount" aria-hidden="true">{groups[z.key].length}</span>
@@ -218,10 +218,10 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
                   const fanw = CARD_W + (maxRow - 1) * fanPitch(maxRow) + 36;
                   const txp = ((f[i].tx / fanw) * 100).toFixed(2);
                   return (
-                    <a class="fcard" href={`/players/${m.p.slug}`} data-slug={m.p.slug}
+                    <a class={`fcard t-${cardTheme(m.p.gtStatus)}`} href={`/players/${m.p.slug}`} data-slug={m.p.slug}
                       style={`--i:${gi};--txp:${txp}%;--ty:${f[i].ty.toFixed(1)}px;--rot:${f[i].rot.toFixed(2)}deg`}>
                       <Headshot name={m.p.name} photo={m.p.photo} size={64} variant="bust"
-                        incoming={m.arriving && !limbo} incomingTitle={provenanceLabel(m.p)} />
+                        incoming={m.arriving && !limbo} incomingTitle={provenanceLabel(m.p)} theme={cardTheme(m.p.gtStatus)} />
                       <span class="cname">{m.p.name}</span>
                       <span class="csub">{[m.p.position || '—', m.p.classYear].filter(Boolean).join(' · ')}</span>
                       {pct !== null && <span class="cchip"><PercentileChip percentile={pct} metric={m.p.hitting ? 'OPS' : 'ERA'} /></span>}
@@ -569,6 +569,9 @@ const SILHOUETTE = `${FENCE} L568 688 Q480 726 392 688 Z`;
     opacity: 0;
     transform-origin: 50% 130%;
   }
+  /* trading-card frame themed by roster status (gold above is the returning base) */
+  .fcard.t-navy { border-color: var(--navy); }
+  .fcard.t-white { border-color: var(--well); }
   .panel.open .fcard {
     transform: translateY(var(--ty)) rotate(var(--rot));
     opacity: 1;

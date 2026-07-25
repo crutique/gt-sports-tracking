@@ -6,8 +6,9 @@ import PercentileChip from '../components/PercentileChip.astro';
 import ProvenanceTag from '../components/ProvenanceTag.astro';
 import { DEADLINE_LABEL, getDraft, isDeadlinePending } from '../lib/draft';
 import type { DraftPlayer } from '../lib/draft';
-import { getLeagueByKey, getPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
+import { cardTheme, getLeagueByKey, getPlayers, isSampleLeague, provenanceLabel } from '../lib/data';
 import type { Player } from '../lib/data';
+import departing from '../data/departing.json';
 
 // The second core question — "what does next spring look like?" — answered in
 // counts and chips: who's back, who's arriving, who's in limbo until the
@@ -122,7 +123,7 @@ const over = projected - ROSTER_LIMIT;
           return (
             <li>
               <a href={`/players/${p.slug}`}>
-                <Headshot name={p.name} photo={p.photo} size={26} variant="bust" />
+                <Headshot name={p.name} photo={p.photo} size={26} variant="bust" theme={cardTheme(p.gtStatus)} />
                 <span class="who">{p.name}<span class="sub">{p.position || '—'}{p.classYear ? ` · ${p.classYear}` : ''}</span></span>
                 {pct !== null && <span class="tail"><PercentileChip percentile={pct} metric={`summer ${p.hitting ? 'OPS' : 'ERA'}`} muted /></span>}
               </a>
@@ -159,7 +160,7 @@ const over = projected - ROSTER_LIMIT;
                 <li>
                   <a href={`/players/${p.slug}`}>
                     <Headshot name={p.name} photo={p.photo} size={26} variant="bust" incoming={!limbo}
-                      incomingTitle={provenanceLabel(p)} />
+                      incomingTitle={provenanceLabel(p)} theme={cardTheme(p.gtStatus)} />
                     <span class="who">{p.name}<span class="sub">{[p.position, p.classYear].filter(Boolean).join(' · ') || '—'}</span></span>
                     {limbo && (
                       <span class="tail">
@@ -213,6 +214,43 @@ const over = projected - ROSTER_LIMIT;
       </ul>
     </section>
   </div>
+
+  <section class="card departing" aria-label="Players departing after 2026, off the 2027 roster">
+    <header class="dhead">
+      <span class="count dcount">{departing.outOfEligibility.length + departing.transfers.length}</span>
+      <h2 class="section-title">Departing</h2>
+      <span class="dtag">off the 2027 roster</span>
+    </header>
+    <div class="dcols">
+      <div class="dcol">
+        <p class="subhead">Out of Eligibility</p>
+        <ul>
+          {departing.outOfEligibility.map((p) => (
+            <li>
+              <span class="row">
+                <Headshot name={p.name} photo={p.photo} size={26} variant="bust" theme="gray" />
+                <span class="who">{p.name}<span class="sub">{p.position} · {p.classYear}</span></span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="dcol">
+        <p class="subhead">Outgoing Transfers</p>
+        <ul>
+          {departing.transfers.map((p) => (
+            <li>
+              <span class="row">
+                <Headshot name={p.name} photo={p.photo} size={26} variant="bust" theme="gray" />
+                <span class="who">{p.name}<span class="sub">{p.position} · {p.classYear}{p.destination ? ` · → ${p.destination}` : ''}</span></span>
+                {!p.destination && <span class="tail tag">portal</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -349,4 +387,19 @@ const over = projected - ROSTER_LIMIT;
     padding: 2px 7px;
   }
   .tag.warn { color: var(--warn-ink); background: var(--warn-bg); }
+
+  /* Departing: off the 2027 roster — muted header + grayed portraits set it apart. */
+  .departing { margin-top: 14px; padding: 16px; border-top: 3px solid var(--well); }
+  .dhead { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .dcount { color: var(--text-mut); }
+  .departing .section-title { flex: 0 0 auto; margin: 0; color: var(--text-mut); }
+  .dtag {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-mut);
+  }
+  .dcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2px 22px; align-items: start; }
 </style>

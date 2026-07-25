@@ -74,7 +74,7 @@ def build_draft(entries, today, deadline=DEADLINE):
                          "bonusSource": None, "reportedSourceUrl": u.get("source"),
                          "unverifiedSourceUrl": None,
                          "status": "signed_udfa", "signedDate": u.get("date"),
-                         "headshot": None, "note": e.get("note")})
+                         "headshot": e.get("photo"), "note": e.get("note")})
             continue
         pid = e["person_id"]
         pick = picks.get(pid) or {}

@@ -3,7 +3,7 @@
 // panel — big gold-framed portrait on the navy felt, the headline percentile
 // riding the photo corner like a grading sticker.
 import type { League, Player } from '../lib/data';
-import { provenanceLabel } from '../lib/data';
+import { cardTheme, provenanceLabel } from '../lib/data';
 import { classFull } from '../lib/format';
 import Headshot from './Headshot.astro';
 
@@ -17,21 +17,13 @@ const cls = classFull(player.classYear);
 const meta = [cls, player.fromSchool ? `From ${player.fromSchool}` : null]
   .filter(Boolean).join(' · ');
 
-let context = '';
-if (player.hitting) {
-  context = `${player.hitting.counting.g} G · ${player.hitting.counting.ab} AB`;
-} else if (player.pitching) {
-  context = `${player.pitching.counting.g} G · ${player.pitching.counting.ip} IP`;
-}
-
 const incoming = player.gtStatus !== 'returning';
 const provTitle = provenanceLabel(player);
-const hasContext = Boolean(context);
 ---
 <header class="hero">
   <div class="photo">
     <Headshot name={player.name} photo={player.photo} size={172} variant="bust"
-      incoming={incoming} incomingTitle={provTitle} />
+      incoming={incoming} incomingTitle={provTitle} theme={cardTheme(player.gtStatus)} />
     <span class="pos-tag">
       <span class="pos">{player.position || '—'}</span>
     </span>
@@ -50,12 +42,9 @@ const hasContext = Boolean(context);
       {!player.summer.team && <span class="team">No summer assignment confirmed yet</span>}
     </div>
   </div>
-  {hasContext && (
-    <div class="context">
-      <div class="season">2026 Summer</div>
-      <div class="line">{context}</div>
-    </div>
-  )}
+  <div class="context">
+    <img class="gt-logo" src="/gt-logo.png" width="60" height="60" alt="Georgia Tech" loading="lazy" />
+  </div>
 </header>
 
 <style>
@@ -125,14 +114,8 @@ const hasContext = Boolean(context);
     white-space: nowrap;
   }
   .lg-ab { display: none; }
-  .context { text-align: right; flex-shrink: 0; align-self: flex-start; padding-top: 4px; }
-  .season {
-    color: var(--on-navy-faint);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .line { color: var(--on-navy-mut); font-size: 13px; margin-top: 2px; }
+  .context { flex-shrink: 0; align-self: flex-start; padding-top: 2px; }
+  .gt-logo { display: block; width: 60px; height: 60px; }
   @media (max-width: 560px) {
     .hero {
       flex-direction: column;
@@ -147,13 +130,9 @@ const hasContext = Boolean(context);
     .lg-full { display: none; }
     .lg-ab { display: inline; }
     .context {
-      text-align: center;
       align-self: center;
       padding-top: 0;
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
     }
-    .line { margin-top: 0; }
+    .gt-logo { width: 52px; height: 52px; }
   }
 </style>

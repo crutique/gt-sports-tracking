@@ -3,7 +3,7 @@ import Headshot from './Headshot.astro';
 import { getDisplayablePlayers, getGamelog } from '../lib/data';
 import type { HitterGame, PitcherGame, Player } from '../lib/data';
 import { hitterGameScore, pitcherGameScore } from '../lib/stats';
-import { fmtDate, outsToIp } from '../lib/format';
+import { fmtDateWeekday, outsToIp } from '../lib/format';
 
 // The broadcast bottom-line: every GT performance from a given night streams
 // across one row like an ESPN score ticker, loudest first — nobody gets
@@ -93,13 +93,13 @@ for (const d of dates) byDate.get(d)!.sort((a, b) => b.score - a.score);
       <p class="kick">Recent summer league games</p>
       <div class="nav">
         <button type="button" id="rg-prev" aria-label="Earlier date">‹</button>
-        <span class="date" id="rg-date">{fmtDate(dates[0])}</span>
+        <span class="date" id="rg-date">{fmtDateWeekday(dates[0])}</span>
         <button type="button" id="rg-next" aria-label="Later date" disabled>›</button>
       </div>
     </div>
     <div class="ticker">
       {dates.map((d, i) => (
-        <div class="lane" data-date={d} data-label={fmtDate(d)} hidden={i !== 0}>
+        <div class="lane" data-date={d} data-label={fmtDateWeekday(d)} hidden={i !== 0}>
           <div class="track">
             <div class="seq">
               {byDate.get(d)!.map((c) => (

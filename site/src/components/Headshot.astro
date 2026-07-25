@@ -13,8 +13,12 @@ interface Props {
   /** Where the incoming player comes from (provenanceLabel) — spoken as the
       badge's tooltip and accessible name. */
   incomingTitle?: string | null;
+  /** Card color theme by roster status: gold = returning (default), navy =
+      incoming transfer, white = incoming recruit, gray = departed/off-roster.
+      See lib/data cardTheme(). */
+  theme?: 'gold' | 'navy' | 'white' | 'gray';
 }
-const { name, photo, size, variant = 'circle', incoming = false, incomingTitle = null } = Astro.props;
+const { name, photo, size, variant = 'circle', incoming = false, incomingTitle = null, theme = 'gold' } = Astro.props;
 const badgeBox = Math.min(22, Math.max(11, Math.round(size * 0.32)));
 const badgeFont = Math.min(14, Math.max(8, Math.round(size * 0.2)));
 const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('');
@@ -127,13 +131,13 @@ const frameStyle = variant === 'bust'
 ---
 <span class="hs">
   {usePhoto ? (
-    <span class={`shot frame ${variant}`} style={frameStyle}>
+    <span class={`shot frame ${variant} t-${theme}`} style={frameStyle}>
       <img class="ph" src={photo} alt={name} style={cropStyle} />
       {incoming && <i class="inb" role={incomingTitle ? 'img' : undefined} aria-label={incomingTitle ?? undefined} aria-hidden={incomingTitle ? undefined : 'true'} style={`width:${badgeBox}px;height:${badgeBox}px;font-size:${badgeFont}px`}>+</i>}
     </span>
   ) : (
     <span
-      class={`shot initials ${variant}`}
+      class={`shot initials ${variant} t-${theme}`}
       style={`${frameStyle};font-size:${Math.round(size * (variant === 'bust' ? 0.3 : 0.34))}px`}
     >
       {initials}
@@ -150,6 +154,13 @@ const frameStyle = variant === 'bust'
     border: 2px solid var(--gold-light);
     background: linear-gradient(180deg, var(--gold), var(--gold-deep));
   }
+  /* Card theme by roster status — t-gold is the base above; transfers go navy
+     (gold-on-navy trim), recruits go clean white. */
+  .shot.t-navy { border-color: var(--navy); background: linear-gradient(180deg, var(--navy-bright), var(--navy-dark)); }
+  .shot.t-white { border-color: var(--well); background: var(--card); }
+  /* departed / off-roster: neutral frame + grayed portrait */
+  .shot.t-gray { border-color: var(--line); background: var(--well); }
+  .shot.t-gray .ph { filter: grayscale(0.9); }
   /* the + badge speaks through the site's own tooltip, not the OS's slow one */
   .intip {
     position: absolute;
@@ -219,6 +230,9 @@ const frameStyle = variant === 'bust'
     /* flat gold: the gradient's deep end put navy-dark at 4.2:1 — below AA */
     background: var(--gold);
   }
+  .initials.t-navy { color: var(--on-navy); background: var(--navy); }
+  .initials.t-white { color: var(--navy-dark); background: var(--card); }
+  .initials.t-gray { color: var(--text-mut); background: var(--well); }
   /* + arrival badge: the incoming mark lives on the card, not in the tag */
   .inb {
     position: absolute;

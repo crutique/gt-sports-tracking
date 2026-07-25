@@ -30,6 +30,14 @@ export function fmtDate(iso: string): string {
   return `${MONTHS[m - 1]} ${d}`;
 }
 
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+// "Fri Jul 24" — weekday from a UTC-anchored date so it never shifts a day.
+export function fmtDateWeekday(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  const wd = WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
+  return `${wd} ${MONTHS[m - 1]} ${d}`;
+}
+
 /** Written-out class year for the card: SO → Sophomore, R-SO → Redshirt Sophomore. */
 export function classFull(cls: string): string {
   const NAMES: Record<string, string> = {
