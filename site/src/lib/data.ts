@@ -255,8 +255,11 @@ export function mapPlayerToCard(p: Player): PlayerCardData {
   if (p.gtStatus === 'freshman') {
     const r = p.recruit ?? {};
     const bt = String(r.bats_throws ?? '').split('/');
-    const ranks: { k: string; v: string }[] = [];
-    if (r.pg_grade != null) ranks.push({ k: 'PG Grade', v: String(r.pg_grade) });
+    // PG Grade box always shows — a signee without a grade (didn't attend a
+    // showcase for full evaluation) reads "—", not a dropped box.
+    const ranks: { k: string; v: string }[] = [
+      { k: 'PG Grade', v: r.pg_grade != null ? String(r.pg_grade) : '—' },
+    ];
     if (r.pg_rank != null) ranks.push({ k: "Nat'l", v: `#${r.pg_rank}` });
     if (r.pg_pos != null && r.pg_pos_rank != null) ranks.push({ k: `${r.pg_pos} Rank`, v: `#${r.pg_pos_rank}` });
     return {
