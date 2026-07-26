@@ -8,3 +8,6 @@ dist/
 .claude/worktrees/
 .astro/
 .claude/settings.local.json
+
+# cached NCAA API responses (regenerable, ~60MB)
+pipeline/.cache/
