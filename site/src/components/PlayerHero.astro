@@ -1,7 +1,11 @@
 ---
-// The card front: the whole page is the trading card, and this is its photo
-// panel — big gold-framed portrait on the navy felt, the headline percentile
-// riding the photo corner like a grading sticker.
+// The card front: the page's identity banner. Navy-dominant for everyone (it
+// reads best and sits well on the white page), with roster status carried by a
+// type-coloured eyebrow + a subtle type-tinted glow — the card's language
+// without flipping the whole banner (gold reads garish at this scale, white
+// clashes with the page). The portrait is the background-removed cutout on a
+// consistent white panel, so every player reads the same regardless of the
+// source photo's backdrop.
 import type { League, Player } from '../lib/data';
 import { cardTheme, provenanceLabel } from '../lib/data';
 import { classFull } from '../lib/format';
@@ -10,8 +14,20 @@ import Headshot from './Headshot.astro';
 interface Props {
   player: Player;
   league: League | undefined;
+  /** 'identity' drops the summer team/league line — the hero is shared above the
+      Overview + Summer tabs, and summer assignment belongs to the Summer view. */
+  context?: 'identity' | 'summer';
+  hometown?: string | null;
+  originSchool?: string | null;   // HS (returners/recruits) — hometown's companion
 }
-const { player, league } = Astro.props;
+const { player, league, context = 'summer', hometown = null, originSchool = null } = Astro.props;
+const showSummer = context === 'summer';
+const origin = [hometown, originSchool].filter(Boolean).join(' · ');
+
+const theme = cardTheme(player.gtStatus);
+const statusLabel = player.gtStatus === 'transfer' ? 'Transfer'
+  : player.gtStatus === 'freshman' ? '2026 Recruit' : 'Returning';
+const cutout = player.photo ? `/cutouts/${player.slug}.png` : null;
 
 const cls = classFull(player.classYear);
 const meta = [cls, player.fromSchool ? `From ${player.fromSchool}` : null]
@@ -20,27 +36,33 @@ const meta = [cls, player.fromSchool ? `From ${player.fromSchool}` : null]
 const incoming = player.gtStatus !== 'returning';
 const provTitle = provenanceLabel(player);
 ---
-<header class="hero">
+<header class={`hero t-${theme}`}>
   <div class="photo">
-    <Headshot name={player.name} photo={player.photo} size={172} variant="bust"
-      incoming={incoming} incomingTitle={provTitle} theme={cardTheme(player.gtStatus)} />
-    <span class="pos-tag">
-      <span class="pos">{player.position || '—'}</span>
-    </span>
+    {cutout ? (
+      <div class="cut"><img src={cutout} alt={player.name} loading="lazy" /></div>
+    ) : (
+      <Headshot name={player.name} photo={player.photo} size={172} variant="bust"
+        incoming={incoming} incomingTitle={provTitle} theme={theme} />
+    )}
+    <span class="pos-tag"><span class="pos">{player.position || '—'}</span></span>
   </div>
   <div class="who">
+    <span class="eyebrow">{statusLabel}</span>
     <h1>{player.name}</h1>
     {meta && <div class="meta">{meta}</div>}
-    <div class="row team-row">
-      {player.summer.team && <span class="team">{player.summer.team}</span>}
-      {league && (
-        <span class="pill">
-          <span class="lg-full">{league.name}</span>
-          <span class="lg-ab" title={league.name}>{league.abbrev}</span>
-        </span>
-      )}
-      {!player.summer.team && <span class="team">No summer assignment confirmed yet</span>}
-    </div>
+    {!showSummer && origin && <div class="origin">{origin}</div>}
+    {showSummer && (
+      <div class="row team-row">
+        {player.summer.team && <span class="team">{player.summer.team}</span>}
+        {league && (
+          <span class="pill">
+            <span class="lg-full">{league.name}</span>
+            <span class="lg-ab" title={league.name}>{league.abbrev}</span>
+          </span>
+        )}
+        {!player.summer.team && <span class="team">No summer assignment confirmed yet</span>}
+      </div>
+    )}
   </div>
   <div class="context">
     <img class="gt-logo" src="/gt-logo.png" width="60" height="60" alt="Georgia Tech" loading="lazy" />
@@ -49,90 +71,79 @@ const provTitle = provenanceLabel(player);
 
 <style>
   .hero {
-    /* the page's outer gold frame supplies the card edge — no hatband here */
+    /* base navy felt; type tint layered on top per theme below */
     background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-bright) 100%);
     padding: 22px;
     display: flex;
     align-items: center;
     gap: 22px;
   }
-  .photo {
-    position: relative;
-    flex-shrink: 0;
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.4));
+  /* status tint — subtle, navy stays dominant */
+  .hero.t-gold {
+    background:
+      radial-gradient(115% 150% at 90% -25%, rgba(179, 144, 81, 0.30), transparent 55%),
+      linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 58%, var(--navy-bright) 100%);
   }
-  /* position tag: the card-corner position mark, class written out beneath */
-  .pos-tag {
-    position: absolute;
-    top: -9px;
-    right: -9px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    z-index: 2;
+  .hero.t-white {
+    background:
+      radial-gradient(115% 150% at 90% -25%, rgba(255, 255, 255, 0.16), transparent 55%),
+      linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 58%, var(--navy-bright) 100%);
   }
+
+  .photo { position: relative; flex-shrink: 0; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.4)); }
+  /* cutout on a consistent white panel — one look across every source photo */
+  .cut {
+    width: 172px; height: 172px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--card), var(--well));
+    border: 3px solid var(--gold);
+  }
+  .cut img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 6%; }
+
+  /* position tag: the card-corner position mark */
+  .pos-tag { position: absolute; top: -9px; right: -9px; z-index: 2; }
   .pos {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.04em;
-    color: var(--on-navy);
-    background: var(--navy);
-    border: 2px solid var(--card);
-    border-radius: 8px;
-    padding: 1px 8px;
-    white-space: nowrap;
+    font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.04em;
+    color: var(--on-navy); background: var(--navy); border: 2px solid var(--card);
+    border-radius: 8px; padding: 1px 8px; white-space: nowrap;
   }
   .who { flex: 1; min-width: 0; }
-  h1 {
-    margin: 0;
-    color: var(--on-navy);
-    font-size: 36px;
-    letter-spacing: 0.01em;
-  }
-  .meta {
+  .eyebrow {
+    display: block;
+    font-family: var(--font-display); font-weight: 700; font-size: 11.5px;
+    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px;
     color: var(--gold);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
   }
+  .t-navy .eyebrow { color: var(--gold-light); }
+  .t-white .eyebrow { color: var(--on-navy); }
+  h1 { margin: 0; color: var(--on-navy); font-size: 36px; letter-spacing: 0.01em; line-height: 1.02; }
+  .meta {
+    color: var(--gold); font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-top: 4px;
+  }
+  .t-navy .meta { color: var(--gold-light); }
+  .t-white .meta { color: var(--on-navy-mut); }
+  .origin { margin-top: 6px; color: var(--on-navy-mut); font-size: 13px; }
   .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .team-row { margin-top: 8px; }
   .team { color: var(--on-navy-mut); font-size: 13px; }
   .pill {
-    background: var(--gold);
-    color: var(--navy-dark);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 12px;
-    padding: 2px 10px;
-    white-space: nowrap;
+    background: var(--gold); color: var(--navy-dark); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em; border-radius: 12px; padding: 2px 10px; white-space: nowrap;
   }
   .lg-ab { display: none; }
   .context { flex-shrink: 0; align-self: flex-start; padding-top: 2px; }
   .gt-logo { display: block; width: 60px; height: 60px; }
   @media (max-width: 560px) {
-    .hero {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 14px;
-      padding: 20px 16px 18px;
-    }
+    .hero { flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 20px 16px 18px; }
     .who { width: 100%; }
     h1 { font-size: 30px; }
+    .eyebrow { margin-bottom: 2px; }
     .team-row { justify-content: center; }
     .lg-full { display: none; }
     .lg-ab { display: inline; }
-    .context {
-      align-self: center;
-      padding-top: 0;
-    }
+    .context { align-self: center; padding-top: 0; }
     .gt-logo { width: 52px; height: 52px; }
   }
 </style>

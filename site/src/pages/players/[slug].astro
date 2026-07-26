@@ -5,7 +5,7 @@ import SliderPanel from '../../components/SliderPanel.astro';
 import Sparkline from '../../components/Sparkline.astro';
 import GameLogTable from '../../components/GameLogTable.astro';
 import Base from '../../layouts/Base.astro';
-import { getGamelog, getLeagueByKey, getPlayers, isSampleLeague } from '../../lib/data';
+import { getGamelog, getLeagueByKey, getPlayers, isSampleLeague, mapPlayerToCard } from '../../lib/data';
 import type { HitterGame, PitcherGame, Player } from '../../lib/data';
 import { rollingEra, rollingOps } from '../../lib/stats';
 import { fmtDate, fmtEra, fmtRate3 } from '../../lib/format';
@@ -27,6 +27,17 @@ const hasStats = Boolean(player.hitting || player.pitching) && !sample;
 const side = player.hitting ? 'hitters' : 'pitchers';
 const gamelog = getGamelog(player.slug);
 const logSide = player.pitching && !player.hitting ? 'pitching' : 'hitting';
+
+// ── Overview (identity) — who the player is and their track record, from the
+// same card model the field-diagram cards use. Never the live summer line.
+const card = mapPlayerToCard(player);
+// Vitals read as prime info — a row of labelled tiles, not a run-on line.
+const vitals = [
+  card.height ? { k: 'HT', v: card.height } : null,
+  card.weight ? { k: 'WT', v: `${card.weight}` } : null,
+  card.bats ? { k: 'Bats', v: card.bats } : null,
+  card.throws ? { k: 'Throws', v: card.throws } : null,
+].filter((x): x is { k: string; v: string } => x !== null);
 
 // Trend: trailing-10-game OPS for hitters, trailing-5-outing ERA for pitchers,
 // with the league season average as the dashed reference line.
@@ -63,114 +74,131 @@ if (trendDomain.length > 0) {
   }
 }
 
-// Card bio: listed measurements only (returners via the official GT roster,
-// freshmen via PG; transfers pending backfill render nothing).
-const ht = player.height ?? (player.recruit?.height ? String(player.recruit.height) : null);
-const wt = player.weight ?? (player.recruit?.weight ? Number(player.recruit.weight) : null);
-const bt = player.recruit?.bats_throws ? String(player.recruit.bats_throws) : null;
-const vitals = [
-  ht ? { h: 'HT', v: ht } : null,
-  wt ? { h: 'WT', v: String(wt) } : null,
-  bt ? { h: 'B/T', v: bt } : null,
-].filter((c): c is { h: string; v: string } => c !== null);
-
-// The no-stats explainer never speculates past a note that already explains —
-// "check back soon" under "held out for the draft" was a false promise.
+// The no-stats explainer never speculates past a note that already explains.
 const emptyMsg = hasStats ? null
   : player.recruit
-    ? `${firstName} hasn't played a game for Georgia Tech yet — here's what we know from his recruiting profile.`
+    ? `${firstName} hasn't played a game for Georgia Tech yet.`
     : player.summer.status === 'assigned'
-      ? `Stats for ${firstName} aren't available yet.`
+      ? `Summer stats for ${firstName} aren't available yet.`
       : player.summer.status === 'not_playing'
         ? `${firstName} is not playing summer ball this year.`
         : player.note
           ? null
-          : `${firstName} doesn't have a confirmed summer team yet. Check back soon.`;
+          : `${firstName} doesn't have a confirmed summer team yet.`;
 
 const shareDesc = [
   player.position || null,
-  player.summer.team ?? null,
-  league?.name ?? null,
+  card.eyebrow,
+  card.hometown ?? null,
 ].filter(Boolean).join(' · ') || 'Georgia Tech baseball';
 ---
 <Base title={`${player.name} — Baseball Tracking GT`}
-  description={`${player.name} — ${shareDesc} · 2026 summer tracking.`}>
-  <a class="back" id="back-link" href="/stats">← All players</a>
-  <article class="card profile">
-    <PlayerHero player={player} league={league} />
+  description={`${player.name} — ${shareDesc}. Georgia Tech baseball.`}>
+  <a class="back" id="back-link" href="/">← Roster</a>
 
-    {player.note && (
-      <div class="strip note">
-        <span class="dot">i</span>
-        <em>{player.note}</em>
-      </div>
-    )}
-
-    {emptyMsg && <div class="empty">{emptyMsg}</div>}
-
-    {player.recruit && (
-      <section class="recruit">
-        <h2 class="section-title">Recruit Profile</h2>
-        <p class="facts">
-          {[player.recruit.hometown, player.recruit.high_school,
-            [player.recruit.height, player.recruit.weight ? `${player.recruit.weight} lbs` : null].filter(Boolean).join(' · '),
-            player.recruit.bats_throws ? `B/T ${player.recruit.bats_throws}` : null,
-          ].filter(Boolean).join('  ·  ')}
-        </p>
-        {(player.recruit.pg_grade || player.recruit.pg_rank) && (
-          <p class="pg">
-            {player.recruit.pg_grade && <span class="badge">PG {player.recruit.pg_grade}</span>}
-            {player.recruit.pg_rank && <span>#{player.recruit.pg_rank} national (Class of 2026)</span>}
-            {player.recruit.pg_url && <a href={String(player.recruit.pg_url)} rel="noopener">via Perfect Game ↗</a>}
-          </p>
-        )}
-        {player.recruit.hs_pitching && <p class="hs">2026 HS pitching: <strong>{player.recruit.hs_pitching}</strong></p>}
-        {player.recruit.hs_batting && <p class="hs">2026 HS batting: <strong>{player.recruit.hs_batting}</strong></p>}
-        {player.recruit.hs_source && <p class="src"><a href={String(player.recruit.hs_source)} rel="noopener">stats via MaxPreps ↗</a></p>}
-        {player.recruit.highlight && <p class="hl">{player.recruit.highlight}</p>}
-      </section>
-    )}
-
-    {hasStats && (
-      <div class="body">
-        <div class="left">
-          {vitals.length > 0 && (
-            <table class="vitals">
-              <thead><tr>{vitals.map((c) => <th scope="col">{c.h}</th>)}</tr></thead>
-              <tbody><tr>{vitals.map((c) => <td>{c.v}</td>)}</tr></tbody>
-            </table>
-          )}
-          {(['hitting', 'pitching'] as const).map((s) =>
-            player[s] ? (
-              <section>
-                <h2 class="section-title">{player.hitting && player.pitching ? `Summer 2026 Stats — ${s === 'hitting' ? 'Batting' : 'Pitching'}` : 'Summer 2026 Stats'}</h2>
-                <CardBackStats block={player[s]!} side={s} />
-              </section>
-            ) : null
-          )}
-        </div>
-        <div class="right">
-          <div class="pct-panel">
-            {(['hitting', 'pitching'] as const).map((s) =>
-              player[s] && league ? (
-                <SliderPanel block={player[s]!} leagueName={league.name} side={s}
-                  dual={Boolean(player.hitting && player.pitching)} />
-              ) : null
-            )}
-            {league && (
-              <p class="pct-note">
-                Percentiles rank {firstName} against all {league.name} {side},
-                2026 season · stats through {player.asOf}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    )}
-
+  <article class="card herocard">
+    <PlayerHero player={player} league={league} context="identity"
+      hometown={card.hometown} originSchool={card.originSchool} />
+    <nav class="ptabs" role="tablist" aria-label="Player views">
+      <button type="button" class="ptab" id="tab-overview" role="tab" data-view="overview"
+        aria-selected="true" aria-controls="view-overview">Overview</button>
+      <button type="button" class="ptab" id="tab-summer" role="tab" data-view="summer"
+        aria-selected="false" aria-controls="view-summer" tabindex="-1">Summer 2026</button>
+    </nav>
   </article>
 
-  {hasStats && trend.length > 0 && trendLast !== null && (
+  <!-- ── OVERVIEW — identity & track record ── -->
+  <section class="view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="tab-overview">
+    {player.note && (
+      <div class="card note">
+        <span class="dot">i</span><em>{player.note}</em>
+      </div>
+    )}
+
+    <article class="card ov">
+      {vitals.length > 0 && (
+        <div class="specs">
+          {vitals.map((t) => <div class="spec"><i>{t.k}</i><b>{t.v}</b></div>)}
+        </div>
+      )}
+
+      {card.ranks && (
+        <div class="ranks">
+          {card.ranks.map((r) => <span class="rank"><b>{r.v}</b><i>{r.k}</i></span>)}
+        </div>
+      )}
+
+      {card.rows.length > 0 ? (
+        <section class="stat-sec">
+          <h2 class="section-title">{card.statLabel || 'Prior seasons'}</h2>
+          <table class="pstat">
+            <thead><tr><th scope="col" class="yr">Season</th>{card.cols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+            <tbody>
+              {card.rows.map((row) => (
+                <tr><th scope="row" class="yr">{row.label}</th>{row.values.map((v) => <td>{v}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : (!player.recruit && card.pending && <p class="pending">{card.pending}</p>)}
+
+      {player.recruit && (
+        <section class="recruit stat-sec">
+          <h2 class="section-title">Recruiting</h2>
+          {player.recruit.highlight && <p class="hl">{player.recruit.highlight}</p>}
+          {player.recruit.hs_pitching && <p class="hs">2026 HS pitching: <strong>{player.recruit.hs_pitching}</strong></p>}
+          {player.recruit.hs_batting && <p class="hs">2026 HS batting: <strong>{player.recruit.hs_batting}</strong></p>}
+          <p class="src">
+            {player.recruit.pg_url && <a href={String(player.recruit.pg_url)} rel="noopener">Perfect Game profile ↗</a>}
+            {player.recruit.hs_source && <a href={String(player.recruit.hs_source)} rel="noopener">HS stats via MaxPreps ↗</a>}
+          </p>
+        </section>
+      )}
+    </article>
+  </section>
+
+  <!-- ── SUMMER 2026 — this offseason's performance ── -->
+  <section class="view" id="view-summer" data-view="summer" role="tabpanel" aria-labelledby="tab-summer" hidden>
+    <article class="card sm">
+      <div class="sm-head">
+        <span class="sm-team">{player.summer.team ?? 'No summer assignment confirmed yet'}</span>
+        {league && <span class="pill"><span class="lg-full">{league.name}</span><span class="lg-ab" title={league.name}>{league.abbrev}</span></span>}
+      </div>
+
+      {emptyMsg && <div class="empty">{emptyMsg}</div>}
+
+      {hasStats && (
+        <div class="body">
+          <div class="left">
+            {(['hitting', 'pitching'] as const).map((s) =>
+              player[s] ? (
+                <section>
+                  <h2 class="section-title">{player.hitting && player.pitching ? `Summer 2026 — ${s === 'hitting' ? 'Batting' : 'Pitching'}` : 'Summer 2026 Stats'}</h2>
+                  <CardBackStats block={player[s]!} side={s} />
+                </section>
+              ) : null
+            )}
+          </div>
+          <div class="right">
+            <div class="pct-panel">
+              {(['hitting', 'pitching'] as const).map((s) =>
+                player[s] && league ? (
+                  <SliderPanel block={player[s]!} leagueName={league.name} side={s}
+                    dual={Boolean(player.hitting && player.pitching)} />
+                ) : null
+              )}
+              {league && (
+                <p class="pct-note">
+                  Percentiles rank {firstName} against all {league.name} {side}, 2026 season · stats through {player.asOf}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </article>
+
+    {hasStats && trend.length > 0 && trendLast !== null && (
       <section class="card trendband">
         <h2 class="section-title">{rollingTitle}</h2>
         <div class="tb-grid">
@@ -179,19 +207,11 @@ const shareDesc = [
               <span class="trend-value">{fmtTrend(trendLast)}</span>
               <span class="trend-cap">{trendLabelStat}</span>
             </div>
-            <Sparkline
-              points={trend}
-              baseline={trendBaseline}
+            <Sparkline points={trend} baseline={trendBaseline}
               label={`${trendLabelStat}, currently ${fmtTrend(trendLast)}${trendBaseline !== null ? `, league average ${fmtTrend(trendBaseline)}` : ''}`}
-              width={880}
-              height={150}
-              smooth
-              endDot={false}
-              ticks={trendTicks}
-              fmtTick={fmtTrend}
+              width={880} height={150} smooth endDot={false} ticks={trendTicks} fmtTick={fmtTrend}
               baselineLabel={trendBaseline !== null ? 'LG AVG' : null}
-              ramp={{ invert: logSide === 'pitching', ref: logSide === 'hitting' ? 0.2 : 2 }}
-            />
+              ramp={{ invert: logSide === 'pitching', ref: logSide === 'hitting' ? 0.2 : 2 }} />
             {trendDates.length >= 2 && (
               <div class="tb-axis" aria-hidden="true">
                 <span>{fmtDate(trendDates[0])}</span>
@@ -201,191 +221,206 @@ const shareDesc = [
           </div>
         </div>
       </section>
-  )}
+    )}
 
-  {hasStats && (
-    <section class="card logcard">
-      <GameLogTable entries={gamelog} side={logSide} />
-    </section>
-  )}
+    {hasStats && (
+      <section class="card logcard">
+        <GameLogTable entries={gamelog} side={logSide} />
+      </section>
+    )}
+  </section>
 </Base>
 
 <script>
-  // Go back via history ONLY when the visitor came from the players dashboard,
-  // so its tab/filter/sort state (carried in its URL) survives — from any other
-  // page the label "All players" must mean what it says, so the plain href runs.
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.ptabs .ptab')];
+  const views = [...document.querySelectorAll<HTMLElement>('.view')];
+
+  function activate(view: string, push: boolean) {
+    tabs.forEach((t) => {
+      const on = t.dataset.view === view;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    views.forEach((v) => v.toggleAttribute('hidden', v.dataset.view !== view));
+    if (push) {
+      const url = view === 'summer' ? '?view=summer' : location.pathname;
+      history.replaceState(null, '', url);
+    }
+  }
+
+  tabs.forEach((tab) => tab.addEventListener('click', () => activate(tab.dataset.view!, true)));
+  document.querySelector('.ptabs')?.addEventListener('keydown', (e) => {
+    const key = (e as KeyboardEvent).key;
+    if (key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+    e.preventDefault();
+    const cur = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    const next = key === 'ArrowLeft' ? (cur - 1 + tabs.length) % tabs.length : (cur + 1) % tabs.length;
+    tabs[next].focus();
+    activate(tabs[next].dataset.view!, true);
+  });
+
+  // Deep link: Summer tabs (Stats/Leagues) send ?view=summer; #summer also works.
+  const params = new URLSearchParams(location.search);
+  if (params.get('view') === 'summer' || location.hash === '#summer') activate('summer', false);
+
+  // Back link: return via history only when we came from within the site, so the
+  // origin tab's state survives; otherwise the href fallback runs.
   document.getElementById('back-link')!.addEventListener('click', (e) => {
-    let fromDashboard = false;
+    let internal = false;
     try {
-      const ref = new URL(document.referrer);
-      fromDashboard = ref.origin === location.origin && ref.pathname === '/stats';
-    } catch {
-      /* unparseable referrer: use the href fallback */
-    }
-    if (fromDashboard && history.length > 1) {
-      e.preventDefault();
-      history.back();
-    }
+      internal = new URL(document.referrer).origin === location.origin;
+    } catch { /* no/again unparseable referrer: use href */ }
+    if (internal && history.length > 1) { e.preventDefault(); history.back(); }
   });
 </script>
 
 <style>
-  .back {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 0 0 10px;
-  }
-  /* the page is the card: gold frame, white face, object shadow on the table */
-  .profile {
+  .back { display: inline-block; font-size: 13px; font-weight: 600; margin: 0 0 10px; }
+
+  /* the hero card keeps the trading-card frame; the view cards sit below it */
+  .herocard {
     overflow: hidden;
     border: 4px solid var(--gold);
     border-radius: 16px;
-    /* classic card frame: gold edge, white gutter, gold pinstripe */
-    box-shadow:
-      inset 0 0 0 2px var(--card),
-      inset 0 0 0 3px var(--gold-deep),
-      0 14px 34px rgba(0, 0, 0, 0.16);
+    box-shadow: inset 0 0 0 2px var(--card), inset 0 0 0 3px var(--gold-deep), 0 14px 34px rgba(0, 0, 0, 0.16);
   }
-  /* card-back section headers: the navy bar */
-  .profile :global(.section-title) {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--on-navy);
-    background: var(--navy);
-    border-radius: 6px;
-    padding: 4px 10px;
-    margin: 0 0 10px;
-    border-bottom: none;
-  }
-  .strip {
-    background: var(--line-soft);
-    border-bottom: 1px solid var(--line);
-    padding: 7px 22px;
-    font-size: 12px;
-    color: var(--text); /* --text-mut measured 4.3:1 on this surface — under AA */
-  }
-  .dot {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--gold);
-    color: var(--navy-dark);
-    text-align: center;
-    font-weight: 800;
-    font-size: 10px;
-    line-height: 14px;
-    margin-right: 6px;
-  }
-  .empty { padding: 26px 22px; color: var(--text-mut); font-size: 14px; }
-  .recruit {
-    padding: 20px 22px;
-    background: var(--bg);
-    border-top: 1px solid var(--line);
-  }
-  .recruit p { margin: 0 0 8px; }
-  .recruit p:last-child { margin-bottom: 0; }
-  .facts { font-size: 13px; color: var(--text); }
-  .pg { font-size: 12px; color: var(--text-mut); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .badge {
-    display: inline-block;
-    background: var(--navy);
-    color: var(--gold-light);
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    padding: 2px 8px;
-    border-radius: 10px;
-  }
-  .hs { font-size: 13px; }
-  .hs strong { color: var(--navy); }
-  .src { font-size: 12px; color: var(--text-mut); }
-  .hl { font-style: italic; font-size: 13px; color: var(--text-mut); }
-  .body {
+  /* tab bar sits on the navy hero's lower edge */
+  .ptabs {
     display: flex;
-    gap: 24px;
-    padding: 20px 22px 24px;
-    background: var(--card);
+    gap: 4px;
+    padding: 0 14px;
+    background: var(--navy-dark);
+    border-top: 2px solid var(--gold);
   }
-  .left { flex: 0 0 40%; min-width: 0; }
-  /* the card-back vitals box: same panel grammar as the stat tables */
-  .vitals {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-  .vitals th {
-    font-size: 10px;
+  .ptab {
+    appearance: none;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-    color: var(--text-mut);
-    background: var(--line-soft);
-    padding: 4px 2px;
-    text-align: center;
+    color: var(--on-navy-mut);
+    padding: 11px 14px 10px;
+    border-bottom: 3px solid transparent;
   }
-  .vitals td {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-    padding: 5px 2px 6px;
-    font-size: 16px;
-    color: var(--text);
+  .ptab:hover { color: var(--on-navy); }
+  .ptab[aria-selected='true'] { color: var(--on-navy); border-bottom-color: var(--gold); }
+  .ptab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; border-radius: 3px; }
+
+  .view { margin-top: 14px; display: flex; flex-direction: column; gap: 14px; }
+  .view[hidden] { display: none; }
+
+  /* section headers: the navy bar (shared grammar with the stat tables) */
+  .view :global(.section-title) {
+    font-family: var(--font-display); font-weight: 700; font-size: 14px;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-navy);
+    background: var(--navy); border-radius: 6px; padding: 4px 10px; margin: 0 0 10px; border-bottom: none;
   }
-  .right { flex: 1; min-width: 0; border-left: 1px solid var(--line); padding-left: 24px; }
-  .pct-panel {
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 12px 14px 10px;
+
+  .note {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; font-size: 12.5px; color: var(--text); font-style: italic;
   }
-  .pct-note {
-    margin: 8px 0 0;
-    padding-top: 8px;
-    border-top: 1px solid var(--line);
-    font-size: 12px;
-    color: var(--text);
-    max-width: 65ch;
+  .note .dot {
+    flex-shrink: 0;
+    display: inline-block; width: 15px; height: 15px; border-radius: 50%;
+    background: var(--gold); color: var(--navy-dark); text-align: center;
+    font-weight: 800; font-size: 10px; line-height: 15px; font-style: normal;
   }
+
+  /* Overview */
+  .ov { padding: 18px 20px 22px; }
+  /* physical specs — a connected ribbon, label over value; deliberately quieter
+     and structurally different from the PG rank callouts below it */
+  .specs { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
+  .spec { padding: 7px 18px; text-align: center; }
+  .spec + .spec { border-left: 1px solid var(--line); }
+  .spec i {
+    display: block; font-style: normal; font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-mut); margin-bottom: 3px;
+  }
+  .spec b {
+    font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1;
+    color: var(--text); font-variant-numeric: tabular-nums;
+  }
+
+  /* PG rank callouts — separate boxes, big value over label */
+  .ranks { display: flex; gap: 10px; margin-top: 18px; max-width: 420px; }
+  .rank {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 10px 4px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  .rank b {
+    font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1;
+    color: var(--navy); font-variant-numeric: tabular-nums;
+  }
+  .rank i {
+    font-style: normal; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-mut); text-align: center;
+  }
+
+  .stat-sec { margin-top: 20px; }
+  .pstat { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .pstat th, .pstat td { text-align: right; padding: 7px 8px; font-size: 14px; }
+  .pstat thead th {
+    font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-mut); border-bottom: 1px solid var(--line);
+  }
+  .pstat tbody td { color: var(--text); border-bottom: 1px solid var(--line-soft); }
+  .pstat tbody tr:last-child td, .pstat tbody tr:last-child .yr { border-bottom: none; }
+  .pstat .yr { text-align: left; }
+  .pstat tbody .yr {
+    font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--navy);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .pstat thead .yr { border-bottom: 1px solid var(--line); }
+  .pending { margin: 18px 0 0; font-size: 13px; font-style: italic; color: var(--text-mut); }
+
+  .recruit .hl { margin: 0 0 8px; font-style: italic; font-size: 13.5px; color: var(--text); }
+  .recruit .hs { margin: 0 0 6px; font-size: 13.5px; }
+  .recruit .hs strong { color: var(--navy); }
+  .recruit .src { margin: 8px 0 0; display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; }
+
+  /* Summer */
+  .sm { padding: 16px 20px 20px; }
+  .sm-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .sm-team { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--text); }
+  .pill {
+    background: var(--gold); color: var(--navy-dark); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em; border-radius: 12px; padding: 2px 10px; white-space: nowrap;
+  }
+  .lg-ab { display: none; }
+  .empty { padding: 22px 2px; color: var(--text-mut); font-size: 14px; }
+  .body { display: flex; gap: 24px; padding: 16px 0 4px; }
+  .left { flex: 0 0 42%; min-width: 0; }
   .left section + section { margin-top: 20px; }
+  .right { flex: 1; min-width: 0; border-left: 1px solid var(--line); padding-left: 24px; }
+  .pct-panel { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px 10px; }
+  .pct-note { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; color: var(--text); max-width: 65ch; }
+
   .trend-now { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
-  .trend-value {
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-  }
+  .trend-value { font-family: var(--font-display); font-size: 26px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .trend-cap { font-size: 12px; color: var(--text-mut); }
-  .trendband { margin-top: 16px; padding: 16px 20px 20px; }
-  .logcard { margin-top: 16px; }
+  .trendband { padding: 16px 20px 20px; }
   .tb-grid { display: flex; gap: 26px; align-items: flex-start; }
   .tb-chart { flex: 1; min-width: 0; }
   .tb-chart :global(.spark) { max-width: none; }
   .tb-axis {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 48px;
-    padding-right: 58px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--text-mut);
-    margin-top: 3px;
+    display: flex; justify-content: space-between; padding-left: 48px; padding-right: 58px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+    font-family: var(--font-display); font-weight: 600; color: var(--text-mut); margin-top: 3px;
   }
+
   @media (max-width: 700px) {
     .body { flex-direction: column; }
     .left { flex: 1; }
     .right { border-left: none; padding-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .lg-full { display: none; }
+    .lg-ab { display: inline; }
   }
 </style>
