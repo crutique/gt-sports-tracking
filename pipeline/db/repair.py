@@ -151,34 +151,104 @@ def repair_players(conn, dry_run=False):
     if dry_run:
         return len(merges)
 
+    # Set-based, not row-by-row. 53,857 merges at ~7 statements each is ~377,000
+    # round trips, which on a Pi ran for half an hour inside a single opaque
+    # transaction with no way to see progress. The same work expressed as joins
+    # against a mapping table is about ten statements.
     with conn.cursor() as cur:
         cur.execute("UPDATE cbb.player_season SET canon_key = NULL")
-        for loser, winner in merges:
-            for table, cols in (("batting_line", load._BAT_COLS),
-                                ("pitching_line", load._PIT_COLS)):
-                sets = ", ".join(f"{c} = cbb.{table}.{c} + EXCLUDED.{c}" for c in cols)
-                names_ = ", ".join(cols)
-                cur.execute(
-                    f"INSERT INTO cbb.{table} (game_id, player_season_id, {names_}) "
-                    f"SELECT game_id, %s, {names_} FROM cbb.{table} "
-                    f"WHERE player_season_id = %s "
-                    f"ON CONFLICT (game_id, player_season_id) DO UPDATE SET {sets}",
-                    (winner, loser))
-                cur.execute(f"DELETE FROM cbb.{table} WHERE player_season_id = %s",
-                            (loser,))
-            for col in ("batter_player_season_id", "pitcher_player_season_id"):
-                cur.execute(f"UPDATE cbb.play SET {col} = %s WHERE {col} = %s",
-                            (winner, loser))
-            cur.execute("DELETE FROM cbb.player_season WHERE player_season_id = %s",
-                        (loser,))
-        cur.executemany("UPDATE cbb.player_season SET canon_key = %s "
-                        "WHERE player_season_id = %s",
-                        [(k, psid) for psid, k in rekey])
+        cur.execute("CREATE TEMP TABLE merge_map (loser bigint PRIMARY KEY, "
+                    "winner bigint NOT NULL) ON COMMIT DROP")
+        with cur.copy("COPY merge_map (loser, winner) FROM STDIN") as cp:
+            for loser, winner in merges:
+                cp.write_row((loser, winner))
+        cur.execute("CREATE INDEX ON merge_map (winner)")
+        _log("  mapping table built; folding stat lines")
+
+        for table, cols in (("batting_line", load._BAT_COLS),
+                            ("pitching_line", load._PIT_COLS)):
+            names_ = ", ".join(cols)
+            sums = ", ".join(f"sum(t.{c})::smallint" for c in cols)
+            sets = ", ".join(f"{c} = cbb.{table}.{c} + EXCLUDED.{c}" for c in cols)
+            # Several losers can fold into one winner, and the winner may already
+            # hold a line for that game -- hence both the GROUP BY and ON CONFLICT.
+            cur.execute(
+                f"INSERT INTO cbb.{table} (game_id, player_season_id, {names_}) "
+                f"SELECT t.game_id, m.winner, {sums} "
+                f"FROM cbb.{table} t JOIN merge_map m ON m.loser = t.player_season_id "
+                f"GROUP BY t.game_id, m.winner "
+                f"ON CONFLICT (game_id, player_season_id) DO UPDATE SET {sets}")
+            cur.execute(
+                f"DELETE FROM cbb.{table} t USING merge_map m "
+                f"WHERE m.loser = t.player_season_id")
+            _log(f"  {table} folded")
+
+        for col in ("batter_player_season_id", "pitcher_player_season_id"):
+            cur.execute(f"UPDATE cbb.play p SET {col} = m.winner "
+                        f"FROM merge_map m WHERE m.loser = p.{col}")
+        _log("  plays repointed")
+
+        cur.execute("DELETE FROM cbb.player_season ps USING merge_map m "
+                    "WHERE m.loser = ps.player_season_id")
+    conn.commit()
+
+    # Re-key in one statement per batch rather than 151,000 individual updates.
+    with conn.cursor() as cur:
+        cur.execute("CREATE TEMP TABLE rekey_map (psid bigint PRIMARY KEY, key text) "
+                    "ON COMMIT DROP")
+        with cur.copy("COPY rekey_map (psid, key) FROM STDIN") as cp:
+            for psid, key in rekey:
+                cp.write_row((psid, key))
+        cur.execute("UPDATE cbb.player_season ps SET canon_key = r.key "
+                    "FROM rekey_map r WHERE r.psid = ps.player_season_id")
         # people left with no season are the discarded name variants
         cur.execute("DELETE FROM cbb.person p WHERE NOT EXISTS "
                     "(SELECT 1 FROM cbb.player_season ps WHERE ps.person_id = p.person_id)")
     conn.commit()
+    _log("  re-keyed and orphan people removed")
     return len(merges)
+
+
+# ------------------------------------------------------------ duplicate games --
+def repair_duplicate_games(conn, dry_run=False):
+    """Collapse games loaded more than once from the same archive object.
+
+    Only ~68% of StatCrew files declare `<venue sbid>`, so for the rest the
+    ON CONFLICT (sb_id) guard did nothing and a re-ingest inserted another copy.
+    Concurrent crawler processes then produced two and three copies of the same
+    game, which inflated season totals -- Advincula came out at 63 games against
+    an official 61.
+
+    Identity here is the **source URL**: one archive object is one game, whatever
+    the document says about itself. That deliberately does not touch legitimate
+    doubleheaders, which are distinct objects with distinct URLs.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT gs.url, array_agg(g.game_id ORDER BY g.game_id) "
+            "FROM cbb.game g JOIN cbb.game_source gs USING (game_id) "
+            "WHERE gs.url IS NOT NULL GROUP BY gs.url HAVING count(*) > 1")
+        dupes = cur.fetchall()
+
+    extra = sum(len(ids) - 1 for _u, ids in dupes)
+    _log(f"duplicate games: {len(dupes)} source urls loaded more than once, "
+         f"{extra} surplus rows")
+    if dry_run or not dupes:
+        return extra
+
+    with conn.cursor() as cur:
+        losers = [gid for _u, ids in dupes for gid in ids[1:]]
+        cur.execute("CREATE TEMP TABLE dup_games (game_id bigint PRIMARY KEY) "
+                    "ON COMMIT DROP")
+        with cur.copy("COPY dup_games (game_id) FROM STDIN") as cp:
+            for gid in losers:
+                cp.write_row((gid,))
+        # every child table cascades from cbb.game, so one delete is enough
+        cur.execute("DELETE FROM cbb.game g USING dup_games d "
+                    "WHERE d.game_id = g.game_id")
+    conn.commit()
+    _log(f"  removed {len(losers)} duplicate game rows")
+    return extra
 
 
 def main(argv=None):
@@ -187,6 +257,7 @@ def main(argv=None):
                     help="report what would merge without changing anything")
     args = ap.parse_args(argv)
     conn = load.connect()
+    repair_duplicate_games(conn, args.dry_run)
     repair_schools(conn, args.dry_run)
     repair_team_seasons(conn, args.dry_run)
     repair_players(conn, args.dry_run)

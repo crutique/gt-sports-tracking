@@ -123,8 +123,14 @@ def _upsert_line(cur, table, cols, game_id, psid, row):
 
 
 # -------------------------------------------------------------------- game --
-def load_game(conn, parsed, source, url, raw_text, sha=None):
-    """Upsert one parsed game and everything hanging off it. Returns game_id."""
+def load_game(conn, parsed, source, url, raw_text, sha=None, sb_id=None):
+    """Upsert one parsed game and everything hanging off it. Returns game_id.
+
+    ``sb_id`` is the archive id we *fetched with*, and it must be supplied rather
+    than trusted from the document: only ~68% of files declare ``<venue sbid>``,
+    and without it the ON CONFLICT guard below never fires, so every re-ingest
+    silently inserts another copy of the game.
+    """
     from pipeline import statbroadcast as SB
 
     season = season_of(parsed["date"])
@@ -155,7 +161,7 @@ def load_game(conn, parsed, source, url, raw_text, sha=None):
              parsed.get("attend") or None, parsed.get("duration") or None,
              "final" if parsed.get("complete") else "in_progress",
              bool(parsed.get("complete")),
-             parsed.get("sbid") or None, parsed.get("gameid") or None))
+             sb_id or parsed.get("sbid") or None, parsed.get("gameid") or None))
         game_id = cur.fetchone()[0]
 
         cur.execute(

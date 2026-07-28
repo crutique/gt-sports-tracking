@@ -188,7 +188,7 @@ def ingest_one(conn, sbid):
                         detail=f"implausible game date {parsed['date']}")
         return "suspect"
 
-    load.load_game(conn, parsed, SOURCE, SB.xml_url(sbid), xml)
+    load.load_game(conn, parsed, SOURCE, SB.xml_url(sbid), xml, sb_id=str(sbid))
     load.log_ingest(conn, SOURCE, sbid, "ok",
                     season=load.season_of(parsed["date"]), game_date=parsed["date"])
     return "ok"

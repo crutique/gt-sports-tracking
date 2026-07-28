@@ -185,6 +185,13 @@ CREATE TABLE IF NOT EXISTS cbb.pitching_line (
     PRIMARY KEY (game_id, player_season_id)
 );
 
+-- FK targets need their own index. The primary keys above lead with `game_id`,
+-- so a delete or update of a `player_season` row would otherwise scan the whole
+-- table to check references -- which turned one merge pass into a 12-minute
+-- statement against 2.2M rows.
+CREATE INDEX IF NOT EXISTS batting_line_player_idx  ON cbb.batting_line (player_season_id);
+CREATE INDEX IF NOT EXISTS pitching_line_player_idx ON cbb.pitching_line (player_season_id);
+
 CREATE TABLE IF NOT EXISTS cbb.fielding_line (
     game_id         bigint NOT NULL REFERENCES cbb.game(game_id) ON DELETE CASCADE,
     player_season_id bigint NOT NULL REFERENCES cbb.player_season(player_season_id),
