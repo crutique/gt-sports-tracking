@@ -127,31 +127,51 @@ def fetch_xml(sbid, cache=True):
     return text
 
 
-def peek_root(sbid):
-    """Root element name for ``sbid`` using a range request -- ``'bsgame'`` etc.
+#: Bytes to request when classifying. Must reach ``<venue schedinn>``, which sits
+#: at offset 265-588 across 3000 sampled real files (present in 2998 of them).
+_PEEK_BYTES = 1500
 
-    The archive holds every sport StatBroadcast scores: ``fbgame`` (football),
-    ``bbgame`` (basketball), ``hkgame`` (hockey), ``bsgame`` (baseball/softball).
-    Baseball is a small slice, so downloading whole documents just to discard
-    them would waste both our time and their bandwidth. A 400-byte range request
-    is enough to read the root tag, which cuts classification cost by ~99%.
 
-    Returns ``None`` if the object is absent or unreadable.
+def peek_header(sbid):
+    """Classify ``sbid`` from its first ~1.5 KB: ``(root_tag, sched_innings)``.
+
+    The archive holds every sport StatBroadcast scores -- ``fbgame`` (football),
+    ``bbgame`` (basketball), ``hkgame`` (hockey), ``bsgame`` (baseball/softball)
+    -- and baseball is a minority of it. Fetching whole documents only to discard
+    them wastes their bandwidth and our time: in one season's crawl **36% of all
+    objects processed were softball**, each a ~50 KB download thrown away.
+
+    Reading far enough to catch ``schedinn`` as well as the root tag rejects
+    softball for ~1.5 KB instead of ~50 KB, so the only files fetched in full are
+    ones we actually keep.
+
+    ``sched_innings`` is 0 when the attribute is absent (rare -- 2 of 3000);
+    callers fall back to downloading and counting innings for those.
+
+    Returns ``(None, 0)`` if the object is absent or unreadable.
     """
     _throttle()
-    req = urllib.request.Request(xml_url(sbid),
-                                 headers={"User-Agent": _UA, "Range": "bytes=0-399"})
+    req = urllib.request.Request(
+        xml_url(sbid),
+        headers={"User-Agent": _UA, "Range": f"bytes=0-{_PEEK_BYTES - 1}"})
     try:
         with urllib.request.urlopen(req, timeout=_TIMEOUT) as resp:
             head = resp.read().decode("utf-8", errors="ignore")
     except urllib.error.HTTPError as exc:
         if exc.code in (403, 404):
-            return None
+            return None, 0
         raise
     except Exception:
-        return None
+        return None, 0
     m = re.search(r"<([A-Za-z][A-Za-z0-9_]*)", head)
-    return m.group(1) if m else None
+    root = m.group(1) if m else None
+    innings = re.search(r'schedinn="(\d+)"', head)
+    return root, int(innings.group(1)) if innings else 0
+
+
+def peek_root(sbid):
+    """Root element name only. Retained for callers that do not need innings."""
+    return peek_header(sbid)[0]
 
 
 def sha256(text):

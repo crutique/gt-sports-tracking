@@ -71,6 +71,37 @@ def test_missing_object_is_a_gap_not_an_error(monkeypatch):
 
 
 # --- baseball vs softball ---------------------------------------------------
+def test_peek_header_reads_root_and_innings_together(monkeypatch):
+    """Softball must be rejectable from the header alone -- it shares the
+    `bsgame` root and was 36% of a real season's objects, each otherwise a full
+    ~50KB download thrown away."""
+    head = ('<bsgame source="TAS Baseball/Softball" version="5.17.00">'
+            '<venue gameid="TX_03" visname="UC Davis" homename="Texas" '
+            'date="2/15/2026" schedinn="9" sbid="651570">')
+    monkeypatch.setattr(SB, "_throttle", lambda: None)
+
+    class FakeResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self): return head.encode()
+
+    monkeypatch.setattr(SB.urllib.request, "urlopen", lambda *a, **k: FakeResp())
+    assert SB.peek_header("651570") == ("bsgame", 9)
+    assert SB.peek_root("651570") == "bsgame"
+
+
+def test_peek_header_survives_a_missing_schedinn(monkeypatch):
+    monkeypatch.setattr(SB, "_throttle", lambda: None)
+
+    class FakeResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self): return b'<bsgame source="TAS"><venue date="2/15/2026">'
+
+    monkeypatch.setattr(SB.urllib.request, "urlopen", lambda *a, **k: FakeResp())
+    assert SB.peek_header("1") == ("bsgame", 0), "0 means fall back to a full read"
+
+
 def test_baseball_is_identified_by_scheduled_innings():
     game = statcrew.parse_game(FIXTURE.read_text(encoding="utf-8", errors="ignore"))
     assert game["sched_innings"] == 9

@@ -119,33 +119,41 @@ def _pending(conn, date_from, date_to, redo, limit):
         return cur.fetchall()
 
 
-def _root_tag(conn, sbid):
-    """Root element for ``sbid``, remembered so each object is classified once.
+def _header(conn, sbid):
+    """``(root_tag, sched_innings)`` for ``sbid``, remembered after first look.
 
-    The archive is mostly other sports, so this is the difference between a
-    400-byte range request and a full document download for ~90% of objects.
+    Classification is cached in ``cbb.archive_object`` so an object is peeked at
+    most once across every re-run of the crawl.
     """
     with conn.cursor() as cur:
-        cur.execute("SELECT root_tag FROM cbb.archive_object WHERE sbid = %s", (sbid,))
+        cur.execute("SELECT root_tag, sched_innings FROM cbb.archive_object "
+                    "WHERE sbid = %s", (sbid,))
         row = cur.fetchone()
     if row and row[0]:
-        return row[0]
-    tag = SB.peek_root(sbid) or "?"
+        return row[0], row[1] or 0
+    tag, innings = SB.peek_header(sbid)
     with conn.cursor() as cur:
-        cur.execute("UPDATE cbb.archive_object SET root_tag = %s WHERE sbid = %s",
-                    (tag, sbid))
-    return tag
+        cur.execute("UPDATE cbb.archive_object SET root_tag = %s, sched_innings = %s "
+                    "WHERE sbid = %s", (tag or "?", innings, sbid))
+    return (tag or "?"), innings
 
 
 def ingest_one(conn, sbid):
     """Fetch, classify and load a single archived game. Returns a status string."""
-    tag = _root_tag(conn, sbid)
+    tag, innings = _header(conn, sbid)
     if tag is None or tag == "?":
         load.log_ingest(conn, SOURCE, sbid, "missing", detail="no object")
         return "missing"
     if tag != "bsgame":
         load.log_ingest(conn, SOURCE, sbid, "skipped", detail=f"root <{tag}>")
         return "skipped"
+    # Reject softball from the header alone. It shares the `bsgame` root and made
+    # up 36% of a season's objects, so downloading each one in full before
+    # discarding it was the single largest waste in the crawl.
+    if innings and innings < SB.BASEBALL_INNINGS:
+        load.log_ingest(conn, SOURCE, sbid, "skipped",
+                        detail=f"softball ({innings}-inning)")
+        return "softball"
 
     xml = SB.fetch_xml(sbid)
     if xml is None:
@@ -154,6 +162,7 @@ def ingest_one(conn, sbid):
 
     parsed = statcrew.parse_game(xml)
     if not SB.is_baseball(parsed):
+        # only reachable when the header carried no schedinn (2 of 3000 files)
         load.log_ingest(conn, SOURCE, sbid, "skipped",
                         game_date=parsed.get("date") or None, detail="softball")
         return "softball"
