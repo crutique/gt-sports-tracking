@@ -29,6 +29,7 @@ Usage on the Pi::
 """
 import argparse
 import datetime as dt
+import re
 import sys
 import traceback
 
@@ -174,7 +175,14 @@ def ingest_one(conn, sbid):
     # file a game under a season a century early and quietly poison any
     # season-level aggregate. Flag rather than guess: the row lands in the gap
     # list where it can be corrected deliberately.
-    year = int(parsed["date"][:4] or 0)
+    # Real observed values: '1926-02-28' (year mistyped), '0206-20-26'
+    # (transposed), and bare '3/1' (truncated, which reaches Postgres as an
+    # invalid date and aborts the transaction).
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", parsed["date"] or ""):
+        load.log_ingest(conn, SOURCE, sbid, "suspect",
+                        detail=f"unparseable game date {parsed['date']!r}")
+        return "suspect"
+    year = int(parsed["date"][:4])
     if not 1990 <= year <= 2100:
         load.log_ingest(conn, SOURCE, sbid, "suspect",
                         detail=f"implausible game date {parsed['date']}")
