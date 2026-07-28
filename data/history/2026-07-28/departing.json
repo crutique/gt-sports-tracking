@@ -1,0 +1,14 @@
+{
+  "note": "GT players leaving after 2026 who are NOT going pro (pro departures live in draft.json). Curated from ramblinwreck.com roster reconciliation + SI GT beat tracker (2026-07-24). Transfer destinations are unreported as of late July; recheck in September when fall rosters populate.",
+  "outOfEligibility": [
+    { "name": "Caden Spivey", "slug": "caden-spivey", "position": "RHP", "classYear": "Sr", "photo": "/headshots/caden-spivey.jpg" },
+    { "name": "Brett Barfield", "slug": "brett-barfield", "position": "LHP", "classYear": "Sr", "photo": "/headshots/brett-barfield.jpg" },
+    { "name": "Kayden Campbell", "slug": "kayden-campbell", "position": "LHP", "classYear": "Sr", "photo": "/headshots/kayden-campbell.jpg" }
+  ],
+  "transfers": [
+    { "name": "Tyler Neises", "slug": "tyler-neises", "position": "INF", "classYear": "Jr", "photo": "/headshots/tyler-neises.jpg", "destination": null },
+    { "name": "Cade Brown", "slug": "cade-brown", "position": "OF/1B", "classYear": "So", "photo": "/headshots/cade-brown.jpg", "destination": null },
+    { "name": "Dominic Stephenson", "slug": "dominic-stephenson", "position": "C", "classYear": "Fr", "photo": "/headshots/dominic-stephenson.jpg", "destination": null },
+    { "name": "Michael Dee", "slug": "michael-dee", "position": "INF/SS", "classYear": "Fr", "photo": "/headshots/michael-dee.jpg", "destination": null }
+  ]
+}
