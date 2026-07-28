@@ -19,6 +19,8 @@ import re
 
 import psycopg
 
+from pipeline import names
+
 DSN = "dbname=ncaa_baseball"
 
 
@@ -36,15 +38,11 @@ def season_of(game_date):
     return year + 1 if month >= 8 else year
 
 
-_PUNCT = re.compile(r"[^a-z0-9]+")
-
-
 def norm_name(name):
-    """Normalise a school name enough to match across scorer spellings."""
-    s = (name or "").lower().replace("&", " and ")
-    s = re.sub(r"\b(university|univ|college|the|of|at)\b", " ", s)
-    s = re.sub(r"\bst\.?\b", "state", s)
-    return _PUNCT.sub("", s)
+    """Normalise a school name. See :mod:`pipeline.names` for why this is not
+    a simple lowercase-and-strip: scorers write `Western Mich.` and `Western
+    Michigan` in the same season, and `St.` means State or Saint by position."""
+    return names.canon_school(name)
 
 
 # --------------------------------------------------------------- resolvers --
@@ -75,31 +73,32 @@ def player_season_id(cur, player, tsid):
     Matching is on full name *within this team-season only* -- never globally,
     which would merge distinct people who share a name across schools.
     """
-    name = player["name"] or player["shortname"]
+    raw = player["name"] or player["shortname"]
+    key = names.canon_person(raw)
+    if not key:
+        return None
     cur.execute(
-        "SELECT ps.player_season_id FROM cbb.player_season ps "
-        "JOIN cbb.person p ON p.person_id = ps.person_id "
-        "WHERE ps.team_season_id = %s AND lower(p.full_name) = lower(%s)",
-        (tsid, name))
+        "SELECT player_season_id FROM cbb.player_season "
+        "WHERE team_season_id = %s AND canon_key = %s", (tsid, key))
     row = cur.fetchone()
     if row:
         return row[0]
 
-    parts = name.rsplit(" ", 1)
+    first, last = names.split_person(raw)
     cur.execute(
         "INSERT INTO cbb.person (full_name, first_name, last_name, bats, throws) "
         "VALUES (%s, %s, %s, %s, %s) RETURNING person_id",
-        (name, parts[0] if len(parts) > 1 else None, parts[-1],
+        (names.display_name(raw), first or None, last,
          player.get("bats") or None, player.get("throws") or None))
     pid = cur.fetchone()[0]
 
     cur.execute(
         "INSERT INTO cbb.player_season "
-        "(person_id, team_season_id, jersey, positions, class, bats, throws) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s) "
-        "ON CONFLICT (person_id, team_season_id) DO UPDATE SET jersey = EXCLUDED.jersey "
+        "(person_id, team_season_id, canon_key, jersey, positions, class, bats, throws) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
+        "ON CONFLICT (team_season_id, canon_key) DO UPDATE SET jersey = EXCLUDED.jersey "
         "RETURNING player_season_id",
-        (pid, tsid, player.get("uni") or None, player.get("pos") or None,
+        (pid, tsid, key, player.get("uni") or None, player.get("pos") or None,
          player.get("cls") or None, player.get("bats") or None,
          player.get("throws") or None))
     return cur.fetchone()[0]
@@ -172,6 +171,8 @@ def load_game(conn, parsed, source, url, raw_text, sha=None):
         for side, (team, tsid) in sides.items():
             for p in team["players"]:
                 psid = player_season_id(cur, p, tsid)
+                if psid is None:          # unnameable row -- never guess
+                    continue
                 psid_by_name[(side, p["shortname"] or p["name"])] = psid
                 _upsert_line(cur, "batting_line", _BAT_COLS, game_id, psid, p["batting"])
                 if p["pitching"]:
