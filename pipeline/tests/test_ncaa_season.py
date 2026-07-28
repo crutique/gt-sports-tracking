@@ -73,6 +73,42 @@ def test_canonical_keys_present():
     assert (r["ab"], r["h"], r["bb"], r["d"], r["hr"]) == (219, 87, 50, 20, 20)
 
 
+# --- pitcher rows are not batting lines -------------------------------------
+def _pitcher(first, last, bat, pitch):
+    """A pitcher's row. The feed still emits a ``batterStats`` block for these,
+    but it is NOT a batting line -- it carries the opponent line (``atBats`` 0
+    alongside nonzero H/R/BB/K), so it must never be aggregated as batting."""
+    return {"firstName": first, "lastName": last,
+            "batterStats": {k: str(v) for k, v in bat.items()},
+            "pitcherStats": {k: str(v) for k, v in pitch.items()},
+            "hittingSeason": {}}
+
+
+def test_pitcher_row_is_not_counted_as_a_batter():
+    # real 2025 shape: 169 such rows in one sampled slate. Feeding them to the
+    # batting aggregate invented strikeouts (569 team K, 514 of them from these).
+    games = [_game(1, [
+        _bat("Vahn", "Lackey", game={"atBats": 4, "strikeouts": 1}, atBats=100),
+        _pitcher("H.", "Henry",
+                 bat={"atBats": 0, "runsScored": 6, "hits": 6, "walks": 1, "strikeouts": 2},
+                 pitch={"inningsPitched": "1.1", "hitsAllowed": 6, "battersFaced": 13}),
+    ])]
+    rows = S.team_season(games, team_id=1)
+    assert [r["name"] for r in rows] == ["Vahn Lackey"], "pitcher must not become a batter"
+    assert rows[0]["k"] == 1, "pitcher's line must not inflate batter strikeouts"
+
+
+def test_two_way_player_still_counts_when_he_actually_batted():
+    # a genuine two-way line has pitcherStats AND real at-bats; keep it
+    games = [_game(1, [
+        _pitcher("Ryan", "Zuckerman",
+                 bat={"atBats": 4, "hits": 2, "strikeouts": 1},
+                 pitch={"inningsPitched": "5.0", "hitsAllowed": 3, "battersFaced": 20}),
+    ])]
+    rows = S.team_season(games, team_id=1)
+    assert len(rows) == 1 and rows[0]["ab"] == 4 and rows[0]["h"] == 2
+
+
 # --- identity resolution ----------------------------------------------------
 def test_same_player_across_all_real_name_variants_is_one_identity():
     games = [

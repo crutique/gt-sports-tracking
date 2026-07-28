@@ -1,0 +1,1130 @@
+<bsgame source="TAS Baseball/Softball" version="5.17.00" generated="12/31/2025">
+  <venue gameid="TX_03" visid="UCD" homeid="TX" visname="UC Davis" homename="Texas" date="2/15/2026" location="Austin, Texas" stadium="Disch-Falk Field" duration="3:00" attend="7056" leaguegame="N" start="12:02 PM" schedinn="9" weather="66, Partly Cloudy, N 18 MPH" sbid="651570">
+    <umpires hp="Anthony Perez" first="C.J. Burdette" second="Doug Williams" third="Michael Snover">
+    </umpires>
+    <notes>
+      <note text="Weather: 66, Partly Cloudy, N 18 MPH">
+      </note>
+      <note text="Game: livegame">
+      </note>
+    </notes>
+    <rules batters="9,9" usedh="Y">
+    </rules>
+  </venue>
+  <team vh="V" id="UCD" name="UC Davis" code="UCD" record="0-3">
+    <linescore line="0,0,0,0,0,1,0,0,0" runs="1" hits="2" errs="1" lob="5">
+      <lineinn inn="1" score="0">
+      </lineinn>
+      <lineinn inn="2" score="0">
+      </lineinn>
+      <lineinn inn="3" score="0">
+      </lineinn>
+      <lineinn inn="4" score="0">
+      </lineinn>
+      <lineinn inn="5" score="0">
+      </lineinn>
+      <lineinn inn="6" score="1">
+      </lineinn>
+      <lineinn inn="7" score="0">
+      </lineinn>
+      <lineinn inn="8" score="0">
+      </lineinn>
+      <lineinn inn="9" score="0">
+      </lineinn>
+    </linescore>
+    <starters>
+      <starter spot="1" name="Wooldridge" uni="27" pos="dh">
+      </starter>
+      <starter spot="2" name="Howard" uni="28" pos="cf">
+      </starter>
+      <starter spot="3" name="Lee" uni="8" pos="3b">
+      </starter>
+      <starter spot="4" name="Wright" uni="2" pos="ss">
+      </starter>
+      <starter spot="5" name="Anzai" uni="19" pos="1b">
+      </starter>
+      <starter spot="6" name="Pettersen" uni="4" pos="c">
+      </starter>
+      <starter spot="7" name="Hirschkorn" uni="6" pos="2b">
+      </starter>
+      <starter spot="8" name="Mault" uni="29" pos="rf">
+      </starter>
+      <starter spot="9" name="Story" uni="40" pos="lf">
+      </starter>
+      <starter spot="10" name="Speights" uni="15" pos="p">
+      </starter>
+    </starters>
+    <batords>
+      <batord spot="1" name="Lerma" uni="10" pos="p">
+      </batord>
+      <batord spot="2" name="Castagnola" uni="20" pos="ph">
+      </batord>
+      <batord spot="3" name="Burnham" uni="24" pos="ph">
+      </batord>
+      <batord spot="4" name="Felix" uni="18" pos="ph">
+      </batord>
+      <batord spot="5" name="Anzai" uni="19" pos="1b">
+      </batord>
+      <batord spot="6" name="Pettersen" uni="4" pos="c">
+      </batord>
+      <batord spot="7" name="Hirschkorn" uni="6" pos="2b">
+      </batord>
+      <batord spot="8" name="Mault" uni="29" pos="rf">
+      </batord>
+      <batord spot="9" name="Story" uni="40" pos="lf">
+      </batord>
+    </batords>
+    <totals>
+      <hitting ab="28" r="1" h="2" rbi="1" double="2" bb="3" so="10" hbp="1" kl="4" sh="1" gdp="1" hitdp="3" ground="10" fly="4">
+      </hitting>
+      <fielding po="24" a="5" e="1" pb="1" sba="3">
+      </fielding>
+      <hsitsummary rcherr="3" rchfc="1" ground="10" fly="4" w2outs="0,6" wrunners="1,11" wrbiops="1,8" vsleft="1,22" leadoff="1,9" rbi3rd="1,3" advops="3,12" pinchhit="1,4" lob="5">
+      </hsitsummary>
+      <pitching ip="8.0" h="11" r="9" er="7" bb="9" so="7" sha="1" sfa="2" bf="46" ab="33" double="1" hbp="1" kl="1" teamue="1" fly="13" ground="4">
+      </pitching>
+      <psitsummary fly="13" ground="4" leadoff="5,8" wrunners="8,25" vsleft="3,10" w2outs="5,13" tmunearned="1" pitches="184" strikes="0">
+      </psitsummary>
+    </totals>
+    <player name="Braydon Wooldridge" shortname="Wooldridge" code="" uni="27" gp="1" gs="1" spot="1" pos="dh/p" bats="L" throws="L" class="SR">
+      <hitting ab="1" r="0" h="0" rbi="0" fly="1">
+      </hitting>
+      <fielding po="1" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="1" vsleft="0,1" leadoff="0,1">
+      </hsitsummary>
+      <pitching appear="3" ip="0.2" h="6" r="6" er="6" bb="2" so="0" sfa="1" bf="10" ab="7" double="1" pitches="42" strikes="21" fly="2" inheritr="0" inherits="0">
+      </pitching>
+      <psitsummary fly="2" leadoff="0,1" wrunners="6,6" vsleft="1,1" w2outs="5,5" pitches="42" strikes="21">
+      </psitsummary>
+    </player>
+    <player name="Taylor Werth" shortname="Werth" code="" uni="48" gp="1" spot="1" sub="1" pos="p" bats="R" throws="R" class="FR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="4" ip="0.1" h="0" r="0" er="0" bb="0" so="0" bf="1" ab="1" pitches="5" strikes="3" fly="1" inheritr="2" inherits="0">
+      </pitching>
+      <psitsummary fly="1" wrunners="0,1" vsleft="0,1" w2outs="0,1" pitches="5" strikes="3">
+      </psitsummary>
+    </player>
+    <player name="Everet Johnson" shortname="Johnson" code="" uni="25" gp="1" spot="1" sub="2" pos="ph" bats="R" throws="R" class="SO">
+      <hitting ab="1" r="0" h="0" rbi="0" so="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary vsleft="0,1" leadoff="0,1" pinchhit="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Grayson Bonanno" shortname="Bonanno" code="" uni="13" gp="1" spot="1" sub="3" pos="p" bats="R" throws="R" class="SO">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="5" ip="2.0" h="2" r="0" er="0" bb="1" so="1" bf="9" ab="8" pitches="29" strikes="21" fly="4" ground="1" inheritr="0" inherits="0">
+      </pitching>
+      <psitsummary fly="4" ground="1" leadoff="1,2" wrunners="1,6" vsleft="1,4" w2outs="0,2" pitches="29" strikes="21">
+      </psitsummary>
+    </player>
+    <player name="Korey Williams" shortname="Williams" code="" uni="9" gp="1" spot="1" sub="4" pos="ph" bats="R" throws="R" class="SR">
+      <hitting ab="1" r="0" h="0" rbi="0" ground="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary ground="1" wrunners="0,1" wrbiops="0,1" vsleft="0,1" advops="0,1" pinchhit="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Jack Meek" shortname="Meek" code="" uni="31" gp="1" spot="1" sub="5" pos="p" bats="L" throws="L" class="SR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0" sba="1">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="6" ip="1.1" h="0" r="1" er="1" bb="2" so="1" bf="6" ab="4" pitches="23" strikes="12" fly="3" inheritr="0" inherits="0">
+      </pitching>
+      <psitsummary fly="3" leadoff="1,2" wrunners="0,1" vsleft="0,1" w2outs="0,1" tmunearned="1" pitches="23" strikes="12">
+      </psitsummary>
+    </player>
+    <player name="Tyler Wood" shortname="Wood" code="" uni="43" gp="1" spot="1" sub="6" pos="p" bats="R" throws="R" class="JR">
+      <hitting ab="1" r="0" h="0" rbi="0" hitdp="1" fly="1">
+      </hitting>
+      <fielding po="0" a="0" e="0" sba="2">
+      </fielding>
+      <hsitsummary fly="1" wrunners="0,1" advops="0,1">
+      </hsitsummary>
+      <pitching appear="7" ip="0.2" h="0" r="0" er="0" bb="0" so="1" bf="2" ab="2" pitches="14" strikes="8" ground="1" inheritr="2" inherits="1">
+      </pitching>
+      <psitsummary ground="1" wrunners="0,2" w2outs="0,1" pitches="14" strikes="8">
+      </psitsummary>
+    </player>
+    <player name="Mason Lerma" shortname="Lerma" code="" uni="10" gp="1" spot="1" sub="7" pos="p" atpos="p" bats="L" throws="L" class="JR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="1" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="8" ip="1.0" h="1" r="1" er="0" bb="0" so="1" bf="5" ab="5" kl="1" pitches="15" strikes="11" fly="1" ground="1" inheritr="0" inherits="0">
+      </pitching>
+      <psitsummary fly="1" ground="1" leadoff="1,1" wrunners="0,4" vsleft="0,1" w2outs="0,1" pitches="15" strikes="11">
+      </psitsummary>
+    </player>
+    <player name="Tyler Howard" shortname="Howard" code="" uni="28" gp="1" gs="1" spot="2" pos="cf" bats="R" throws="R" class="JR">
+      <hitting ab="3" r="0" h="0" rbi="0" so="1" ground="1">
+      </hitting>
+      <fielding po="4" a="0" e="1">
+      </fielding>
+      <hsitsummary rcherr="1" ground="1" w2outs="0,1" wrunners="0,1" wrbiops="0,1" vsleft="0,3" advops="0,1" lob="1">
+      </hsitsummary>
+    </player>
+    <player name="Jack Castagnola" shortname="Castagnola" code="" uni="20" gp="1" spot="2" sub="1" pos="ph" atpos="ph" bats="L" throws="L" class="SO">
+      <hitting ab="1" r="0" h="0" rbi="0" so="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary leadoff="0,1" pinchhit="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Ryan Lee" shortname="Lee" code="" uni="8" gp="1" gs="1" spot="3" pos="3b" bats="R" throws="R" class="SR">
+      <hitting ab="2" r="0" h="0" rbi="0" bb="1" gdp="1" hitdp="1" ground="2">
+      </hitting>
+      <fielding po="0" a="1" e="0">
+      </fielding>
+      <hsitsummary ground="2" w2outs="0,1" wrunners="0,1" vsleft="0,2" leadoff="1,1" advops="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Eli Burnham" shortname="Burnham" code="" uni="24" gp="1" spot="3" sub="1" pos="ph" atpos="ph" bats="R" throws="R" class="FR">
+      <hitting ab="1" r="0" h="1" rbi="0" double="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary pinchhit="1,1">
+      </hsitsummary>
+    </player>
+    <player name="Joey Wright" shortname="Wright" code="" uni="2" gp="1" gs="1" spot="4" pos="ss" bats="R" throws="R" class="SR">
+      <hitting ab="2" r="0" h="0" rbi="0" sh="1" ground="2">
+      </hitting>
+      <fielding po="0" a="1" e="0">
+      </fielding>
+      <hsitsummary rcherr="1" ground="2" vsleft="0,2" leadoff="0,2" advops="1,1">
+      </hsitsummary>
+    </player>
+    <player name="Ethan Felix" shortname="Felix" code="" uni="18" gp="1" spot="4" sub="1" pos="ph" atpos="ph" bats="R" throws="R" class="SR">
+      <hitting ab="0" r="0" h="0" rbi="0" bb="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+    </player>
+    <player name="Keenan Anzai" shortname="Anzai" code="" uni="19" gp="1" gs="1" spot="5" pos="1b" atpos="1b" bats="R" throws="R" class="SO">
+      <hitting ab="3" r="0" h="0" rbi="0" so="2" hbp="1" kl="1" ground="1">
+      </hitting>
+      <fielding po="5" a="1" e="0">
+      </fielding>
+      <hsitsummary rchfc="1" ground="1" wrunners="0,2" wrbiops="0,2" vsleft="0,2" rbi3rd="0,1" advops="1,2">
+      </hsitsummary>
+    </player>
+    <player name="Kyle Pettersen" shortname="Pettersen" code="" uni="4" gp="1" gs="1" spot="6" pos="c" atpos="c" bats="R" throws="R" class="FR">
+      <hitting ab="4" r="0" h="0" rbi="0" so="2" kl="1" hitdp="1" fly="2">
+      </hitting>
+      <fielding po="5" a="2" e="0" pb="1" sba="3">
+      </fielding>
+      <hsitsummary fly="2" w2outs="0,2" wrunners="0,3" wrbiops="0,2" vsleft="0,3" rbi3rd="0,1" advops="0,3" lob="2">
+      </hsitsummary>
+    </player>
+    <player name="Houston Hirschkorn" shortname="Hirschkorn" code="" uni="6" gp="1" gs="1" spot="7" pos="2b" atpos="2b" bats="R" throws="R" class="SO">
+      <hitting ab="3" r="0" h="0" rbi="0" so="2" kl="1" ground="1">
+      </hitting>
+      <fielding po="2" a="0" e="0">
+      </fielding>
+      <hsitsummary ground="1" w2outs="0,1" wrunners="0,1" wrbiops="0,1" vsleft="0,3" leadoff="0,2" advops="0,1" lob="2">
+      </hsitsummary>
+    </player>
+    <player name="Kai Mault" shortname="Mault" code="" uni="29" gp="1" gs="1" spot="8" pos="rf" atpos="rf" bats="R" throws="R" class="FR">
+      <hitting ab="3" r="1" h="0" rbi="0" so="1" kl="1" ground="1">
+      </hitting>
+      <fielding po="3" a="0" e="0">
+      </fielding>
+      <hsitsummary rcherr="1" ground="1" vsleft="0,2" leadoff="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Zach Story" shortname="Story" code="" uni="40" gp="1" gs="1" spot="9" pos="lf" atpos="lf" bats="R" throws="R" class="SO">
+      <hitting ab="2" r="0" h="1" rbi="1" double="1" bb="1" ground="1">
+      </hitting>
+      <fielding po="3" a="0" e="0">
+      </fielding>
+      <hsitsummary ground="1" w2outs="0,1" wrunners="1,1" wrbiops="1,1" vsleft="1,2" rbi3rd="1,1" advops="1,1">
+      </hsitsummary>
+    </player>
+    <player name="Jaxon Murphy" shortname="Murphy" code="" uni="3" gp="1" spot="9" sub="1" pos="ph" bats="L" throws="R" class="JR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+    </player>
+    <player name="Carter Speights" shortname="Speights" code="" uni="15" gp="1" gs="1" spot="10" pos="p" bats="R" throws="R" class="JR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="1" loss="0-1" gs="1" ip="1.0" h="2" r="1" er="1" bb="3" so="2" sha="1" bf="8" ab="4" pitches="40" strikes="21" ground="1">
+      </pitching>
+      <psitsummary ground="1" leadoff="2,2" wrunners="1,3" vsleft="1,2" w2outs="0,1" pitches="40" strikes="21">
+      </psitsummary>
+    </player>
+    <player name="Eli Solem" shortname="Solem" code="" uni="41" gp="1" spot="10" sub="1" pos="p" bats="R" throws="R" class="FR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="2" ip="1.0" h="0" r="0" er="0" bb="1" so="1" sfa="1" bf="5" ab="2" hbp="1" pitches="16" strikes="9" fly="2" inheritr="2" inherits="1">
+      </pitching>
+      <psitsummary fly="2" wrunners="0,2" w2outs="0,1" pitches="16" strikes="9">
+      </psitsummary>
+    </player>
+    <player name="Rowen Barnes" shortname="Barnes" code="" uni="17" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Matthew Barnes II" shortname="Barnes II" code="" uni="30" gp="0" spot="0" pos="" bats="R" throws="R" class="SO">
+    </player>
+    <player name="Sal Batres" shortname="Batres" code="" uni="23" gp="0" spot="0" pos="" bats="R" throws="R" class="SO">
+    </player>
+    <player name="Evan Gentil" shortname="Gentil" code="" uni="34" gp="0" spot="0" pos="" bats="R" throws="R" class="SO">
+    </player>
+    <player name="Max Hippensteel" shortname="Hippensteel" code="" uni="45" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Ethan Kang" shortname="Kang" code="" uni="14" gp="0" spot="0" pos="" bats="L" throws="L" class="JR">
+    </player>
+    <player name="Elijah McNeal" shortname="McNeal" code="" uni="21" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Logan Mosman" shortname="Mosman" code="" uni="36" gp="0" spot="0" pos="" bats="R" throws="L" class="FR">
+    </player>
+    <player name="Owen Page" shortname="Page" code="" uni="35" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Jack Pezzolo" shortname="Pezzolo" code="" uni="32" gp="0" spot="0" pos="" bats="L" throws="L" class="FR">
+    </player>
+    <player name="Bryson Schelp" shortname="Schelp" code="" uni="26" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Peter Storjohann" shortname="Storjohann" code="" uni="16" gp="0" spot="0" pos="" bats="R" throws="R" class="JR">
+    </player>
+    <player name="Noel Valdez" shortname="Valdez" code="" uni="11" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+  </team>
+  <team vh="H" id="TX" name="Texas" code="TX" rank="3" record="3-0">
+    <linescore line="0,1,6,0,0,0,1,1,X" runs="9" hits="11" errs="3" lob="13">
+      <lineinn inn="1" score="0">
+      </lineinn>
+      <lineinn inn="2" score="1">
+      </lineinn>
+      <lineinn inn="3" score="6">
+      </lineinn>
+      <lineinn inn="4" score="0">
+      </lineinn>
+      <lineinn inn="5" score="0">
+      </lineinn>
+      <lineinn inn="6" score="0">
+      </lineinn>
+      <lineinn inn="7" score="1">
+      </lineinn>
+      <lineinn inn="8" score="1">
+      </lineinn>
+      <lineinn inn="9" score="X">
+      </lineinn>
+    </linescore>
+    <starters>
+      <starter spot="1" name="Mendoza" uni="5" pos="2b">
+      </starter>
+      <starter spot="2" name="Rodriguez" uni="24" pos="ss">
+      </starter>
+      <starter spot="3" name="Robbins" uni="43" pos="cf">
+      </starter>
+      <starter spot="4" name="Tinney" uni="8" pos="c">
+      </starter>
+      <starter spot="5" name="Borba" uni="31" pos="1b">
+      </starter>
+      <starter spot="6" name="Livingston" uni="15" pos="dh">
+      </starter>
+      <starter spot="7" name="Becerra" uni="1" pos="3b">
+      </starter>
+      <starter spot="8" name="Pack Jr." uni="6" pos="rf">
+      </starter>
+      <starter spot="9" name="Larson" uni="44" pos="lf">
+      </starter>
+      <starter spot="10" name="Volantis" uni="99" pos="p">
+      </starter>
+    </starters>
+    <batords>
+      <batord spot="1" name="Mendoza" uni="5" pos="2b">
+      </batord>
+      <batord spot="2" name="Rodriguez" uni="24" pos="ss">
+      </batord>
+      <batord spot="3" name="Robbins" uni="43" pos="cf">
+      </batord>
+      <batord spot="4" name="Tinney" uni="8" pos="c">
+      </batord>
+      <batord spot="5" name="Borba" uni="31" pos="1b">
+      </batord>
+      <batord spot="6" name="Courville" uni="14" pos="ph">
+      </batord>
+      <batord spot="7" name="Becerra" uni="1" pos="3b">
+      </batord>
+      <batord spot="8" name="Pack Jr." uni="6" pos="rf">
+      </batord>
+      <batord spot="9" name="Duplantier J" uni="0" pos="lf">
+      </batord>
+      <batord spot="10" name="Winter" uni="34" pos="p">
+      </batord>
+    </batords>
+    <totals>
+      <hitting ab="33" r="9" h="11" rbi="7" double="1" bb="9" so="7" hbp="1" kl="1" sb="3" sh="1" sf="2" ground="4" fly="13">
+      </hitting>
+      <fielding po="27" a="10" e="3" indp="3">
+      </fielding>
+      <hsitsummary rcherr="1" ground="4" fly="13" w2outs="5,13" wrunners="8,25" wrbiops="5,17" vsleft="7,16" leadoff="5,8" rbi3rd="2,6" wloaded="1,4" advops="16,32" pinchhit="1,2" adv="4" lob="13" rbi-2out="5">
+      </hsitsummary>
+      <pitching ip="9.0" h="2" r="1" er="0" bb="3" so="10" sha="1" bf="33" ab="28" double="2" hbp="1" kl="4" ibb="0" gdp="1" fly="4" ground="10">
+      </pitching>
+      <psitsummary fly="4" ground="10" leadoff="1,9" wrunners="1,11" vsleft="0,2" w2outs="0,6" pitches="109" strikes="0">
+      </psitsummary>
+    </totals>
+    <player name="Ethan Mendoza" shortname="Mendoza" code="" uni="5" gp="1" gs="1" spot="1" pos="2b" atpos="2b" bats="R" throws="R" class="JR">
+      <hitting ab="4" r="2" h="2" rbi="1" bb="1" sb="2" sf="1" ground="1" fly="2">
+      </hitting>
+      <fielding po="1" a="4" e="0" indp="1">
+      </fielding>
+      <hsitsummary ground="1" fly="2" w2outs="1,2" wrunners="1,3" wrbiops="1,3" vsleft="1,2" leadoff="2,2" rbi3rd="1,1" advops="2,4" adv="2" lob="1">
+      </hsitsummary>
+    </player>
+    <player name="Adrian Rodriguez" shortname="Rodriguez" code="" uni="24" gp="1" gs="1" spot="2" pos="ss" atpos="ss" bats="B" throws="R" class="SO">
+      <hitting ab="3" r="1" h="1" rbi="3" double="1" bb="1" sh="1" ground="2" fly="1">
+      </hitting>
+      <fielding po="0" a="1" e="0" indp="1">
+      </fielding>
+      <hsitsummary ground="2" fly="1" w2outs="1,2" wrunners="1,3" wrbiops="1,2" vsleft="1,2" wloaded="1,1" advops="3,5" adv="1" lob="2" rbi-2out="3">
+      </hsitsummary>
+    </player>
+    <player name="Aiden Robbins" shortname="Robbins" code="" uni="43" gp="1" gs="1" spot="3" pos="cf" atpos="cf" bats="R" throws="R" class="JR">
+      <hitting ab="4" r="1" h="1" rbi="1" bb="1" so="1" sb="1" fly="2">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="2" w2outs="1,1" wrunners="1,3" wrbiops="1,3" vsleft="1,1" leadoff="0,1" rbi3rd="0,1" wloaded="0,1" advops="1,3" rbi-2out="1">
+      </hsitsummary>
+    </player>
+    <player name="Carson Tinney" shortname="Tinney" code="" uni="8" gp="1" gs="1" spot="4" pos="c" atpos="c" bats="R" throws="R" class="JR">
+      <hitting ab="3" r="0" h="1" rbi="0" bb="2" so="2">
+      </hitting>
+      <fielding po="10" a="1" e="0">
+      </fielding>
+      <hsitsummary w2outs="1,2" wrunners="1,3" wrbiops="0,2" vsleft="1,1" rbi3rd="0,1" wloaded="0,1" advops="1,3" lob="3">
+      </hsitsummary>
+    </player>
+    <player name="Casey Borba" shortname="Borba" code="" uni="31" gp="1" gs="1" spot="5" pos="1b" atpos="1b" bats="R" throws="R" class="JR">
+      <hitting ab="4" r="0" h="1" rbi="1" bb="1" ground="1" fly="2">
+      </hitting>
+      <fielding po="14" a="0" e="0" indp="3">
+      </fielding>
+      <hsitsummary ground="1" fly="2" w2outs="1,2" wrunners="1,3" wrbiops="1,2" vsleft="1,2" leadoff="0,1" advops="2,4" lob="1" rbi-2out="1">
+      </hsitsummary>
+    </player>
+    <player name="Josh Livingston" shortname="Livingston" code="" uni="15" gp="1" gs="1" spot="6" pos="dh" bats="L" throws="R" class="SR">
+      <hitting ab="3" r="1" h="0" rbi="0" bb="1" so="2" fly="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="1" w2outs="0,3" wrunners="0,3" wrbiops="0,2" wloaded="0,1" advops="0,3" lob="6">
+      </hsitsummary>
+    </player>
+    <player name="Presley Courville" shortname="Courville" code="" uni="14" gp="1" spot="6" sub="1" pos="ph" atpos="ph" bats="R" throws="R" class="FR">
+      <hitting ab="1" r="1" h="1" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary vsleft="1,1" leadoff="1,1" pinchhit="1,1">
+      </hsitsummary>
+    </player>
+    <player name="Temo Becerra" shortname="Becerra" code="" uni="1" gp="1" gs="1" spot="7" pos="3b" atpos="3b" bats="R" throws="R" class="SR">
+      <hitting ab="3" r="2" h="1" rbi="0" bb="2" so="1">
+      </hitting>
+      <fielding po="0" a="4" e="0">
+      </fielding>
+      <hsitsummary rcherr="1" wrunners="0,1" vsleft="0,2" leadoff="2,3" advops="2,2">
+      </hsitsummary>
+    </player>
+    <player name="Anthony Pack Jr." shortname="Pack Jr." code="" uni="6" gp="1" gs="1" spot="8" pos="rf" atpos="rf" bats="L" throws="L" class="FR">
+      <hitting ab="5" r="1" h="2" rbi="0" so="1" kl="1" fly="2">
+      </hitting>
+      <fielding po="0" a="0" e="1">
+      </fielding>
+      <hsitsummary fly="2" wrunners="2,4" wrbiops="1,2" vsleft="1,3" rbi3rd="0,1" advops="2,4">
+      </hsitsummary>
+    </player>
+    <player name="Ashton Larson" shortname="Larson" code="" uni="44" gp="1" gs="1" spot="9" pos="lf" bats="L" throws="L" class="JR">
+      <hitting ab="1" r="0" h="1" rbi="1" hbp="1" sf="1" fly="1">
+      </hitting>
+      <fielding po="1" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="1" wrunners="1,1" rbi3rd="1,1" advops="3,3" adv="1">
+      </hsitsummary>
+    </player>
+    <player name="Blake Peterson" shortname="Peterson" code="" uni="29" gp="1" spot="9" sub="1" pos="ph" bats="R" throws="R" class="SO">
+      <hitting ab="1" r="0" h="0" rbi="0" fly="1">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="1" w2outs="0,1" vsleft="0,1" pinchhit="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Jayden Duplantier" shortname="Duplantier J" code="" uni="0" gp="1" spot="9" sub="2" pos="lf" atpos="lf" bats="R" throws="R" class="SR">
+      <hitting ab="1" r="0" h="0" rbi="0" fly="1">
+      </hitting>
+      <fielding po="1" a="0" e="0">
+      </fielding>
+      <hsitsummary fly="1" wrunners="0,1" wrbiops="0,1" vsleft="0,1" rbi3rd="0,1" advops="0,1">
+      </hsitsummary>
+    </player>
+    <player name="Dylan Volantis" shortname="Volantis" code="" uni="99" gp="1" gs="1" spot="10" pos="p" bats="L" throws="L" class="SO">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="2">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="1" win="1-0" gs="1" ip="7.0" h="1" r="1" er="0" bb="1" so="8" sha="1" bf="25" ab="22" double="1" hbp="1" kl="4" ibb="0" gdp="1" pitches="78" strikes="56" fly="2" ground="9">
+      </pitching>
+      <psitsummary fly="2" ground="9" leadoff="1,7" wrunners="1,8" vsleft="0,1" w2outs="0,5" pitches="78" strikes="56">
+      </psitsummary>
+    </player>
+    <player name="Michael Winter" shortname="Winter" code="" uni="34" gp="1" spot="10" sub="1" pos="p" atpos="p" bats="R" throws="R" class="FR">
+      <hitting ab="0" r="0" h="0" rbi="0">
+      </hitting>
+      <fielding po="0" a="0" e="0">
+      </fielding>
+      <hsitsummary>
+      </hsitsummary>
+      <pitching appear="2" ip="2.0" h="1" r="0" er="0" bb="2" so="2" bf="8" ab="6" double="1" pitches="31" strikes="16" fly="2" ground="1" inheritr="0" inherits="0">
+      </pitching>
+      <psitsummary fly="2" ground="1" leadoff="0,2" wrunners="0,3" vsleft="0,1" w2outs="0,1" pitches="31" strikes="16">
+      </psitsummary>
+    </player>
+    <player name="Kade Bing" shortname="Bing" code="" uni="11" gp="0" spot="0" pos="" bats="L" throws="L" class="JR">
+    </player>
+    <player name="Thomas Burns" shortname="Burns" code="" uni="45" gp="0" spot="0" pos="" bats="R" throws="R" class="JR">
+    </player>
+    <player name="Sam Cozart" shortname="Cozart" code="" uni="35" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Brett Crossland" shortname="Crossland" code="" uni="88" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Callum Early" shortname="Early" code="" uni="36" gp="0" spot="0" pos="" bats="L" throws="R" class="SO">
+    </player>
+    <player name="Andrew Ermis" shortname="Ermis" code="" uni="7" gp="0" spot="0" pos="" bats="R" throws="R" class="JR">
+    </player>
+    <player name="Jason Flores" shortname="Flores Jas" code="" uni="4" gp="0" spot="0" pos="" bats="R" throws="R" class="SO">
+    </player>
+    <player name="Jadyn Furgason" shortname="Furgason" code="" uni="95" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Max Grubbs" shortname="Grubbs" code="" uni="38" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Hudson Hamilton" shortname="Hamilton" code="" uni="48" gp="0" spot="0" pos="" bats="R" throws="R" class="JR">
+    </player>
+    <player name="Luke Harrison" shortname="Harrison" code="" uni="53" gp="0" spot="0" pos="" bats="L" throws="L" class="SR">
+    </player>
+    <player name="Cal Higgins" shortname="Higgins" code="" uni="27" gp="0" spot="0" pos="" bats="L" throws="L" class="SR">
+    </player>
+    <player name="Will Hill" shortname="Hill" code="" uni="17" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Cody Howard" shortname="Howard" code="" uni="41" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Haiden Leffew" shortname="Leffew" code="" uni="12" gp="0" spot="0" pos="" bats="R" throws="L" class="JR">
+    </player>
+    <player name="Connor McCreery" shortname="McCreery" code="" uni="33" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Jack McKernan" shortname="McKernan" code="" uni="19" gp="0" spot="0" pos="" bats="L" throws="L" class="FR">
+    </player>
+    <player name="Maddox Monsour" shortname="Monsour" code="" uni="32" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Jack Paris" shortname="Paris" code="" uni="55" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Dariyan Pendergrass" shortname="Pendergrass" code="" uni="42" gp="0" spot="0" pos="" bats="L" throws="L" class="SR">
+    </player>
+    <player name="Ruger Riojas" shortname="Riojas" code="" uni="13" gp="0" spot="0" pos="" bats="R" throws="R" class="SR">
+    </player>
+    <player name="Kaleb Rogers" shortname="Rogers" code="" uni="30" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Ethan Walker" shortname="Walker" code="" uni="46" gp="0" spot="0" pos="" bats="L" throws="L" class="JR">
+    </player>
+    <player name="Brody Walls" shortname="Walls" code="" uni="67" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Grady Westphal" shortname="Westphal" code="" uni="28" gp="0" spot="0" pos="" bats="R" throws="R" class="FR">
+    </player>
+    <player name="Jonah Williams" shortname="Williams" code="" uni="9" gp="0" spot="0" pos="" bats="L" throws="L" class="SO">
+    </player>
+  </team>
+  <plays format="summary">
+    <inning number="1">
+      <batting vh="V" id="UCD">
+        <play seq="1" outs="0" batter="Wooldridge" batprof="L" pitcher="Volantis" pchprof="L">
+          <narrative text="Wooldridge flied out to lf (1-0 B).">
+          </narrative>
+        </play>
+        <play seq="2" outs="1" batter="Howard" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Howard grounded out to 2b (0-1 K).">
+          </narrative>
+        </play>
+        <play seq="3" outs="2" batter="Lee" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Lee grounded out to 2b (1-0 B).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="4" outs="0" batter="Mendoza" batprof="R" pitcher="Speights" pchprof="R">
+          <narrative text="Mendoza singled to left center (2-2 KBFB).">
+          </narrative>
+        </play>
+        <play seq="5" outs="0" batter="Rodriguez" batprof="L" pitcher="Speights" pchprof="R" first="Mendoza">
+          <narrative text="Rodriguez grounded out to 3b, SAC, bunt (0-0); Mendoza advanced to second.">
+          </narrative>
+        </play>
+        <play seq="6" outs="1" batter="Robbins" batprof="R" pitcher="Speights" pchprof="R" second="Mendoza">
+          <narrative text="Robbins struck out swinging (1-2 KFBS).">
+          </narrative>
+        </play>
+        <play seq="7" outs="2" batter="Tinney" batprof="R" pitcher="Speights" pchprof="R" second="Mendoza">
+          <narrative text="Tinney walked (3-0 BBBB).">
+          </narrative>
+        </play>
+        <play seq="8" outs="2" batter="Borba" batprof="R" pitcher="Speights" pchprof="R" first="Tinney" second="Mendoza">
+          <narrative text="Borba walked (3-2 BBKBFB); Tinney advanced to second; Mendoza advanced to third.">
+          </narrative>
+        </play>
+        <play seq="9" outs="2" batter="Livingston" batprof="L" pitcher="Speights" pchprof="R" first="Borba" second="Tinney" third="Mendoza">
+          <narrative text="Livingston struck out swinging (2-2 KBBSFFS).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="1" e="0" lob="3">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="2">
+      <batting vh="V" id="UCD">
+        <play seq="10" outs="0" batter="Wright" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Wright grounded out to 3b (1-0 B).">
+          </narrative>
+        </play>
+        <play seq="11" outs="1" batter="Anzai" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Anzai hit by pitch (0-1 K).">
+          </narrative>
+        </play>
+        <play seq="12" outs="1" batter="Pettersen" batprof="R" pitcher="Volantis" pchprof="L" first="Anzai">
+          <narrative text="Pettersen lined into double play 1b unassisted (0-1 K); Anzai out on the play.">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="13" outs="0" batter="Becerra" batprof="R" pitcher="Speights" pchprof="R">
+          <narrative text="Becerra walked (3-2 BBKBKFB).">
+          </narrative>
+        </play>
+        <play seq="14" outs="0" batter="Pack Jr." batprof="L" pitcher="Speights" pchprof="R" first="Becerra">
+          <narrative text="Pack Jr. singled through the right side (2-2 BKSBF); Becerra advanced to second.">
+          </narrative>
+        </play>
+        <play seq="15" outs="0" batter="Larson" batprof="L" pitcher="Speights" pchprof="R" first="Pack Jr." second="Becerra">
+          <sub vh="V" spot="10" who="Solem" for="Speights" pos="p">
+          </sub>
+          <narrative text="Solem to p for Speights.">
+          </narrative>
+        </play>
+        <play seq="16" outs="0" batter="Larson" batprof="L" pitcher="Solem" pchprof="R" first="Pack Jr." second="Becerra">
+          <narrative text="Larson hit by pitch (0-1 K); Pack Jr. advanced to second; Becerra advanced to third.">
+          </narrative>
+        </play>
+        <play seq="17" outs="0" batter="Mendoza" batprof="R" pitcher="Solem" pchprof="R" first="Larson" second="Pack Jr." third="Becerra">
+          <cmt text="After review, #44 was hit by pitch">
+          </cmt>
+          <narrative text="After review, #44 was hit by pitch.">
+          </narrative>
+        </play>
+        <play seq="18" outs="0" batter="Mendoza" batprof="R" pitcher="Solem" pchprof="R" first="Larson" second="Pack Jr." third="Becerra">
+          <narrative text="Mendoza flied out to cf, SF, RBI (2-1 BBF); Pack Jr. advanced to third; Becerra scored.">
+          </narrative>
+        </play>
+        <play seq="19" outs="1" batter="Rodriguez" batprof="L" pitcher="Solem" pchprof="R" first="Larson" third="Pack Jr.">
+          <narrative text="Rodriguez walked (3-0 BBBB); Larson advanced to second.">
+          </narrative>
+        </play>
+        <play seq="20" outs="1" batter="Robbins" batprof="R" pitcher="Solem" pchprof="R" first="Rodriguez" second="Larson" third="Pack Jr.">
+          <narrative text="Robbins lined out to 2b (0-2 KK).">
+          </narrative>
+        </play>
+        <play seq="21" outs="2" batter="Tinney" batprof="R" pitcher="Solem" pchprof="R" first="Rodriguez" second="Larson" third="Pack Jr.">
+          <narrative text="Tinney struck out swinging (0-2 KKS).">
+          </narrative>
+        </play>
+        <innsummary r="1" h="1" e="0" lob="3">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="3">
+      <batting vh="V" id="UCD">
+        <play seq="22" outs="0" batter="Hirschkorn" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Hirschkorn struck out looking (3-2 BFKFFBBK).">
+          </narrative>
+        </play>
+        <play seq="23" outs="1" batter="Mault" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Mault struck out looking (2-2 FSBBK).">
+          </narrative>
+        </play>
+        <play seq="24" outs="2" batter="Story" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Story grounded out to 3b (2-1 BKB).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="25" outs="0" batter="Borba" batprof="R" pitcher="Solem" pchprof="R">
+          <sub vh="V" spot="1" who="Wooldridge" pos="p">
+          </sub>
+          <narrative text="Wooldridge to p.">
+          </narrative>
+        </play>
+        <play seq="26" outs="0" batter="Borba" batprof="R" pitcher="Wooldridge" pchprof="L">
+          <sub vh="V" spot="10" who="/" for="Solem" pos="">
+          </sub>
+          <narrative text="/  for Solem.">
+          </narrative>
+        </play>
+        <play seq="27" outs="0" batter="Borba" batprof="R" pitcher="Wooldridge" pchprof="L">
+          <narrative text="Borba popped up to p (2-2 KBSB).">
+          </narrative>
+        </play>
+        <play seq="28" outs="1" batter="Livingston" batprof="L" pitcher="Wooldridge" pchprof="L">
+          <narrative text="Livingston walked (3-1 KBBBB).">
+          </narrative>
+        </play>
+        <play seq="29" outs="1" batter="Becerra" batprof="R" pitcher="Wooldridge" pchprof="L" first="Livingston">
+          <narrative text="Becerra walked (3-1 KBBBB); Livingston advanced to second.">
+          </narrative>
+        </play>
+        <play seq="30" outs="1" batter="Pack Jr." batprof="L" pitcher="Wooldridge" pchprof="L" first="Becerra" second="Livingston">
+          <narrative text="Pack Jr. singled to third base (3-2 BBKFB); Becerra advanced to second; Livingston advanced to third.">
+          </narrative>
+        </play>
+        <play seq="31" outs="1" batter="Larson" batprof="L" pitcher="Wooldridge" pchprof="L" first="Pack Jr." second="Becerra" third="Livingston">
+          <narrative text="Larson flied out to cf, SF, RBI (1-1 BS); Livingston scored.">
+          </narrative>
+        </play>
+        <play seq="32" outs="2" batter="Mendoza" batprof="R" pitcher="Wooldridge" pchprof="L" first="Pack Jr." second="Becerra">
+          <narrative text="Mendoza singled through the right side (1-0 B); Pack Jr. advanced to second; Becerra advanced to third.">
+          </narrative>
+        </play>
+        <play seq="33" outs="2" batter="Rodriguez" batprof="R" pitcher="Wooldridge" pchprof="L" first="Mendoza" second="Pack Jr." third="Becerra">
+          <narrative text="Rodriguez doubled to left center, 3 RBI (0-0); Mendoza scored; Pack Jr. scored; Becerra scored.">
+          </narrative>
+        </play>
+        <play seq="34" outs="2" batter="Robbins" batprof="R" pitcher="Wooldridge" pchprof="L" second="Rodriguez">
+          <narrative text="Robbins singled through the right side, RBI (3-2 BBKBFF); Rodriguez scored.">
+          </narrative>
+        </play>
+        <play seq="35" outs="2" batter="Tinney" batprof="R" pitcher="Wooldridge" pchprof="L" first="Robbins">
+          <narrative text="Tinney singled through the left side (0-0); Robbins advanced to second.">
+          </narrative>
+        </play>
+        <play seq="36" outs="2" batter="Borba" batprof="R" pitcher="Wooldridge" pchprof="L" first="Tinney" second="Robbins">
+          <narrative text="Borba singled through the left side, RBI (3-2 BBKBFF); Tinney advanced to second; Robbins scored.">
+          </narrative>
+        </play>
+        <play seq="37" outs="2" batter="Livingston" batprof="L" pitcher="Wooldridge" pchprof="L" first="Borba" second="Tinney">
+          <sub vh="V" spot="1" who="Wooldridge" pos="dh">
+          </sub>
+          <narrative text="Wooldridge to dh.">
+          </narrative>
+        </play>
+        <play seq="38" outs="2" batter="Livingston" batprof="L" pitcher="/" pchprof="R" first="Borba" second="Tinney">
+          <sub vh="V" spot="1" who="Werth" for="Wooldridge" pos="p">
+          </sub>
+          <narrative text="Werth to p for Wooldridge.">
+          </narrative>
+        </play>
+        <play seq="39" outs="2" batter="Livingston" batprof="L" pitcher="Werth" pchprof="R" first="Borba" second="Tinney">
+          <narrative text="Livingston flied out to rf (2-2 BFFB).">
+          </narrative>
+        </play>
+        <innsummary r="6" h="6" e="0" lob="2">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="4">
+      <batting vh="V" id="UCD">
+        <play seq="40" outs="0" batter="Werth" batprof="R" pitcher="Volantis" pchprof="L">
+          <sub vh="V" spot="1" who="Johnson" for="Werth" pos="ph">
+          </sub>
+          <narrative text="Johnson pinch hit for Werth.">
+          </narrative>
+        </play>
+        <play seq="41" outs="0" batter="Johnson" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Johnson struck out swinging (0-2 KSS).">
+          </narrative>
+        </play>
+        <play seq="42" outs="1" batter="Howard" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Howard reached on an error by p (0-2 SS).">
+          </narrative>
+        </play>
+        <play seq="43" outs="1" batter="Lee" batprof="R" pitcher="Volantis" pchprof="L" first="Howard">
+          <narrative text="Lee grounded into double play ss to 2b to 1b (0-0); Howard out on the play.">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="1" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="44" outs="0" batter="Becerra" batprof="R" pitcher="/" pchprof="R">
+          <cmt text="After review, the #8 was out on first base">
+          </cmt>
+          <narrative text="After review, the #8 was out on first base.">
+          </narrative>
+        </play>
+        <play seq="45" outs="0" batter="Becerra" batprof="R" pitcher="/" pchprof="R">
+          <sub vh="V" spot="1" who="Bonanno" for="Johnson" pos="p">
+          </sub>
+          <narrative text="Bonanno to p for Johnson.">
+          </narrative>
+        </play>
+        <play seq="46" outs="0" batter="Becerra" batprof="R" pitcher="Bonanno" pchprof="R">
+          <narrative text="Becerra singled to center field (1-1 KB).">
+          </narrative>
+        </play>
+        <play seq="47" outs="0" batter="Pack Jr." batprof="L" pitcher="Bonanno" pchprof="R" first="Becerra">
+          <narrative text="Pack Jr. flied out to cf (0-0).">
+          </narrative>
+        </play>
+        <play seq="48" outs="1" batter="Larson" batprof="L" pitcher="Bonanno" pchprof="R" first="Becerra">
+          <narrative text="Larson singled up the middle (1-2 BSSF); Becerra advanced to second.">
+          </narrative>
+        </play>
+        <play seq="49" outs="1" batter="Mendoza" batprof="R" pitcher="Bonanno" pchprof="R" first="Larson" second="Becerra">
+          <narrative text="Mendoza popped up to rf (1-1 BK).">
+          </narrative>
+        </play>
+        <play seq="50" outs="2" batter="Rodriguez" batprof="L" pitcher="Bonanno" pchprof="R" first="Larson" second="Becerra">
+          <narrative text="Rodriguez grounded out to 1b unassisted (0-1 K).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="2" e="0" lob="2">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="5">
+      <batting vh="V" id="UCD">
+        <play seq="51" outs="0" batter="Wright" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Wright grounded out to 2b (1-0 B).">
+          </narrative>
+        </play>
+        <play seq="52" outs="1" batter="Anzai" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Anzai struck out looking (2-2 SKBBK).">
+          </narrative>
+        </play>
+        <play seq="53" outs="2" batter="Pettersen" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Pettersen struck out swinging, out at first c to 1b (0-2 SSS).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="54" outs="0" batter="Robbins" batprof="R" pitcher="Bonanno" pchprof="R">
+          <narrative text="Robbins flied out to lf (1-1 KB).">
+          </narrative>
+        </play>
+        <play seq="55" outs="1" batter="Tinney" batprof="R" pitcher="Bonanno" pchprof="R">
+          <narrative text="Tinney walked (3-2 BKBBKFB).">
+          </narrative>
+        </play>
+        <play seq="56" outs="1" batter="Borba" batprof="R" pitcher="Bonanno" pchprof="R" first="Tinney">
+          <narrative text="Borba flied out to lf (0-0).">
+          </narrative>
+        </play>
+        <play seq="57" outs="2" batter="Livingston" batprof="L" pitcher="Bonanno" pchprof="R" first="Tinney">
+          <narrative text="Livingston struck out swinging, out at first c to 1b (0-2 KKS).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="1">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="6">
+      <batting vh="V" id="UCD">
+        <play seq="58" outs="0" batter="Hirschkorn" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Hirschkorn grounded out to 1b unassisted (1-2 KBKF).">
+          </narrative>
+        </play>
+        <play seq="59" outs="1" batter="Mault" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Mault reached on an error by rf, advanced to third (0-0).">
+          </narrative>
+        </play>
+        <play seq="60" outs="1" batter="Story" batprof="R" pitcher="Volantis" pchprof="L" third="Mault">
+          <narrative text="Story doubled to left center, RBI (0-2 KFF); Mault scored, unearned.">
+          </narrative>
+        </play>
+        <play seq="61" outs="1" batter="Bonanno" batprof="R" pitcher="Volantis" pchprof="L" second="Story">
+          <sub vh="V" spot="1" who="Williams" for="Johnson" pos="ph">
+          </sub>
+          <narrative text="Williams pinch hit for Johnson.">
+          </narrative>
+        </play>
+        <play seq="62" outs="1" batter="Williams" batprof="R" pitcher="Volantis" pchprof="L" second="Story">
+          <narrative text="Williams grounded out to 3b (0-0).">
+          </narrative>
+        </play>
+        <play seq="63" outs="2" batter="Howard" batprof="R" pitcher="Volantis" pchprof="L" second="Story">
+          <narrative text="Howard struck out swinging (1-2 KFBS).">
+          </narrative>
+        </play>
+        <innsummary r="1" h="1" e="1" lob="1">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="64" outs="0" batter="Becerra" batprof="R" pitcher="/" pchprof="R">
+          <sub vh="V" spot="1" who="Meek" for="Williams" pos="p">
+          </sub>
+          <narrative text="Meek to p for Williams.">
+          </narrative>
+        </play>
+        <play seq="65" outs="0" batter="Becerra" batprof="R" pitcher="Meek" pchprof="L">
+          <narrative text="Becerra struck out swinging (0-2 KKS).">
+          </narrative>
+        </play>
+        <play seq="66" outs="1" batter="Pack Jr." batprof="L" pitcher="Meek" pchprof="L">
+          <narrative text="Pack Jr. flied out to rf (2-2 KBFB).">
+          </narrative>
+        </play>
+        <play seq="67" outs="2" batter="Larson" batprof="L" pitcher="Meek" pchprof="L">
+          <sub vh="H" spot="9" who="Peterson" for="Larson" pos="ph">
+          </sub>
+          <narrative text="Peterson pinch hit for Larson.">
+          </narrative>
+        </play>
+        <play seq="68" outs="2" batter="Peterson" batprof="R" pitcher="Meek" pchprof="L">
+          <narrative text="Peterson flied out to cf (1-2 BSS).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="7">
+      <batting vh="V" id="UCD">
+        <play seq="69" outs="0" batter="Lee" batprof="R" pitcher="Volantis" pchprof="L">
+          <sub vh="H" spot="9" who="Duplantier J" pos="lf">
+          </sub>
+          <narrative text="Duplantier J to lf.">
+          </narrative>
+        </play>
+        <play seq="70" outs="0" batter="Lee" batprof="R" pitcher="Volantis" pchprof="L">
+          <narrative text="Lee walked (3-2 BBKBFB).">
+          </narrative>
+        </play>
+        <play seq="71" outs="0" batter="Wright" batprof="R" pitcher="Volantis" pchprof="L" first="Lee">
+          <narrative text="Wright reached on a throwing error by p, SAC, bunt, advanced to second (0-1 K); Lee advanced to third.">
+          </narrative>
+        </play>
+        <play seq="72" outs="0" batter="Anzai" batprof="R" pitcher="Volantis" pchprof="L" second="Wright" third="Lee">
+          <narrative text="Anzai reached on a fielder's choice (0-0); Wright advanced to third; Lee out at home 3b to c.">
+          </narrative>
+        </play>
+        <play seq="73" outs="1" batter="Pettersen" batprof="R" pitcher="Volantis" pchprof="L" first="Anzai" third="Wright">
+          <narrative text="Pettersen struck out looking (1-2 KBSK).">
+          </narrative>
+        </play>
+        <play seq="74" outs="2" batter="Hirschkorn" batprof="R" pitcher="Volantis" pchprof="L" first="Anzai" third="Wright">
+          <narrative text="Hirschkorn struck out swinging (1-2 BKSS).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="1" lob="2">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="75" outs="0" batter="Mendoza" batprof="R" pitcher="Meek" pchprof="L">
+          <narrative text="Mendoza walked (3-1 BBBKB).">
+          </narrative>
+        </play>
+        <play seq="76" outs="0" batter="Rodriguez" batprof="R" pitcher="Meek" pchprof="L" first="Mendoza">
+          <narrative text="Rodriguez popped up to 2b (0-1 K).">
+          </narrative>
+        </play>
+        <play seq="77" outs="1" batter="Robbins" batprof="R" pitcher="Meek" pchprof="L" first="Mendoza">
+          <narrative text="Mendoza stole second.">
+          </narrative>
+        </play>
+        <play seq="78" outs="1" batter="Robbins" batprof="R" pitcher="Meek" pchprof="L" second="Mendoza">
+          <narrative text="Robbins walked (3-0 BBBB).">
+          </narrative>
+        </play>
+        <play seq="79" outs="1" batter="Tinney" batprof="R" pitcher="Meek" pchprof="L" first="Robbins" second="Mendoza">
+          <sub vh="V" spot="1" who="Wood" for="Meek" pos="p">
+          </sub>
+          <narrative text="Wood to p for Meek.">
+          </narrative>
+        </play>
+        <play seq="80" outs="1" batter="Tinney" batprof="R" pitcher="Wood" pchprof="R" first="Robbins" second="Mendoza">
+          <narrative text="Robbins stole second; Mendoza stole third.">
+          </narrative>
+        </play>
+        <play seq="81" outs="1" batter="Tinney" batprof="R" pitcher="Wood" pchprof="R" second="Robbins" third="Mendoza">
+          <narrative text="Tinney struck out swinging, out at first c to 1b (3-2 KBBKBS).">
+          </narrative>
+        </play>
+        <play seq="82" outs="2" batter="Borba" batprof="R" pitcher="Wood" pchprof="R" second="Robbins" third="Mendoza">
+          <narrative text="Robbins advanced to third on a passed ball; Mendoza scored on a passed ball, team unearned.">
+          </narrative>
+        </play>
+        <play seq="83" outs="2" batter="Borba" batprof="R" pitcher="Wood" pchprof="R" third="Robbins">
+          <narrative text="Borba grounded out to ss (3-2 KBFBFB).">
+          </narrative>
+        </play>
+        <innsummary r="1" h="0" e="0" lob="1">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="8">
+      <batting vh="V" id="UCD">
+        <play seq="84" outs="0" batter="Mault" batprof="R" pitcher="Volantis" pchprof="L">
+          <sub vh="H" spot="10" who="Winter" for="Volantis" pos="p">
+          </sub>
+          <narrative text="Winter to p for Volantis.">
+          </narrative>
+        </play>
+        <play seq="85" outs="0" batter="Mault" batprof="R" pitcher="Winter" pchprof="R">
+          <narrative text="Mault grounded out to 1b unassisted.">
+          </narrative>
+        </play>
+        <play seq="86" outs="1" batter="Story" batprof="R" pitcher="Winter" pchprof="R">
+          <narrative text="Story walked (3-0 BBBB).">
+          </narrative>
+        </play>
+        <play seq="87" outs="1" batter="Wood" batprof="R" pitcher="Winter" pchprof="R" first="Story">
+          <sub vh="V" spot="9" who="Murphy" for="Story" pos="ph">
+          </sub>
+          <narrative text="Murphy pinch hit for Story.">
+          </narrative>
+        </play>
+        <play seq="88" outs="1" batter="Wood" batprof="R" pitcher="Winter" pchprof="R" first="Murphy">
+          <narrative text="Wood lined into double play 1b unassisted (1-1 BK); Murphy out on the play.">
+          </narrative>
+        </play>
+        <innsummary r="0" h="0" e="0" lob="0">
+        </innsummary>
+      </batting>
+      <batting vh="H" id="TX">
+        <play seq="89" outs="0" batter="Livingston" batprof="L" pitcher="Wood" pchprof="R">
+          <sub vh="V" spot="1" who="Lerma" for="Wood" pos="p">
+          </sub>
+          <narrative text="Lerma to p for Wood.">
+          </narrative>
+        </play>
+        <play seq="90" outs="0" batter="Livingston" batprof="L" pitcher="Lerma" pchprof="L">
+          <sub vh="V" spot="9" who="Story" for="Murphy" pos="lf">
+          </sub>
+          <narrative text="Story to lf for Murphy.">
+          </narrative>
+        </play>
+        <play seq="91" outs="0" batter="Livingston" batprof="L" pitcher="Lerma" pchprof="L">
+          <sub vh="H" spot="6" who="Courville" for="Livingston" pos="ph">
+          </sub>
+          <narrative text="Courville pinch hit for Livingston.">
+          </narrative>
+        </play>
+        <play seq="92" outs="0" batter="Courville" batprof="R" pitcher="Lerma" pchprof="L">
+          <narrative text="Courville singled up the middle (1-2 FFB).">
+          </narrative>
+        </play>
+        <play seq="93" outs="0" batter="Becerra" batprof="R" pitcher="Lerma" pchprof="L" first="Courville">
+          <narrative text="Becerra reached on an error by cf, advanced to third (0-0); Courville scored, unearned.">
+          </narrative>
+        </play>
+        <play seq="94" outs="0" batter="Pack Jr." batprof="L" pitcher="Lerma" pchprof="L" third="Becerra">
+          <narrative text="Pack Jr. struck out looking (2-2 SBBFK).">
+          </narrative>
+        </play>
+        <play seq="95" outs="1" batter="Duplantier J" batprof="R" pitcher="Lerma" pchprof="L" third="Becerra">
+          <narrative text="Duplantier J popped up to lf (0-0).">
+          </narrative>
+        </play>
+        <play seq="96" outs="2" batter="Mendoza" batprof="R" pitcher="Lerma" pchprof="L" third="Becerra">
+          <narrative text="Mendoza out at first 1b to p (1-2 KSB).">
+          </narrative>
+        </play>
+        <innsummary r="1" h="1" e="1" lob="1">
+        </innsummary>
+      </batting>
+    </inning>
+    <inning number="9">
+      <batting vh="V" id="UCD">
+        <play seq="97" outs="0" batter="Howard" batprof="R" pitcher="Winter" pchprof="R">
+          <cmt text="After review, #5 was out on first base">
+          </cmt>
+          <narrative text="After review, #5 was out on first base.">
+          </narrative>
+        </play>
+        <play seq="98" outs="0" batter="Howard" batprof="R" pitcher="Winter" pchprof="R">
+          <sub vh="V" spot="2" who="Castagnola" for="Howard" pos="ph">
+          </sub>
+          <narrative text="Castagnola pinch hit for Howard.">
+          </narrative>
+        </play>
+        <play seq="99" outs="0" batter="Castagnola" batprof="L" pitcher="Winter" pchprof="R">
+          <narrative text="Castagnola struck out swinging (3-2 BBSBFFS).">
+          </narrative>
+        </play>
+        <play seq="100" outs="1" batter="Lee" batprof="R" pitcher="Winter" pchprof="R">
+          <sub vh="V" spot="3" who="Burnham" for="Lee" pos="ph">
+          </sub>
+          <narrative text="Burnham pinch hit for Lee.">
+          </narrative>
+        </play>
+        <play seq="101" outs="1" batter="Burnham" batprof="R" pitcher="Winter" pchprof="R">
+          <narrative text="Burnham doubled down the lf line (1-0 B).">
+          </narrative>
+        </play>
+        <play seq="102" outs="1" batter="Wright" batprof="R" pitcher="Winter" pchprof="R" second="Burnham">
+          <sub vh="V" spot="4" who="Felix" for="Wright" pos="ph">
+          </sub>
+          <narrative text="Felix pinch hit for Wright.">
+          </narrative>
+        </play>
+        <play seq="103" outs="1" batter="Felix" batprof="R" pitcher="Winter" pchprof="R" second="Burnham">
+          <narrative text="Felix walked (3-2 BBFFFBB).">
+          </narrative>
+        </play>
+        <play seq="104" outs="1" batter="Anzai" batprof="R" pitcher="Winter" pchprof="R" first="Felix" second="Burnham">
+          <narrative text="Anzai struck out swinging (0-2 KFS).">
+          </narrative>
+        </play>
+        <play seq="105" outs="2" batter="Pettersen" batprof="R" pitcher="Winter" pchprof="R" first="Felix" second="Burnham">
+          <narrative text="Pettersen flied out to lf (2-2 BKKB).">
+          </narrative>
+        </play>
+        <innsummary r="0" h="1" e="0" lob="2">
+        </innsummary>
+      </batting>
+    </inning>
+  </plays>
+  <status complete="Y">
+  </status>
+</bsgame>

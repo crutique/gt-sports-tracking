@@ -82,9 +82,22 @@ def _team_box(box, team_id):
 
 
 def _batters(team_box):
+    """Real batting lines only.
+
+    The feed emits a ``batterStats`` block on **pitcher** rows too, but it is not
+    a batting line -- it carries the opponent line, with ``atBats`` 0 alongside
+    nonzero H/R/BB/K (impossible for a batter, since a strikeout is an at-bat).
+    Aggregating those invented strikeouts wholesale: of 569 "batter" strikeouts
+    across one Georgia Tech season, 514 came from such rows. A genuine two-way
+    player is kept, because his line has real at-bats.
+    """
     for p in (team_box or {}).get("playerStats") or []:
-        if p.get("batterStats"):
-            yield p
+        bs = p.get("batterStats")
+        if not bs:
+            continue
+        if p.get("pitcherStats") and _int(bs.get("atBats")) == 0:
+            continue
+        yield p
 
 
 def resolve_identities(games, team_id):
