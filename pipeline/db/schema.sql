@@ -78,8 +78,10 @@ CREATE TABLE IF NOT EXISTS cbb.person (
     full_name       text NOT NULL,
     first_name      text,
     last_name       text,
-    bats            char(1),
-    throws          char(1),
+    -- Not char(1): scorers write switch-hitters as 'B', but some files carry
+    -- two-character values, which silently truncates or errors at char(1).
+    bats            varchar(4),
+    throws          varchar(4),
     created_at      timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS person_last_name_idx ON cbb.person (lower(last_name));
@@ -91,8 +93,8 @@ CREATE TABLE IF NOT EXISTS cbb.player_season (
     jersey          text,
     positions       text,                 -- as scored: 'dh/p', 'rf'
     class           text,                 -- FR/SO/JR/SR/GR
-    bats            char(1),
-    throws          char(1),
+    bats            varchar(4),
+    throws          varchar(4),
     hometown        text,
     last_school     text,
     UNIQUE (person_id, team_season_id)
@@ -199,25 +201,30 @@ CREATE TABLE IF NOT EXISTS cbb.fielding_line (
 CREATE TABLE IF NOT EXISTS cbb.play (
     play_id         bigserial PRIMARY KEY,
     game_id         bigint NOT NULL REFERENCES cbb.game(game_id) ON DELETE CASCADE,
+    -- Load-assigned position within the game. The scorer's own `seq` is NOT
+    -- unique -- real files repeat a value and then skip one (seq 13 twice, then
+    -- 15) -- so ordering and identity come from this, and `seq` is kept as the
+    -- scorer recorded it rather than trusted as a key.
+    ordinal         integer NOT NULL,
     seq             integer NOT NULL,
     inning          smallint NOT NULL,
-    half            char(1) NOT NULL,     -- 'V' | 'H' -- the team BATTING
+    half            varchar(2) NOT NULL,  -- 'V' | 'H' -- the team BATTING
     batting_team_season_id integer REFERENCES cbb.team_season(team_season_id),
     outs_before     smallint,
     runner_first    text,
     runner_second   text,
     runner_third    text,
     batter_name     text,
-    batter_hand     char(1),
+    batter_hand     varchar(4),
     pitcher_name    text,
-    pitcher_hand    char(1),
+    pitcher_hand    varchar(4),
     balls           smallint,
     strikes         smallint,
     pitch_sequence  text,                 -- 'KBBSFFS'
     description     text NOT NULL,
     batter_player_season_id  bigint REFERENCES cbb.player_season(player_season_id),
     pitcher_player_season_id bigint REFERENCES cbb.player_season(player_season_id),
-    UNIQUE (game_id, seq)
+    UNIQUE (game_id, ordinal)
 );
 CREATE INDEX IF NOT EXISTS play_game_idx    ON cbb.play (game_id);
 CREATE INDEX IF NOT EXISTS play_batter_idx  ON cbb.play (batter_player_season_id);

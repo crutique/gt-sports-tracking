@@ -183,10 +183,12 @@ def load_game(conn, parsed, source, url, raw_text, sha=None):
         ts_by_vh = {"V": away_ts, "H": home_ts}
         side_by_vh = {"V": "away", "H": "home"}
         rows = []
-        for pl in parsed["plays"]:
+        # `ordinal` is assigned here, not taken from the file: scorers repeat and
+        # skip `seq` values, so it cannot serve as a key.
+        for ordinal, pl in enumerate(parsed["plays"], 1):
             side = side_by_vh.get(pl["half"])
             rows.append((
-                game_id, pl["seq"], pl["inning"], pl["half"],
+                game_id, ordinal, pl["seq"], pl["inning"], pl["half"],
                 ts_by_vh.get(pl["half"]), pl["outs"],
                 pl["bases"]["first"], pl["bases"]["second"], pl["bases"]["third"],
                 pl["batter"], pl["batterHand"] or None,
@@ -197,11 +199,11 @@ def load_game(conn, parsed, source, url, raw_text, sha=None):
             ))
         if rows:
             cur.executemany(
-                "INSERT INTO cbb.play (game_id, seq, inning, half, "
+                "INSERT INTO cbb.play (game_id, ordinal, seq, inning, half, "
                 " batting_team_season_id, outs_before, runner_first, runner_second, "
                 " runner_third, batter_name, batter_hand, pitcher_name, pitcher_hand, "
                 " balls, strikes, pitch_sequence, description, batter_player_season_id) "
-                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", rows)
+                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", rows)
     return game_id
 
 

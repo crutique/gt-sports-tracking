@@ -161,6 +161,16 @@ def ingest_one(conn, sbid):
         load.log_ingest(conn, SOURCE, sbid, "error", detail="missing teams or date")
         return "error"
 
+    # Scorers mistype the year -- real files carry 1926 for 2026, which would
+    # file a game under a season a century early and quietly poison any
+    # season-level aggregate. Flag rather than guess: the row lands in the gap
+    # list where it can be corrected deliberately.
+    year = int(parsed["date"][:4] or 0)
+    if not 1990 <= year <= 2100:
+        load.log_ingest(conn, SOURCE, sbid, "suspect",
+                        detail=f"implausible game date {parsed['date']}")
+        return "suspect"
+
     load.load_game(conn, parsed, SOURCE, SB.xml_url(sbid), xml)
     load.log_ingest(conn, SOURCE, sbid, "ok",
                     season=load.season_of(parsed["date"]), game_date=parsed["date"])
