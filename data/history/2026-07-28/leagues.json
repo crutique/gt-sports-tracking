@@ -1,0 +1,93 @@
+[
+ {
+  "key": "cape_cod",
+  "name": "Cape Cod Baseball League",
+  "abbrev": "CCBL",
+  "officialUrl": "https://www.capecodleague.com",
+  "platform": "mlbstats",
+  "tier": 1,
+  "gtPlayers": [
+   "adam-mckelvey",
+   "brady-fox",
+   "caleb-daniel",
+   "cooper-underwood",
+   "dimitri-angelakos",
+   "drew-rogers",
+   "holden-pantier",
+   "jayden-stroman",
+   "jordan-lodise",
+   "tyler-guerin"
+  ]
+ },
+ {
+  "key": "northwoods",
+  "name": "Northwoods League",
+  "abbrev": "NWL",
+  "officialUrl": "https://northwoodsleague.com",
+  "platform": "scorebook",
+  "tier": 1,
+  "gtPlayers": [
+   "coleman-lewis",
+   "jackson-blakely",
+   "jamie-vicens",
+   "logan-keilen",
+   "riley-hasenstab"
+  ]
+ },
+ {
+  "key": "appalachian",
+  "name": "Appalachian League",
+  "abbrev": "APPY",
+  "officialUrl": "https://www.appyleague.com",
+  "platform": "mlbstats",
+  "tier": 1,
+  "gtPlayers": [
+   "judson-hartwell",
+   "patrick-walsh"
+  ]
+ },
+ {
+  "key": "necbl",
+  "name": "New England Collegiate Baseball League",
+  "abbrev": "NECBL",
+  "officialUrl": "https://necbl.com",
+  "platform": "prestosports",
+  "tier": 1,
+  "gtPlayers": [
+   "eli-stephens"
+  ]
+ },
+ {
+  "key": "sfcbl",
+  "name": "South Florida Collegiate Baseball League",
+  "abbrev": "SFCBL",
+  "officialUrl": "https://sfcbl.com",
+  "platform": "iscore",
+  "tier": 1,
+  "gtPlayers": [
+   "nathanael-coupet"
+  ]
+ },
+ {
+  "key": "cpl",
+  "name": "Coastal Plain League",
+  "abbrev": "CPL",
+  "officialUrl": "https://coastalplain.com",
+  "platform": "iscore",
+  "tier": 1,
+  "gtPlayers": [
+   "isaiah-galason"
+  ]
+ },
+ {
+  "key": "sunbelt",
+  "name": "Sunbelt Baseball League",
+  "abbrev": "SBL",
+  "officialUrl": "https://www.sunbeltbaseballleague.net",
+  "platform": "prestosports",
+  "tier": 1,
+  "gtPlayers": [
+   "kolby-martin"
+  ]
+ }
+]

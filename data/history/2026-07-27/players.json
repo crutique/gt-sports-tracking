@@ -146,7 +146,7 @@
    "leagueKey": "northwoods"
   },
   "photo": "/headshots/jamie-vicens.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
@@ -181,15 +181,15 @@
      "metric": "era",
      "value": 8.5263,
      "percentile": 15,
-     "leagueAvg": 5.7536,
+     "leagueAvg": 5.7397,
      "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 1.3421,
-     "percentile": 72,
-     "leagueAvg": 1.6394,
+     "percentile": 73,
+     "leagueAvg": 1.6367,
      "leagueAvgPercentile": 41,
      "derived": false
     },
@@ -197,15 +197,15 @@
      "metric": "kPct",
      "value": 0.2903,
      "percentile": 86,
-     "leagueAvg": 0.1995,
-     "leagueAvgPercentile": 47,
+     "leagueAvg": 0.2003,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1129,
-     "percentile": 61,
-     "leagueAvg": 0.1367,
+     "percentile": 60,
+     "leagueAvg": 0.1365,
      "leagueAvgPercentile": 44,
      "derived": false
     },
@@ -213,16 +213,16 @@
      "metric": "hr9",
      "value": 0.0,
      "percentile": 83,
-     "leagueAvg": 0.7113,
-     "leagueAvgPercentile": 42,
+     "leagueAvg": 0.7134,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.2174,
-     "percentile": 67,
-     "leagueAvg": 0.2466,
-     "leagueAvgPercentile": 48,
+     "percentile": 66,
+     "leagueAvg": 0.2464,
+     "leagueAvgPercentile": 47,
      "derived": true
     }
    ]
@@ -270,83 +270,83 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/dimitri-angelakos.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
-    "g": 6,
-    "gs": 3,
+    "g": 5,
+    "gs": 2,
     "w": 2,
-    "l": 1,
+    "l": 0,
     "sv": 0,
     "hld": 0,
-    "h": 16,
-    "r": 2,
-    "er": 2,
-    "bb": 4,
-    "k": 15,
+    "h": 12,
+    "r": 1,
+    "er": 1,
+    "bb": 3,
+    "k": 11,
     "hb": 0,
     "hr": 0,
-    "ip": "15.2"
+    "ip": "11.2"
    },
    "rates": {
-    "era": 1.148936170212766,
-    "whip": 1.2765957446808511,
-    "kPct": 0.23076923076923078,
-    "bbPct": 0.06153846153846154,
+    "era": 0.7714285714285715,
+    "whip": 1.2857142857142858,
+    "kPct": 0.22448979591836735,
+    "bbPct": 0.061224489795918366,
     "hr9": 0.0,
-    "k9": 8.617021276595745,
-    "bb9": 2.297872340425532,
-    "oppAvg": 0.26229508196721313
+    "k9": 8.485714285714286,
+    "bb9": 2.3142857142857145,
+    "oppAvg": 0.2608695652173913
    },
    "qualified": true,
    "sliders": [
     {
      "metric": "era",
-     "value": 1.1489,
-     "percentile": 88,
-     "leagueAvg": 4.1277,
-     "leagueAvgPercentile": 42,
+     "value": 0.7714,
+     "percentile": 94,
+     "leagueAvg": 4.0744,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "whip",
-     "value": 1.2766,
+     "value": 1.2857,
      "percentile": 57,
-     "leagueAvg": 1.3964,
-     "leagueAvgPercentile": 45,
+     "leagueAvg": 1.3897,
+     "leagueAvgPercentile": 44,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2308,
-     "percentile": 44,
-     "leagueAvg": 0.2314,
-     "leagueAvgPercentile": 45,
+     "value": 0.2245,
+     "percentile": 43,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.0615,
-     "percentile": 85,
+     "value": 0.0612,
+     "percentile": 86,
      "leagueAvg": 0.1158,
-     "leagueAvgPercentile": 45,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "hr9",
      "value": 0.0,
-     "percentile": 74,
-     "leagueAvg": 0.4944,
-     "leagueAvgPercentile": 38,
+     "percentile": 73,
+     "leagueAvg": 0.4781,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "oppAvg",
-     "value": 0.2623,
-     "percentile": 28,
-     "leagueAvg": 0.2253,
-     "leagueAvgPercentile": 48,
+     "value": 0.2609,
+     "percentile": 31,
+     "leagueAvg": 0.2241,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -371,7 +371,7 @@
    "leagueKey": "northwoods"
   },
   "photo": "/headshots/riley-hasenstab.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
@@ -405,16 +405,16 @@
     {
      "metric": "era",
      "value": 2.6129,
-     "percentile": 87,
-     "leagueAvg": 5.7536,
+     "percentile": 86,
+     "leagueAvg": 5.7397,
      "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 1.3548,
-     "percentile": 71,
-     "leagueAvg": 1.6394,
+     "percentile": 72,
+     "leagueAvg": 1.6367,
      "leagueAvgPercentile": 41,
      "derived": false
     },
@@ -422,15 +422,15 @@
      "metric": "kPct",
      "value": 0.2611,
      "percentile": 74,
-     "leagueAvg": 0.1995,
-     "leagueAvgPercentile": 47,
+     "leagueAvg": 0.2003,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1556,
-     "percentile": 31,
-     "leagueAvg": 0.1367,
+     "percentile": 32,
+     "leagueAvg": 0.1365,
      "leagueAvgPercentile": 44,
      "derived": false
     },
@@ -438,16 +438,16 @@
      "metric": "hr9",
      "value": 0.4355,
      "percentile": 57,
-     "leagueAvg": 0.7113,
-     "leagueAvgPercentile": 42,
+     "leagueAvg": 0.7134,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.1892,
-     "percentile": 81,
-     "leagueAvg": 0.2466,
-     "leagueAvgPercentile": 48,
+     "percentile": 80,
+     "leagueAvg": 0.2464,
+     "leagueAvgPercentile": 47,
      "derived": true
     }
    ]
@@ -472,83 +472,83 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/adam-mckelvey.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
-    "g": 8,
-    "gs": 5,
+    "g": 7,
+    "gs": 4,
     "w": 0,
-    "l": 3,
+    "l": 2,
     "sv": 0,
     "hld": 0,
-    "h": 27,
-    "r": 20,
-    "er": 18,
-    "bb": 10,
-    "k": 26,
+    "h": 22,
+    "r": 17,
+    "er": 15,
+    "bb": 8,
+    "k": 22,
     "hb": 2,
     "hr": 5,
-    "ip": "26.0"
+    "ip": "23.1"
    },
    "rates": {
-    "era": 6.230769230769231,
-    "whip": 1.4230769230769231,
-    "kPct": 0.21666666666666667,
-    "bbPct": 0.08333333333333333,
-    "hr9": 1.7307692307692308,
-    "k9": 9.0,
-    "bb9": 3.4615384615384617,
-    "oppAvg": 0.25
+    "era": 5.785714285714286,
+    "whip": 1.2857142857142858,
+    "kPct": 0.20952380952380953,
+    "bbPct": 0.0761904761904762,
+    "hr9": 1.9285714285714286,
+    "k9": 8.485714285714286,
+    "bb9": 3.085714285714286,
+    "oppAvg": 0.23157894736842105
    },
    "qualified": true,
    "sliders": [
     {
      "metric": "era",
-     "value": 6.2308,
-     "percentile": 17,
-     "leagueAvg": 4.1277,
-     "leagueAvgPercentile": 42,
+     "value": 5.7857,
+     "percentile": 23,
+     "leagueAvg": 4.0744,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "whip",
-     "value": 1.4231,
-     "percentile": 44,
-     "leagueAvg": 1.3964,
-     "leagueAvgPercentile": 45,
+     "value": 1.2857,
+     "percentile": 57,
+     "leagueAvg": 1.3897,
+     "leagueAvgPercentile": 44,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2167,
-     "percentile": 37,
-     "leagueAvg": 0.2314,
-     "leagueAvgPercentile": 45,
+     "value": 0.2095,
+     "percentile": 34,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.0833,
-     "percentile": 72,
+     "value": 0.0762,
+     "percentile": 75,
      "leagueAvg": 0.1158,
-     "leagueAvgPercentile": 45,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "hr9",
-     "value": 1.7308,
-     "percentile": 7,
-     "leagueAvg": 0.4944,
-     "leagueAvgPercentile": 38,
+     "value": 1.9286,
+     "percentile": 4,
+     "leagueAvg": 0.4781,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "oppAvg",
-     "value": 0.25,
-     "percentile": 36,
-     "leagueAvg": 0.2253,
-     "leagueAvgPercentile": 48,
+     "value": 0.2316,
+     "percentile": 46,
+     "leagueAvg": 0.2241,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -636,7 +636,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/drew-rogers.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 14,
@@ -666,33 +666,33 @@
     {
      "metric": "ops",
      "value": 0.6749,
-     "percentile": 47,
-     "leagueAvg": 0.6693,
+     "percentile": 46,
+     "leagueAvg": 0.666,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2143,
-     "percentile": 28,
-     "leagueAvg": 0.2342,
-     "leagueAvgPercentile": 40,
+     "percentile": 29,
+     "leagueAvg": 0.233,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3654,
      "percentile": 59,
-     "leagueAvg": 0.345,
-     "leagueAvgPercentile": 46,
+     "leagueAvg": 0.3441,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.3095,
      "percentile": 35,
-     "leagueAvg": 0.3243,
-     "leagueAvgPercentile": 43,
+     "leagueAvg": 0.3219,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
@@ -700,15 +700,15 @@
      "value": 0.4231,
      "percentile": 0,
      "leagueAvg": 0.236,
-     "leagueAvgPercentile": 40,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1538,
-     "percentile": 84,
-     "leagueAvg": 0.1182,
-     "leagueAvgPercentile": 54,
+     "percentile": 82,
+     "leagueAvg": 0.1181,
+     "leagueAvgPercentile": 56,
      "derived": false
     }
    ]
@@ -734,7 +734,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/caleb-daniel.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 20,
@@ -764,49 +764,49 @@
     {
      "metric": "ops",
      "value": 0.6389,
-     "percentile": 40,
-     "leagueAvg": 0.6693,
+     "percentile": 37,
+     "leagueAvg": 0.666,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2063,
-     "percentile": 24,
-     "leagueAvg": 0.2342,
-     "leagueAvgPercentile": 40,
+     "percentile": 25,
+     "leagueAvg": 0.233,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3056,
-     "percentile": 18,
-     "leagueAvg": 0.345,
-     "leagueAvgPercentile": 46,
+     "percentile": 19,
+     "leagueAvg": 0.3441,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.3333,
-     "percentile": 51,
-     "leagueAvg": 0.3243,
-     "leagueAvgPercentile": 43,
+     "percentile": 46,
+     "leagueAvg": 0.3219,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.2361,
-     "percentile": 38,
+     "percentile": 40,
      "leagueAvg": 0.236,
-     "leagueAvgPercentile": 40,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.0972,
-     "percentile": 32,
-     "leagueAvg": 0.1182,
-     "leagueAvgPercentile": 54,
+     "percentile": 30,
+     "leagueAvg": 0.1181,
+     "leagueAvgPercentile": 56,
      "derived": false
     }
    ]
@@ -832,7 +832,7 @@
    "leagueKey": "northwoods"
   },
   "photo": "/headshots/coleman-lewis.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 36,
@@ -863,23 +863,23 @@
      "metric": "ops",
      "value": 1.0632,
      "percentile": 97,
-     "leagueAvg": 0.7591,
+     "leagueAvg": 0.7581,
      "leagueAvgPercentile": 49,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.3284,
-     "percentile": 89,
-     "leagueAvg": 0.2575,
-     "leagueAvgPercentile": 47,
+     "percentile": 90,
+     "leagueAvg": 0.2572,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.4737,
      "percentile": 92,
-     "leagueAvg": 0.3852,
+     "leagueAvg": 0.3848,
      "leagueAvgPercentile": 48,
      "derived": false
     },
@@ -887,15 +887,15 @@
      "metric": "slg",
      "value": 0.5896,
      "percentile": 96,
-     "leagueAvg": 0.3739,
-     "leagueAvgPercentile": 52,
+     "leagueAvg": 0.3733,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.1919,
      "percentile": 51,
-     "leagueAvg": 0.2032,
+     "leagueAvg": 0.2039,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -903,7 +903,7 @@
      "metric": "bbPct",
      "value": 0.1802,
      "percentile": 82,
-     "leagueAvg": 0.1393,
+     "leagueAvg": 0.139,
      "leagueAvgPercentile": 55,
      "derived": false
     }
@@ -930,7 +930,7 @@
    "leagueKey": "appalachian"
   },
   "photo": "/headshots/judson-hartwell.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 28,
@@ -960,49 +960,49 @@
     {
      "metric": "ops",
      "value": 0.725,
-     "percentile": 27,
-     "leagueAvg": 0.8453,
-     "leagueAvgPercentile": 49,
+     "percentile": 28,
+     "leagueAvg": 0.8415,
+     "leagueAvgPercentile": 54,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2258,
      "percentile": 21,
-     "leagueAvg": 0.2799,
+     "leagueAvg": 0.2785,
      "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3917,
-     "percentile": 30,
-     "leagueAvg": 0.4235,
-     "leagueAvgPercentile": 55,
+     "percentile": 33,
+     "leagueAvg": 0.423,
+     "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.3333,
-     "percentile": 28,
-     "leagueAvg": 0.4218,
-     "leagueAvgPercentile": 48,
+     "percentile": 30,
+     "leagueAvg": 0.4186,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.225,
-     "percentile": 36,
-     "leagueAvg": 0.2071,
-     "leagueAvgPercentile": 44,
+     "percentile": 39,
+     "leagueAvg": 0.2076,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1583,
      "percentile": 34,
-     "leagueAvg": 0.1719,
-     "leagueAvgPercentile": 47,
+     "leagueAvg": 0.1723,
+     "leagueAvgPercentile": 46,
      "derived": false
     }
    ]
@@ -1028,7 +1028,7 @@
    "leagueKey": "sfcbl"
   },
   "photo": "/headshots/nathanael-coupet.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 31,
@@ -1059,15 +1059,15 @@
      "metric": "ops",
      "value": 0.9148,
      "percentile": 84,
-     "leagueAvg": 0.7451,
-     "leagueAvgPercentile": 54,
+     "leagueAvg": 0.7448,
+     "leagueAvgPercentile": 55,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.3084,
      "percentile": 75,
-     "leagueAvg": 0.2613,
+     "leagueAvg": 0.2611,
      "leagueAvgPercentile": 50,
      "derived": false
     },
@@ -1075,15 +1075,15 @@
      "metric": "obp",
      "value": 0.3821,
      "percentile": 41,
-     "leagueAvg": 0.398,
+     "leagueAvg": 0.3978,
      "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.5327,
-     "percentile": 93,
-     "leagueAvg": 0.3472,
+     "percentile": 94,
+     "leagueAvg": 0.347,
      "leagueAvgPercentile": 53,
      "derived": false
     },
@@ -1091,7 +1091,7 @@
      "metric": "kPct",
      "value": 0.1626,
      "percentile": 62,
-     "leagueAvg": 0.1992,
+     "leagueAvg": 0.1993,
      "leagueAvgPercentile": 44,
      "derived": false
     },
@@ -1126,7 +1126,7 @@
    "leagueKey": "northwoods"
   },
   "photo": "/headshots/logan-keilen.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 13,
@@ -1157,47 +1157,47 @@
      "metric": "ops",
      "value": 0.7198,
      "percentile": 35,
-     "leagueAvg": 0.7591,
+     "leagueAvg": 0.7581,
      "leagueAvgPercentile": 49,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2292,
-     "percentile": 25,
-     "leagueAvg": 0.2575,
-     "leagueAvgPercentile": 47,
+     "percentile": 26,
+     "leagueAvg": 0.2572,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.3448,
-     "percentile": 23,
-     "leagueAvg": 0.3852,
+     "percentile": 22,
+     "leagueAvg": 0.3848,
      "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.375,
-     "percentile": 52,
-     "leagueAvg": 0.3739,
-     "leagueAvgPercentile": 52,
+     "percentile": 53,
+     "leagueAvg": 0.3733,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.3276,
      "percentile": 1,
-     "leagueAvg": 0.2032,
+     "leagueAvg": 0.2039,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1207,
-     "percentile": 35,
-     "leagueAvg": 0.1393,
+     "percentile": 36,
+     "leagueAvg": 0.139,
      "leagueAvgPercentile": 55,
      "derived": false
     }
@@ -1245,11 +1245,11 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/holden-pantier.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
-    "g": 19,
-    "ab": 61,
+    "g": 18,
+    "ab": 57,
     "r": 10,
     "h": 17,
     "d": 4,
@@ -1257,67 +1257,67 @@
     "hr": 0,
     "rbi": 11,
     "bb": 8,
-    "k": 20,
+    "k": 18,
     "hbp": 1,
     "sb": 6,
     "cs": 0
    },
    "rates": {
-    "avg": 0.2786885245901639,
-    "obp": 0.36619718309859156,
-    "slg": 0.3442622950819672,
-    "ops": 0.7104594781805588,
-    "kPct": 0.2777777777777778,
-    "bbPct": 0.1111111111111111
+    "avg": 0.2982456140350877,
+    "obp": 0.3880597014925373,
+    "slg": 0.3684210526315789,
+    "ops": 0.7564807541241163,
+    "kPct": 0.2647058823529412,
+    "bbPct": 0.11764705882352941
    },
    "qualified": true,
    "sliders": [
     {
      "metric": "ops",
-     "value": 0.7105,
-     "percentile": 55,
-     "leagueAvg": 0.6693,
+     "value": 0.7565,
+     "percentile": 70,
+     "leagueAvg": 0.666,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "avg",
-     "value": 0.2787,
-     "percentile": 71,
-     "leagueAvg": 0.2342,
-     "leagueAvgPercentile": 40,
+     "value": 0.2982,
+     "percentile": 88,
+     "leagueAvg": 0.233,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "obp",
-     "value": 0.3662,
-     "percentile": 61,
-     "leagueAvg": 0.345,
-     "leagueAvgPercentile": 46,
+     "value": 0.3881,
+     "percentile": 73,
+     "leagueAvg": 0.3441,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "slg",
-     "value": 0.3443,
-     "percentile": 61,
-     "leagueAvg": 0.3243,
-     "leagueAvgPercentile": 43,
+     "value": 0.3684,
+     "percentile": 68,
+     "leagueAvg": 0.3219,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2778,
-     "percentile": 15,
+     "value": 0.2647,
+     "percentile": 23,
      "leagueAvg": 0.236,
-     "leagueAvgPercentile": 40,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.1111,
-     "percentile": 48,
-     "leagueAvg": 0.1182,
-     "leagueAvgPercentile": 54,
+     "value": 0.1176,
+     "percentile": 56,
+     "leagueAvg": 0.1181,
+     "leagueAvgPercentile": 56,
      "derived": false
     }
    ]
@@ -1343,7 +1343,7 @@
    "leagueKey": "necbl"
   },
   "photo": "/headshots/eli-stephens.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 26,
@@ -1373,15 +1373,15 @@
     {
      "metric": "ops",
      "value": 0.6506,
-     "percentile": 29,
-     "leagueAvg": 0.714,
-     "leagueAvgPercentile": 49,
+     "percentile": 30,
+     "leagueAvg": 0.713,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2292,
-     "percentile": 40,
+     "percentile": 43,
      "leagueAvg": 0.241,
      "leagueAvgPercentile": 49,
      "derived": false
@@ -1389,32 +1389,32 @@
     {
      "metric": "obp",
      "value": 0.359,
-     "percentile": 43,
-     "leagueAvg": 0.3637,
-     "leagueAvgPercentile": 49,
+     "percentile": 48,
+     "leagueAvg": 0.3629,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.2917,
-     "percentile": 25,
-     "leagueAvg": 0.3504,
-     "leagueAvgPercentile": 46,
+     "percentile": 26,
+     "leagueAvg": 0.3501,
+     "leagueAvgPercentile": 49,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.3077,
-     "percentile": 17,
-     "leagueAvg": 0.2347,
-     "leagueAvgPercentile": 44,
+     "percentile": 19,
+     "leagueAvg": 0.2358,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1453,
      "percentile": 67,
-     "leagueAvg": 0.1309,
+     "leagueAvg": 0.1304,
      "leagueAvgPercentile": 53,
      "derived": false
     }
@@ -1453,23 +1453,23 @@
      "metric": "era",
      "value": 1.8,
      "percentile": 87,
-     "leagueAvg": 4.6905,
+     "leagueAvg": 4.7064,
      "leagueAvgPercentile": 42,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 1.4,
-     "percentile": 55,
-     "leagueAvg": 1.491,
-     "leagueAvgPercentile": 44,
+     "percentile": 52,
+     "leagueAvg": 1.4876,
+     "leagueAvgPercentile": 43,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.0,
      "percentile": 0,
-     "leagueAvg": 0.2323,
+     "leagueAvg": 0.2335,
      "leagueAvgPercentile": 47,
      "derived": false
     },
@@ -1477,24 +1477,24 @@
      "metric": "bbPct",
      "value": 0.1364,
      "percentile": 38,
-     "leagueAvg": 0.1275,
-     "leagueAvgPercentile": 44,
+     "leagueAvg": 0.127,
+     "leagueAvgPercentile": 43,
      "derived": false
     },
     {
      "metric": "hr9",
      "value": 0.0,
-     "percentile": 82,
-     "leagueAvg": 0.6465,
-     "leagueAvgPercentile": 40,
+     "percentile": 81,
+     "leagueAvg": 0.6409,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.2105,
-     "percentile": 63,
-     "leagueAvg": 0.2307,
-     "leagueAvgPercentile": 51,
+     "percentile": 62,
+     "leagueAvg": 0.2306,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -1540,7 +1540,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/jordan-lodise.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 16,
@@ -1565,38 +1565,38 @@
     "kPct": 0.31746031746031744,
     "bbPct": 0.015873015873015872
    },
-   "qualified": false,
+   "qualified": true,
    "sliders": [
     {
      "metric": "ops",
      "value": 0.7611,
-     "percentile": 70,
-     "leagueAvg": 0.6693,
+     "percentile": 73,
+     "leagueAvg": 0.666,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2623,
-     "percentile": 62,
-     "leagueAvg": 0.2342,
-     "leagueAvgPercentile": 40,
+     "percentile": 64,
+     "leagueAvg": 0.233,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.2857,
      "percentile": 10,
-     "leagueAvg": 0.345,
-     "leagueAvgPercentile": 46,
+     "leagueAvg": 0.3441,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.4754,
      "percentile": 94,
-     "leagueAvg": 0.3243,
-     "leagueAvgPercentile": 43,
+     "leagueAvg": 0.3219,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
@@ -1604,15 +1604,15 @@
      "value": 0.3175,
      "percentile": 6,
      "leagueAvg": 0.236,
-     "leagueAvgPercentile": 40,
+     "leagueAvgPercentile": 41,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.0159,
      "percentile": 0,
-     "leagueAvg": 0.1182,
-     "leagueAvgPercentile": 54,
+     "leagueAvg": 0.1181,
+     "leagueAvgPercentile": 56,
      "derived": false
     }
    ]
@@ -1638,79 +1638,79 @@
    "leagueKey": "appalachian"
   },
   "photo": "/headshots/patrick-walsh.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
-    "g": 13,
-    "ab": 47,
+    "g": 12,
+    "ab": 42,
     "r": 8,
-    "h": 13,
+    "h": 12,
     "d": 2,
     "t": 0,
     "hr": 2,
     "rbi": 9,
     "bb": 14,
-    "k": 15,
+    "k": 14,
     "hbp": 2,
     "sb": 0,
     "cs": 0
    },
    "rates": {
-    "avg": 0.2765957446808511,
-    "obp": 0.4603174603174603,
-    "slg": 0.44680851063829785,
-    "ops": 0.9071259709557582,
-    "kPct": 0.23809523809523808,
-    "bbPct": 0.2222222222222222
+    "avg": 0.2857142857142857,
+    "obp": 0.4827586206896552,
+    "slg": 0.47619047619047616,
+    "ops": 0.9589490968801313,
+    "kPct": 0.2413793103448276,
+    "bbPct": 0.2413793103448276
    },
    "qualified": false,
    "sliders": [
     {
      "metric": "ops",
-     "value": 0.9071,
-     "percentile": 64,
-     "leagueAvg": 0.8453,
-     "leagueAvgPercentile": 49,
+     "value": 0.9589,
+     "percentile": 78,
+     "leagueAvg": 0.8415,
+     "leagueAvgPercentile": 54,
      "derived": false
     },
     {
      "metric": "avg",
-     "value": 0.2766,
-     "percentile": 51,
-     "leagueAvg": 0.2799,
+     "value": 0.2857,
+     "percentile": 58,
+     "leagueAvg": 0.2785,
      "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "obp",
-     "value": 0.4603,
-     "percentile": 72,
-     "leagueAvg": 0.4235,
-     "leagueAvgPercentile": 55,
+     "value": 0.4828,
+     "percentile": 80,
+     "leagueAvg": 0.423,
+     "leagueAvgPercentile": 56,
      "derived": false
     },
     {
      "metric": "slg",
-     "value": 0.4468,
-     "percentile": 57,
-     "leagueAvg": 0.4218,
-     "leagueAvgPercentile": 48,
+     "value": 0.4762,
+     "percentile": 71,
+     "leagueAvg": 0.4186,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "kPct",
-     "value": 0.2381,
+     "value": 0.2414,
      "percentile": 28,
-     "leagueAvg": 0.2071,
-     "leagueAvgPercentile": 44,
+     "leagueAvg": 0.2076,
+     "leagueAvgPercentile": 45,
      "derived": false
     },
     {
      "metric": "bbPct",
-     "value": 0.2222,
-     "percentile": 86,
-     "leagueAvg": 0.1719,
-     "leagueAvgPercentile": 47,
+     "value": 0.2414,
+     "percentile": 94,
+     "leagueAvg": 0.1723,
+     "leagueAvgPercentile": 46,
      "derived": false
     }
    ]
@@ -1757,7 +1757,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/brady-fox.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
@@ -1792,24 +1792,24 @@
      "metric": "era",
      "value": 9.0,
      "percentile": 5,
-     "leagueAvg": 4.1277,
-     "leagueAvgPercentile": 42,
+     "leagueAvg": 4.0744,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 2.1667,
-     "percentile": 7,
-     "leagueAvg": 1.3964,
-     "leagueAvgPercentile": 45,
+     "percentile": 8,
+     "leagueAvg": 1.3897,
+     "leagueAvgPercentile": 44,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.3235,
-     "percentile": 86,
-     "leagueAvg": 0.2314,
-     "leagueAvgPercentile": 45,
+     "percentile": 87,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
@@ -1817,23 +1817,23 @@
      "value": 0.1176,
      "percentile": 44,
      "leagueAvg": 0.1158,
-     "leagueAvgPercentile": 45,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "hr9",
      "value": 1.5,
-     "percentile": 8,
-     "leagueAvg": 0.4944,
-     "leagueAvgPercentile": 38,
+     "percentile": 7,
+     "leagueAvg": 0.4781,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.3333,
      "percentile": 6,
-     "leagueAvg": 0.2253,
-     "leagueAvgPercentile": 48,
+     "leagueAvg": 0.2241,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -1858,7 +1858,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/tyler-guerin.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
@@ -1893,48 +1893,48 @@
      "metric": "era",
      "value": 24.5455,
      "percentile": 0,
-     "leagueAvg": 4.1277,
-     "leagueAvgPercentile": 42,
+     "leagueAvg": 4.0744,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 2.7273,
      "percentile": 1,
-     "leagueAvg": 1.3964,
-     "leagueAvgPercentile": 45,
+     "leagueAvg": 1.3897,
+     "leagueAvgPercentile": 44,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.1304,
      "percentile": 9,
-     "leagueAvg": 0.2314,
-     "leagueAvgPercentile": 45,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1739,
-     "percentile": 15,
+     "percentile": 17,
      "leagueAvg": 0.1158,
-     "leagueAvgPercentile": 45,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "hr9",
      "value": 2.4545,
      "percentile": 2,
-     "leagueAvg": 0.4944,
-     "leagueAvgPercentile": 38,
+     "leagueAvg": 0.4781,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.375,
      "percentile": 2,
-     "leagueAvg": 0.2253,
-     "leagueAvgPercentile": 48,
+     "leagueAvg": 0.2241,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -1959,7 +1959,7 @@
    "leagueKey": "cape_cod"
   },
   "photo": "/headshots/jayden-stroman.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": null,
   "pitching": {
    "counting": {
@@ -1994,24 +1994,24 @@
      "metric": "era",
      "value": 0.0,
      "percentile": 98,
-     "leagueAvg": 4.1277,
-     "leagueAvgPercentile": 42,
+     "leagueAvg": 4.0744,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "whip",
      "value": 1.8,
-     "percentile": 17,
-     "leagueAvg": 1.3964,
-     "leagueAvgPercentile": 45,
+     "percentile": 18,
+     "leagueAvg": 1.3897,
+     "leagueAvgPercentile": 44,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.1111,
      "percentile": 5,
-     "leagueAvg": 0.2314,
-     "leagueAvgPercentile": 45,
+     "leagueAvg": 0.2313,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
@@ -2019,23 +2019,23 @@
      "value": 0.2222,
      "percentile": 5,
      "leagueAvg": 0.1158,
-     "leagueAvgPercentile": 45,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "hr9",
      "value": 0.0,
-     "percentile": 74,
-     "leagueAvg": 0.4944,
-     "leagueAvgPercentile": 38,
+     "percentile": 73,
+     "leagueAvg": 0.4781,
+     "leagueAvgPercentile": 40,
      "derived": false
     },
     {
      "metric": "oppAvg",
      "value": 0.1429,
-     "percentile": 90,
-     "leagueAvg": 0.2253,
-     "leagueAvgPercentile": 48,
+     "percentile": 89,
+     "leagueAvg": 0.2241,
+     "leagueAvgPercentile": 49,
      "derived": true
     }
    ]
@@ -2168,7 +2168,7 @@
    "leagueKey": "sunbelt"
   },
   "photo": "/headshots/kolby-martin.jpg",
-  "asOf": "2026-07-29",
+  "asOf": "2026-07-27",
   "hitting": {
    "counting": {
     "g": 9,
@@ -2199,48 +2199,48 @@
      "metric": "ops",
      "value": 0.4512,
      "percentile": 9,
-     "leagueAvg": 0.7743,
-     "leagueAvgPercentile": 50,
+     "leagueAvg": 0.769,
+     "leagueAvgPercentile": 47,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.1481,
      "percentile": 9,
-     "leagueAvg": 0.2709,
-     "leagueAvgPercentile": 47,
+     "leagueAvg": 0.2683,
+     "leagueAvgPercentile": 51,
      "derived": false
     },
     {
      "metric": "obp",
      "value": 0.303,
-     "percentile": 15,
-     "leagueAvg": 0.3948,
-     "leagueAvgPercentile": 41,
+     "percentile": 16,
+     "leagueAvg": 0.3924,
+     "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.1481,
-     "percentile": 5,
-     "leagueAvg": 0.3795,
-     "leagueAvgPercentile": 50,
+     "percentile": 4,
+     "leagueAvg": 0.3766,
+     "leagueAvgPercentile": 53,
      "derived": false
     },
     {
      "metric": "kPct",
      "value": 0.0909,
-     "percentile": 93,
-     "leagueAvg": 0.2067,
-     "leagueAvgPercentile": 36,
+     "percentile": 96,
+     "leagueAvg": 0.2081,
+     "leagueAvgPercentile": 37,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1515,
      "percentile": 59,
-     "leagueAvg": 0.1366,
-     "leagueAvgPercentile": 55,
+     "leagueAvg": 0.1364,
+     "leagueAvgPercentile": 56,
      "derived": false
     }
    ]
