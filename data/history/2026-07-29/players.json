@@ -181,7 +181,7 @@
      "metric": "era",
      "value": 8.5263,
      "percentile": 15,
-     "leagueAvg": 5.7536,
+     "leagueAvg": 5.7529,
      "leagueAvgPercentile": 41,
      "derived": false
     },
@@ -305,7 +305,7 @@
      "metric": "era",
      "value": 1.1489,
      "percentile": 88,
-     "leagueAvg": 4.1277,
+     "leagueAvg": 4.1337,
      "leagueAvgPercentile": 42,
      "derived": false
     },
@@ -313,7 +313,7 @@
      "metric": "whip",
      "value": 1.2766,
      "percentile": 57,
-     "leagueAvg": 1.3964,
+     "leagueAvg": 1.3971,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -321,7 +321,7 @@
      "metric": "kPct",
      "value": 0.2308,
      "percentile": 44,
-     "leagueAvg": 0.2314,
+     "leagueAvg": 0.2313,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -344,8 +344,8 @@
     {
      "metric": "oppAvg",
      "value": 0.2623,
-     "percentile": 28,
-     "leagueAvg": 0.2253,
+     "percentile": 29,
+     "leagueAvg": 0.2255,
      "leagueAvgPercentile": 48,
      "derived": true
     }
@@ -406,7 +406,7 @@
      "metric": "era",
      "value": 2.6129,
      "percentile": 87,
-     "leagueAvg": 5.7536,
+     "leagueAvg": 5.7529,
      "leagueAvgPercentile": 41,
      "derived": false
     },
@@ -506,8 +506,8 @@
     {
      "metric": "era",
      "value": 6.2308,
-     "percentile": 17,
-     "leagueAvg": 4.1277,
+     "percentile": 18,
+     "leagueAvg": 4.1337,
      "leagueAvgPercentile": 42,
      "derived": false
     },
@@ -515,7 +515,7 @@
      "metric": "whip",
      "value": 1.4231,
      "percentile": 44,
-     "leagueAvg": 1.3964,
+     "leagueAvg": 1.3971,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -523,7 +523,7 @@
      "metric": "kPct",
      "value": 0.2167,
      "percentile": 37,
-     "leagueAvg": 0.2314,
+     "leagueAvg": 0.2313,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -546,8 +546,8 @@
     {
      "metric": "oppAvg",
      "value": 0.25,
-     "percentile": 36,
-     "leagueAvg": 0.2253,
+     "percentile": 37,
+     "leagueAvg": 0.2255,
      "leagueAvgPercentile": 48,
      "derived": true
     }
@@ -565,7 +565,7 @@
   "fromShort": null,
   "height": "6-4",
   "weight": 230,
-  "note": "2026 ACC MVP held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
+  "note": "2026 ACC MVP held out of summer ball for the MLB Draft; went undrafted July 14 and announced his return for 2027 the same day.",
   "playerType": "hitter",
   "summer": {
    "status": "unassigned"
@@ -586,14 +586,91 @@
   "fromShort": null,
   "height": "6-0",
   "weight": 197,
-  "note": "Held out of summer ball for the MLB Draft; went undrafted July 14 and is expected back at GT.",
+  "note": "Held out of summer ball for the MLB Draft, then joined Brewster on July 20 after going undrafted July 14.",
   "playerType": "hitter",
   "summer": {
-   "status": "unassigned"
+   "status": "assigned",
+   "team": "Brewster Whitecaps",
+   "leagueKey": "cape_cod"
   },
   "photo": "/headshots/will-baker.jpg",
-  "asOf": null,
-  "hitting": null,
+  "asOf": "2026-07-29",
+  "hitting": {
+   "counting": {
+    "g": 7,
+    "ab": 26,
+    "r": 3,
+    "h": 5,
+    "d": 2,
+    "t": 0,
+    "hr": 1,
+    "rbi": 5,
+    "bb": 3,
+    "k": 5,
+    "hbp": 0,
+    "sb": 0,
+    "cs": 0
+   },
+   "rates": {
+    "avg": 0.19230769230769232,
+    "obp": 0.27586206896551724,
+    "slg": 0.38461538461538464,
+    "ops": 0.6604774535809019,
+    "kPct": 0.1724137931034483,
+    "bbPct": 0.10344827586206896
+   },
+   "qualified": false,
+   "sliders": [
+    {
+     "metric": "ops",
+     "value": 0.6605,
+     "percentile": 44,
+     "leagueAvg": 0.6696,
+     "leagueAvgPercentile": 46,
+     "derived": false
+    },
+    {
+     "metric": "avg",
+     "value": 0.1923,
+     "percentile": 17,
+     "leagueAvg": 0.2343,
+     "leagueAvgPercentile": 40,
+     "derived": false
+    },
+    {
+     "metric": "obp",
+     "value": 0.2759,
+     "percentile": 5,
+     "leagueAvg": 0.3452,
+     "leagueAvgPercentile": 46,
+     "derived": false
+    },
+    {
+     "metric": "slg",
+     "value": 0.3846,
+     "percentile": 74,
+     "leagueAvg": 0.3245,
+     "leagueAvgPercentile": 43,
+     "derived": false
+    },
+    {
+     "metric": "kPct",
+     "value": 0.1724,
+     "percentile": 83,
+     "leagueAvg": 0.236,
+     "leagueAvgPercentile": 40,
+     "derived": false
+    },
+    {
+     "metric": "bbPct",
+     "value": 0.1034,
+     "percentile": 36,
+     "leagueAvg": 0.1182,
+     "leagueAvgPercentile": 54,
+     "derived": false
+    }
+   ]
+  },
   "pitching": null
  },
  {
@@ -667,7 +744,7 @@
      "metric": "ops",
      "value": 0.6749,
      "percentile": 47,
-     "leagueAvg": 0.6693,
+     "leagueAvg": 0.6696,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -675,7 +752,7 @@
      "metric": "avg",
      "value": 0.2143,
      "percentile": 28,
-     "leagueAvg": 0.2342,
+     "leagueAvg": 0.2343,
      "leagueAvgPercentile": 40,
      "derived": false
     },
@@ -683,7 +760,7 @@
      "metric": "obp",
      "value": 0.3654,
      "percentile": 59,
-     "leagueAvg": 0.345,
+     "leagueAvg": 0.3452,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -691,7 +768,7 @@
      "metric": "slg",
      "value": 0.3095,
      "percentile": 35,
-     "leagueAvg": 0.3243,
+     "leagueAvg": 0.3245,
      "leagueAvgPercentile": 43,
      "derived": false
     },
@@ -765,7 +842,7 @@
      "metric": "ops",
      "value": 0.6389,
      "percentile": 40,
-     "leagueAvg": 0.6693,
+     "leagueAvg": 0.6696,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -773,7 +850,7 @@
      "metric": "avg",
      "value": 0.2063,
      "percentile": 24,
-     "leagueAvg": 0.2342,
+     "leagueAvg": 0.2343,
      "leagueAvgPercentile": 40,
      "derived": false
     },
@@ -781,7 +858,7 @@
      "metric": "obp",
      "value": 0.3056,
      "percentile": 18,
-     "leagueAvg": 0.345,
+     "leagueAvg": 0.3452,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -789,7 +866,7 @@
      "metric": "slg",
      "value": 0.3333,
      "percentile": 51,
-     "leagueAvg": 0.3243,
+     "leagueAvg": 0.3245,
      "leagueAvgPercentile": 43,
      "derived": false
     },
@@ -1276,15 +1353,15 @@
      "metric": "ops",
      "value": 0.7105,
      "percentile": 55,
-     "leagueAvg": 0.6693,
+     "leagueAvg": 0.6696,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.2787,
-     "percentile": 71,
-     "leagueAvg": 0.2342,
+     "percentile": 70,
+     "leagueAvg": 0.2343,
      "leagueAvgPercentile": 40,
      "derived": false
     },
@@ -1292,15 +1369,15 @@
      "metric": "obp",
      "value": 0.3662,
      "percentile": 61,
-     "leagueAvg": 0.345,
+     "leagueAvg": 0.3452,
      "leagueAvgPercentile": 46,
      "derived": false
     },
     {
      "metric": "slg",
      "value": 0.3443,
-     "percentile": 61,
-     "leagueAvg": 0.3243,
+     "percentile": 60,
+     "leagueAvg": 0.3245,
      "leagueAvgPercentile": 43,
      "derived": false
     },
@@ -1390,7 +1467,7 @@
      "metric": "obp",
      "value": 0.359,
      "percentile": 43,
-     "leagueAvg": 0.3637,
+     "leagueAvg": 0.3636,
      "leagueAvgPercentile": 49,
      "derived": false
     },
@@ -1571,7 +1648,7 @@
      "metric": "ops",
      "value": 0.7611,
      "percentile": 70,
-     "leagueAvg": 0.6693,
+     "leagueAvg": 0.6696,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -1579,7 +1656,7 @@
      "metric": "avg",
      "value": 0.2623,
      "percentile": 62,
-     "leagueAvg": 0.2342,
+     "leagueAvg": 0.2343,
      "leagueAvgPercentile": 40,
      "derived": false
     },
@@ -1587,7 +1664,7 @@
      "metric": "obp",
      "value": 0.2857,
      "percentile": 10,
-     "leagueAvg": 0.345,
+     "leagueAvg": 0.3452,
      "leagueAvgPercentile": 46,
      "derived": false
     },
@@ -1595,7 +1672,7 @@
      "metric": "slg",
      "value": 0.4754,
      "percentile": 94,
-     "leagueAvg": 0.3243,
+     "leagueAvg": 0.3245,
      "leagueAvgPercentile": 43,
      "derived": false
     },
@@ -1792,7 +1869,7 @@
      "metric": "era",
      "value": 9.0,
      "percentile": 5,
-     "leagueAvg": 4.1277,
+     "leagueAvg": 4.1337,
      "leagueAvgPercentile": 42,
      "derived": false
     },
@@ -1800,7 +1877,7 @@
      "metric": "whip",
      "value": 2.1667,
      "percentile": 7,
-     "leagueAvg": 1.3964,
+     "leagueAvg": 1.3971,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -1808,7 +1885,7 @@
      "metric": "kPct",
      "value": 0.3235,
      "percentile": 86,
-     "leagueAvg": 0.2314,
+     "leagueAvg": 0.2313,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -1832,7 +1909,7 @@
      "metric": "oppAvg",
      "value": 0.3333,
      "percentile": 6,
-     "leagueAvg": 0.2253,
+     "leagueAvg": 0.2255,
      "leagueAvgPercentile": 48,
      "derived": true
     }
@@ -1893,7 +1970,7 @@
      "metric": "era",
      "value": 24.5455,
      "percentile": 0,
-     "leagueAvg": 4.1277,
+     "leagueAvg": 4.1337,
      "leagueAvgPercentile": 42,
      "derived": false
     },
@@ -1901,7 +1978,7 @@
      "metric": "whip",
      "value": 2.7273,
      "percentile": 1,
-     "leagueAvg": 1.3964,
+     "leagueAvg": 1.3971,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -1909,7 +1986,7 @@
      "metric": "kPct",
      "value": 0.1304,
      "percentile": 9,
-     "leagueAvg": 0.2314,
+     "leagueAvg": 0.2313,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -1933,7 +2010,7 @@
      "metric": "oppAvg",
      "value": 0.375,
      "percentile": 2,
-     "leagueAvg": 0.2253,
+     "leagueAvg": 0.2255,
      "leagueAvgPercentile": 48,
      "derived": true
     }
@@ -1994,7 +2071,7 @@
      "metric": "era",
      "value": 0.0,
      "percentile": 98,
-     "leagueAvg": 4.1277,
+     "leagueAvg": 4.1337,
      "leagueAvgPercentile": 42,
      "derived": false
     },
@@ -2002,7 +2079,7 @@
      "metric": "whip",
      "value": 1.8,
      "percentile": 17,
-     "leagueAvg": 1.3964,
+     "leagueAvg": 1.3971,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -2010,7 +2087,7 @@
      "metric": "kPct",
      "value": 0.1111,
      "percentile": 5,
-     "leagueAvg": 0.2314,
+     "leagueAvg": 0.2313,
      "leagueAvgPercentile": 45,
      "derived": false
     },
@@ -2034,7 +2111,7 @@
      "metric": "oppAvg",
      "value": 0.1429,
      "percentile": 90,
-     "leagueAvg": 0.2253,
+     "leagueAvg": 0.2255,
      "leagueAvgPercentile": 48,
      "derived": true
     }
@@ -2199,15 +2276,15 @@
      "metric": "ops",
      "value": 0.4512,
      "percentile": 9,
-     "leagueAvg": 0.7743,
-     "leagueAvgPercentile": 50,
+     "leagueAvg": 0.7744,
+     "leagueAvgPercentile": 48,
      "derived": false
     },
     {
      "metric": "avg",
      "value": 0.1481,
      "percentile": 9,
-     "leagueAvg": 0.2709,
+     "leagueAvg": 0.2711,
      "leagueAvgPercentile": 47,
      "derived": false
     },
@@ -2215,7 +2292,7 @@
      "metric": "obp",
      "value": 0.303,
      "percentile": 15,
-     "leagueAvg": 0.3948,
+     "leagueAvg": 0.3949,
      "leagueAvgPercentile": 41,
      "derived": false
     },
@@ -2230,16 +2307,16 @@
     {
      "metric": "kPct",
      "value": 0.0909,
-     "percentile": 93,
-     "leagueAvg": 0.2067,
-     "leagueAvgPercentile": 36,
+     "percentile": 95,
+     "leagueAvg": 0.2065,
+     "leagueAvgPercentile": 38,
      "derived": false
     },
     {
      "metric": "bbPct",
      "value": 0.1515,
-     "percentile": 59,
-     "leagueAvg": 0.1366,
+     "percentile": 58,
+     "leagueAvg": 0.137,
      "leagueAvgPercentile": 55,
      "derived": false
     }

@@ -8,12 +8,12 @@ def test_load_all_seed_files():
     slugs = [p["slug"] for p in players]
     assert len(slugs) == len(set(slugs))
     assigned = [p for p in players if p["summer"]["status"] == "assigned"]
-    assert len(assigned) == 21
+    assert len(assigned) == 22  # Will Baker joined Brewster (CCBL) 7/20 after going undrafted
     slugs = {p["slug"] for p in assigned}
     assert {"jamie-vicens", "riley-hasenstab", "coleman-lewis",
             "jordan-lodise", "brady-fox", "jackson-blakely", "jayden-stroman",
             "patrick-walsh", "logan-keilen", "kolby-martin", "cooper-underwood",
-            "isaiah-galason"} <= slugs
+            "isaiah-galason", "will-baker"} <= slugs
     assert "caden-spivey" not in {p["slug"] for p in players}  # out of eligibility, removed 7/15
     # Gaudette was recategorized unassigned (a post-grad returner may still pick
     # up summer ball) — no one is hard-coded "not_playing" now.
