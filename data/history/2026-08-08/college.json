@@ -1,0 +1,682 @@
+{
+ "_provenance": {
+  "note": "Prior-season college stats + roster bio, hand-backfilled 2026-07-25 from official athletics sites. OPS = official OB% + SLG%; WHIP computed as (H+BB)/IP only where the official book omits it. GT lines cross-checked against NCAA's public GraphQL box-score cumulatives.",
+  "gt": {
+   "2026": {
+    "url": "https://ramblinwreck.com/wp-content/uploads/2026/06/GT-Baseball-Stats-2026.pdf",
+    "asOf": "2026-06-04",
+    "label": "GT official season stats (StatBroadcast), through Jun 4, 2026"
+   },
+   "2025": {
+    "url": "https://ramblinwreck.com/wp-content/uploads/2025/06/GT-Baseball-Overall-Stats-2025.pdf",
+    "asOf": "2025-06-01",
+    "label": "GT official season stats, through Jun 1, 2025"
+   }
+  },
+  "gtRosterBio": "https://ramblinwreck.com/sports/m-basebl/roster/ (2025-26, per-player bio pages)",
+  "transfers": "Each incoming transfer transcribed from their prior school's official athletics site (cmuchippewas.com, jaxstatesports.com, wsccathletics.com, mercerbears.com, yhcathletics.com, ucfknights.com, navysports.com, gamecocksonline.com, umbcretrievers.com, hawkeyesports.com/official season PDFs, virginiasports.com/official season PDF), all end-of-season finals."
+ },
+ "players": {
+  "ryan-zuckerman": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 61,
+     "avg": ".345",
+     "ops": "1.158",
+     "hr": 23,
+     "sb": 6
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Yardley, Pa.",
+   "lastSchool": "Pittsburgh"
+  },
+  "will-baker": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 59,
+     "avg": ".332",
+     "ops": "1.046",
+     "hr": 9,
+     "sb": 2
+    },
+    {
+     "year": 2025,
+     "g": 44,
+     "avg": ".263",
+     "ops": ".831",
+     "hr": 6,
+     "sb": 0
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Upper Coomera, Queensland, Australia",
+   "lastSchool": null
+  },
+  "kent-schmidt": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 53,
+     "avg": ".305",
+     "ops": ".932",
+     "hr": 7,
+     "sb": 4
+    },
+    {
+     "year": 2025,
+     "g": 39,
+     "avg": ".395",
+     "ops": "1.017",
+     "hr": 3,
+     "sb": 4
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Marietta, Ga.",
+   "lastSchool": "Georgia Southern"
+  },
+  "drew-rogers": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 34,
+     "avg": ".266",
+     "ops": ".911",
+     "hr": 6,
+     "sb": 0
+    },
+    {
+     "year": 2025,
+     "g": 29,
+     "avg": ".281",
+     "ops": "1.070",
+     "hr": 6,
+     "sb": 0
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Tempe, Ariz.",
+   "lastSchool": "Hamilton HS"
+  },
+  "caleb-daniel": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 50,
+     "avg": ".298",
+     "ops": ".982",
+     "hr": 10,
+     "sb": 0
+    },
+    {
+     "year": 2025,
+     "g": 54,
+     "avg": ".313",
+     "ops": ".911",
+     "hr": 7,
+     "sb": 4
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Cartersville, Ga.",
+   "lastSchool": "Cartersville HS"
+  },
+  "coleman-lewis": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 14,
+     "avg": ".240",
+     "ops": ".705",
+     "hr": 1,
+     "sb": 0
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Lake Park, Ga.",
+   "lastSchool": "Lowndes HS"
+  },
+  "judson-hartwell": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 5,
+     "avg": ".400",
+     "ops": ".900",
+     "hr": 0,
+     "sb": 0
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Watkinsville, Ga.",
+   "lastSchool": "Prince Ave Christian"
+  },
+  "nathanael-coupet": {
+   "school": "Georgia Tech",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 14,
+     "avg": ".538",
+     "ops": "1.332",
+     "hr": 1,
+     "sb": 0
+    },
+    {
+     "year": 2025,
+     "g": 14,
+     "avg": ".267",
+     "ops": ".867",
+     "hr": 1,
+     "sb": 0
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Boynton Beach, Fla.",
+   "lastSchool": "North Broward Prep"
+  },
+  "jackson-blakely": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 15,
+     "ip": "64.1",
+     "era": "3.36",
+     "whip": "1.26",
+     "k": 69
+    },
+    {
+     "year": 2025,
+     "g": 5,
+     "ip": "4.2",
+     "era": "9.64",
+     "whip": "2.36",
+     "k": 1
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Thomaston, Ga.",
+   "lastSchool": "Upson-Lee HS"
+  },
+  "carson-ballard": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 18,
+     "ip": "46.2",
+     "era": "3.66",
+     "whip": "1.37",
+     "k": 47
+    },
+    {
+     "year": 2025,
+     "g": 16,
+     "ip": "32.1",
+     "era": "5.57",
+     "whip": "1.27",
+     "k": 35
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Alpharetta, Ga.",
+   "lastSchool": "Wesleyan HS"
+  },
+  "dimitri-angelakos": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 14,
+     "ip": "28.1",
+     "era": "3.81",
+     "whip": "0.95",
+     "k": 25
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Woodstock, Ga.",
+   "lastSchool": "Etowah HS"
+  },
+  "dylan-loy": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 20,
+     "ip": "45.0",
+     "era": "4.20",
+     "whip": "1.27",
+     "k": 49
+    }
+   ],
+   "bats": "L",
+   "throws": "L",
+   "hometown": "Pigeon Forge, Tenn.",
+   "lastSchool": "Tennessee"
+  },
+  "caden-gaudette": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 26,
+     "ip": "31.2",
+     "era": "4.83",
+     "whip": "1.07",
+     "k": 30
+    },
+    {
+     "year": 2025,
+     "g": 13,
+     "ip": "13.0",
+     "era": "6.92",
+     "whip": "1.69",
+     "k": 20
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Alpharetta, Ga.",
+   "lastSchool": "Milton HS"
+  },
+  "justin-shadek": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 19,
+     "ip": "28.1",
+     "era": "5.40",
+     "whip": "1.52",
+     "k": 44
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Kinnelon, N.J.",
+   "lastSchool": "Rutgers"
+  },
+  "cooper-underwood": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 13,
+     "ip": "23.2",
+     "era": "6.46",
+     "whip": "1.52",
+     "k": 26
+    }
+   ],
+   "bats": "L",
+   "throws": "L",
+   "hometown": "Acworth, Ga.",
+   "lastSchool": "Allatoona HS"
+  },
+  "jake-lankie": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 17,
+     "ip": "23.0",
+     "era": "6.65",
+     "whip": "1.96",
+     "k": 27
+    },
+    {
+     "year": 2025,
+     "g": 8,
+     "ip": "10.1",
+     "era": "6.10",
+     "whip": "1.65",
+     "k": 12
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Alpharetta, Ga.",
+   "lastSchool": "Georgia"
+  },
+  "adam-mckelvey": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 10,
+     "ip": "8.0",
+     "era": "7.88",
+     "whip": "1.75",
+     "k": 11
+    },
+    {
+     "year": 2025,
+     "g": 4,
+     "ip": "3.0",
+     "era": "6.00",
+     "whip": "1.33",
+     "k": 2
+    }
+   ],
+   "bats": "L",
+   "throws": "L",
+   "hometown": "Roswell, Ga.",
+   "lastSchool": "Roswell HS"
+  },
+  "jamie-vicens": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 10,
+     "ip": "8.0",
+     "era": "11.25",
+     "whip": "2.00",
+     "k": 15
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Atlanta, Ga.",
+   "lastSchool": "Marist School"
+  },
+  "riley-hasenstab": {
+   "school": "Georgia Tech",
+   "type": "pitcher",
+   "seasons": [],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Duluth, Ga.",
+   "lastSchool": "Duluth HS"
+  },
+  "logan-keilen": {
+   "school": "Central Michigan",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 46,
+     "avg": ".296",
+     "ops": ".922",
+     "hr": 7,
+     "sb": 2
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "St. Johns, Mich.",
+   "lastSchool": "St. Johns HS"
+  },
+  "cooper-blauser": {
+   "school": "Jacksonville State",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 62,
+     "avg": ".307",
+     "ops": ".861",
+     "hr": 5,
+     "sb": 26
+    },
+    {
+     "year": 2025,
+     "g": 61,
+     "avg": ".300",
+     "ops": ".917",
+     "hr": 4,
+     "sb": 25
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Alpharetta, Ga.",
+   "lastSchool": "Wesleyan School"
+  },
+  "holden-pantier": {
+   "school": "Walters State",
+   "schoolNote": "NJCAA",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 66,
+     "avg": ".476",
+     "ops": "1.538",
+     "hr": 30,
+     "sb": 16
+    },
+    {
+     "year": 2025,
+     "g": 65,
+     "avg": ".399",
+     "ops": "1.198",
+     "hr": 13,
+     "sb": 6
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Erie, Colo.",
+   "lastSchool": "Erie HS"
+  },
+  "eli-stephens": {
+   "school": "Mercer",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 54,
+     "avg": ".374",
+     "ops": "1.225",
+     "hr": 20,
+     "sb": 1
+    },
+    {
+     "year": 2025,
+     "g": 29,
+     "avg": ".267",
+     "ops": ".778",
+     "hr": 3,
+     "sb": 0
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Warner Robins, Ga.",
+   "lastSchool": "Houston County HS"
+  },
+  "jackson-morgan": {
+   "school": "Young Harris",
+   "schoolNote": "D-II",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 59,
+     "avg": ".390",
+     "ops": "1.208",
+     "hr": 20,
+     "sb": 10
+    },
+    {
+     "year": 2025,
+     "g": 20,
+     "avg": ".364",
+     "ops": "1.098",
+     "hr": 2,
+     "sb": 0
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Alpharetta, Ga.",
+   "lastSchool": "Blessed Trinity Catholic"
+  },
+  "jordan-lodise": {
+   "school": "UCF",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 55,
+     "avg": ".243",
+     "ops": ".738",
+     "hr": 5,
+     "sb": 4
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Brunswick, Ga.",
+   "lastSchool": "Brunswick HS"
+  },
+  "patrick-walsh": {
+   "school": "Navy",
+   "type": "hitter",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 48,
+     "avg": ".296",
+     "ops": ".926",
+     "hr": 5,
+     "sb": 11
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Huntersville, N.C.",
+   "lastSchool": "Christ the King Catholic"
+  },
+  "josh-gunther": {
+   "school": "South Carolina",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 13,
+     "ip": "37.2",
+     "era": "7.41",
+     "whip": "1.65",
+     "k": 44
+    }
+   ],
+   "bats": "R",
+   "throws": "R",
+   "hometown": "Fairhope, Ala.",
+   "lastSchool": "Bayside Academy"
+  },
+  "brady-fox": {
+   "school": "UMBC",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 20,
+     "ip": "43.0",
+     "era": "4.60",
+     "whip": "1.40",
+     "k": 53
+    },
+    {
+     "year": 2025,
+     "g": 14,
+     "ip": "37.1",
+     "era": "8.92",
+     "whip": "2.25",
+     "k": 37
+    }
+   ],
+   "bats": "L",
+   "throws": "L",
+   "hometown": "Hockessin, Del.",
+   "lastSchool": "The Sanford School"
+  },
+  "tyler-guerin": {
+   "school": "Iowa",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 17,
+     "ip": "49.0",
+     "era": "7.16",
+     "whip": "1.82",
+     "k": 40
+    },
+    {
+     "year": 2025,
+     "g": 14,
+     "ip": "16.2",
+     "era": "7.02",
+     "whip": "1.56",
+     "k": 25
+    }
+   ],
+   "bats": "L",
+   "throws": "R",
+   "hometown": "Shoreview, Minn.",
+   "lastSchool": "Mounds View HS"
+  },
+  "jayden-stroman": {
+   "school": "Virginia",
+   "type": "pitcher",
+   "seasons": [
+    {
+     "year": 2026,
+     "g": 16,
+     "ip": "22.2",
+     "era": "6.35",
+     "whip": "1.72",
+     "k": 26
+    }
+   ],
+   "bats": "S",
+   "throws": "R",
+   "hometown": "Medford, N.Y.",
+   "lastSchool": "Patchogue-Medford HS"
+  }
+ }
+}
