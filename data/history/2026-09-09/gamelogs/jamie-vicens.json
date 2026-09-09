@@ -1,0 +1,62 @@
+[
+ {
+  "date": "2026-07-05",
+  "opponent": "at Minot Hot Tots",
+  "ip_outs": 6,
+  "h": 2,
+  "r": 2,
+  "er": 1,
+  "bb": 0,
+  "k": 2,
+  "hr": 0,
+  "dec": "L"
+ },
+ {
+  "date": "2026-06-30",
+  "opponent": "vs Bismarck Larks",
+  "ip_outs": 2,
+  "h": 4,
+  "r": 7,
+  "er": 7,
+  "bb": 3,
+  "k": 2,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-24",
+  "opponent": "at Minot Hot Tots",
+  "ip_outs": 15,
+  "h": 2,
+  "r": 2,
+  "er": 2,
+  "bb": 1,
+  "k": 9,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-18",
+  "opponent": "vs Badlands Big Sticks",
+  "ip_outs": 9,
+  "h": 1,
+  "r": 2,
+  "er": 2,
+  "bb": 2,
+  "k": 1,
+  "hr": 0,
+  "dec": "L"
+ },
+ {
+  "date": "2026-06-11",
+  "opponent": "at Waterloo Bucks",
+  "ip_outs": 6,
+  "h": 1,
+  "r": 0,
+  "er": 0,
+  "bb": 1,
+  "k": 4,
+  "hr": 0,
+  "dec": ""
+ }
+]
