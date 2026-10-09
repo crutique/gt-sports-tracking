@@ -1,0 +1,50 @@
+[
+ {
+  "date": "2026-06-30",
+  "opponent": "at Harwich Mariners",
+  "ip_outs": 3,
+  "h": 3,
+  "r": 7,
+  "er": 7,
+  "bb": 3,
+  "k": 0,
+  "hr": 1,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-23",
+  "opponent": "at Yarmouth-Dennis Red Sox",
+  "ip_outs": 3,
+  "h": 0,
+  "r": 0,
+  "er": 0,
+  "bb": 0,
+  "k": 1,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-18",
+  "opponent": "vs Harwich Mariners",
+  "ip_outs": 2,
+  "h": 3,
+  "r": 3,
+  "er": 3,
+  "bb": 1,
+  "k": 0,
+  "hr": 0,
+  "dec": ""
+ },
+ {
+  "date": "2026-06-14",
+  "opponent": "at Brewster Whitecaps",
+  "ip_outs": 3,
+  "h": 0,
+  "r": 0,
+  "er": 0,
+  "bb": 0,
+  "k": 2,
+  "hr": 0,
+  "dec": "SV"
+ }
+]
